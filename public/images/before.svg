@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-label="Verouderde website">
+  <defs>
+    <linearGradient id="b-head" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5b7fb0"/>
+      <stop offset="1" stop-color="#3f5f8c"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="760" fill="#ffffff"/>
+
+  <!-- header -->
+  <rect width="1200" height="72" fill="url(#b-head)"/>
+  <text x="40" y="46" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700" fill="#ffffff">Jansen &amp; Zn.</text>
+  <g font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#dce6f3">
+    <text x="706" y="45">Home</text>
+    <text x="776" y="45">Diensten</text>
+    <text x="868" y="45">Producten</text>
+    <text x="978" y="45">Over</text>
+    <text x="1044" y="45">Contact</text>
+  </g>
+
+  <!-- banner image placeholder -->
+  <rect x="40" y="96" width="1120" height="150" fill="#cfd4da" stroke="#b4bac1"/>
+  <text x="600" y="178" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#8b929b" text-anchor="middle">[ bedrijfsfoto ]</text>
+
+  <!-- main: left text -->
+  <text x="40" y="300" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="700" fill="#2c3138">Welkom bij Jansen &amp; Zn.</text>
+  <g font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#5b6168">
+    <text x="40" y="336">Al meer dan 25 jaar uw vertrouwde partner voor bouw en onderhoud</text>
+    <text x="40" y="360">in de regio. Wij leveren kwaliteit en service waar u op kunt rekenen.</text>
+    <text x="40" y="384">Neem vrijblijvend contact met ons op voor een offerte op maat.</text>
+  </g>
+  <rect x="40" y="408" width="132" height="40" fill="#3f5f8c"/>
+  <text x="106" y="433" font-family="Arial, Helvetica, sans-serif" font-size="14" fill="#ffffff" text-anchor="middle">Lees meer »</text>
+  <g font-family="Arial, Helvetica, sans-serif" font-size="14" fill="#2a5db0">
+    <text x="40" y="488" text-decoration="underline">› Onze diensten</text>
+    <text x="40" y="514" text-decoration="underline">› Referenties</text>
+    <text x="40" y="540" text-decoration="underline">› Vacatures</text>
+  </g>
+
+  <!-- right sidebar -->
+  <rect x="820" y="288" width="340" height="300" fill="#f2f3f5" stroke="#ccd1d6"/>
+  <rect x="820" y="288" width="340" height="40" fill="#e2e6ea"/>
+  <text x="840" y="314" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="700" fill="#3f5f8c">Nieuws</text>
+  <g font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#2a5db0">
+    <text x="840" y="362" text-decoration="underline">Nieuwe showroom geopend</text>
+    <text x="840" y="394" text-decoration="underline">Wij zoeken een monteur (m/v)</text>
+    <text x="840" y="426" text-decoration="underline">Sluitingstijden feestdagen</text>
+  </g>
+  <text x="840" y="472" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#6b7178">Bel ons: 0512 - 12 34 56</text>
+
+  <!-- footer -->
+  <rect x="0" y="700" width="1200" height="60" fill="#eceef0"/>
+  <text x="600" y="736" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#8b929b" text-anchor="middle">© 2011 Jansen &amp; Zn.   |   Algemene voorwaarden   |   Sitemap</text>
+</svg>

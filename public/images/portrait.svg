@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000" role="img" aria-label="Portret placeholder">
+  <defs>
+    <radialGradient id="p-bg" cx="0.62" cy="0.1" r="1">
+      <stop offset="0" stop-color="#322a22"/>
+      <stop offset="0.55" stop-color="#1d1812"/>
+      <stop offset="1" stop-color="#120e0a"/>
+    </radialGradient>
+    <linearGradient id="p-rim" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e2613c" stop-opacity="0"/>
+      <stop offset="1" stop-color="#e2613c" stop-opacity="0.5"/>
+    </linearGradient>
+    <radialGradient id="p-glow" cx="0.7" cy="0.16" r="0.6">
+      <stop offset="0" stop-color="#f4a06a" stop-opacity="0.22"/>
+      <stop offset="0.7" stop-color="#f4a06a" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="p-grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter>
+  </defs>
+  <rect width="800" height="1000" fill="url(#p-bg)"/>
+  <rect width="800" height="1000" fill="url(#p-glow)"/>
+  <!-- filled silhouette (duotone) -->
+  <g fill="#2b231b">
+    <circle cx="406" cy="372" r="156"/>
+    <path d="M150 1000c0-176 116-300 256-300s256 124 256 300z"/>
+  </g>
+  <!-- terracotta rim light on one edge -->
+  <g fill="none" stroke="url(#p-rim)" stroke-width="6">
+    <path d="M548 268a160 160 0 0 1 -10 214"/>
+    <path d="M636 760a262 262 0 0 0 -150 -176"/>
+  </g>
+  <rect width="800" height="1000" filter="url(#p-grain)" opacity="0.05"/>
+  <text x="56" y="952" font-family="ui-monospace, monospace" font-size="17" letter-spacing="3" fill="#6e665c">PORTRET · PLACEHOLDER</text>
+</svg>

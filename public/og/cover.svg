@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="HitzDigital">
+  <defs>
+    <radialGradient id="og-bg" cx="0.5" cy="-0.1" r="1.1">
+      <stop offset="0" stop-color="#221b15"/>
+      <stop offset="0.55" stop-color="#13110e"/>
+      <stop offset="1" stop-color="#0e0c0a"/>
+    </radialGradient>
+    <radialGradient id="og-glow" cx="0.82" cy="0.12" r="0.6">
+      <stop offset="0" stop-color="#e2613c" stop-opacity="0.22"/>
+      <stop offset="0.65" stop-color="#e2613c" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#og-bg)"/>
+  <rect width="1200" height="630" fill="url(#og-glow)"/>
+  <text x="80" y="150" font-family="Inter, system-ui, sans-serif" font-size="34" font-weight="700" letter-spacing="-1" fill="#f4efe7">hitz<tspan fill="#e2613c">.</tspan></text>
+  <rect x="80" y="250" width="56" height="3" fill="#e2613c"/>
+  <text x="80" y="334" font-family="Inter, system-ui, sans-serif" font-size="68" font-weight="700" letter-spacing="-2.5" fill="#f4efe7">Eerst zien. Dan beslissen.</text>
+  <text x="80" y="408" font-family="Inter, system-ui, sans-serif" font-size="30" fill="#9c9489">Moderne websites en redesigns voor kleine ondernemers.</text>
+  <text x="80" y="566" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="600" letter-spacing="1" fill="#6e665c">hitzdigital.nl</text>
+</svg>

@@ -1,0 +1,144 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   HitzDigital — Dark Premium Studio design tokens (build brief §2)
+   --------------------------------------------------------------------------- */
+@theme {
+  /* dark base */
+  --color-base: #13110e;
+  --color-deep: #0f0d0b;
+  --color-panel: #1a1714;
+  --color-panel2: #211d19;
+  --color-chrome: #221e1a;
+  --color-ink: #f4efe7;
+  --color-muted: #9c9489;
+  --color-faint: #6e665c;
+  --color-line: rgba(244, 239, 231, 0.12);
+  --color-line2: rgba(244, 239, 231, 0.07);
+
+  /* single accent: terracotta */
+  --color-accent: #e2613c;
+  --color-accent-bright: #f4824e;
+  --color-accent-deep: #c24a28;
+  --color-accent-tint: #fbede6;
+
+  /* cream relief (one section only) */
+  --color-cream: #f7f3ec;
+  --color-cream-ink: #1c1a17;
+  --color-cream-muted: #6e685e;
+  --color-cream-line: #e7e0d5;
+
+  /* fonts (wired via next/font in layout.tsx) */
+  --font-display: var(--font-display-src), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-body-src), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+
+  --radius-card: 16px;
+  --radius-browser: 14px;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-base);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+/* film grain — fixed, pointer-events-none (perf-safe, build brief §6.E) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.045;
+  mix-blend-mode: soft-light;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-accent-bright);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* respect reduced motion globally */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---- Hero preview mockup: subtle premium 3D / motion (desktop + motion-safe) ---- */
+.hero-mock__frame {
+  position: relative;
+  z-index: 1;
+}
+
+@media (min-width: 768px) {
+  .hero-mock {
+    perspective: 1800px;
+  }
+  .hero-mock__frame {
+    transform: rotateY(-9deg) rotateX(3deg);
+    transition: transform 300ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .hero-mock__backdrop {
+    transform: rotateY(-9deg) rotateX(3deg);
+    transition: transform 400ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .hero-mock__glow {
+    transition: transform 400ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+}
+
+/* pointer-parallax (--mx/--my set by JS, default 0) + idle float — motion-safe only */
+@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  .hero-mock {
+    animation: heroFloat 8s ease-in-out infinite;
+  }
+  .hero-mock__frame {
+    transform: rotateY(calc(-9deg + var(--mx, 0) * 7deg))
+      rotateX(calc(3deg + var(--my, 0) * -6deg));
+  }
+  .hero-mock__backdrop {
+    transform: rotateY(-9deg) rotateX(3deg)
+      translate3d(calc(var(--mx, 0) * 20px), calc(var(--my, 0) * 20px), 0);
+  }
+  .hero-mock__glow {
+    transform: translate3d(calc(var(--mx, 0) * -16px), calc(var(--my, 0) * -10px), 0);
+  }
+}
+
+@keyframes heroFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
