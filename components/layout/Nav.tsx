@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
 import { nav, cta } from "@/lib/content";
+import { ScrollProgress } from "@/components/layout/ScrollProgress";
 
 const EASE = "ease-[cubic-bezier(0.22,1,0.36,1)]";
 
@@ -116,6 +117,7 @@ export function Nav() {
             </button>
           </div>
         </nav>
+        <ScrollProgress />
       </header>
 
       {/* Scrim — dimt + blurt de pagina (nog herkenbaar); klik sluit. Sibling van header. */}
