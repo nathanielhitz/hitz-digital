@@ -1,14 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { List, X } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
 import { nav, cta } from "@/lib/content";
 
-function Wordmark({ className }: { className?: string }) {
+const EASE = "ease-[cubic-bezier(0.22,1,0.36,1)]";
+
+function Wordmark() {
   return (
-    <span className={cn("font-display text-[20px] font-bold tracking-[-0.04em]", className)}>
+    <span className="font-display text-[20px] font-bold tracking-[-0.04em]">
       hitz<span className="text-accent">.</span>
     </span>
   );
@@ -17,11 +18,11 @@ function Wordmark({ className }: { className?: string }) {
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const openBtnRef = useRef<HTMLButtonElement>(null);
-  const closeBtnRef = useRef<HTMLButtonElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLElement>(null);
   const firstRender = useRef(true);
 
-  // Scrolled-state zonder scroll-listener: observeer een sentinel net onder de top.
+  // Scrolled-state zonder scroll-listener: sentinel net onder de top.
   useEffect(() => {
     const sentinel = document.createElement("div");
     sentinel.setAttribute("aria-hidden", "true");
@@ -38,7 +39,7 @@ export function Nav() {
     };
   }, []);
 
-  // Scroll-lock + Escape zolang het menu open is.
+  // Scroll-lock + Escape zolang open.
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -53,21 +54,21 @@ export function Nav() {
     };
   }, [open]);
 
-  // Focus: naar de sluitknop bij openen, terug naar de hamburger bij sluiten.
+  // Focus: bij openen naar het eerste item, bij sluiten terug naar de knop.
   useEffect(() => {
     if (firstRender.current) {
       firstRender.current = false;
       return;
     }
-    if (open) closeBtnRef.current?.focus();
-    else openBtnRef.current?.focus();
+    if (open) panelRef.current?.querySelector<HTMLElement>("a, button")?.focus();
+    else toggleRef.current?.focus();
   }, [open]);
 
   return (
     <>
       <header
         className={cn(
-          "fixed inset-x-0 top-0 z-50 border-b transition-[background-color,border-color,backdrop-filter] duration-300",
+          "fixed inset-x-0 top-0 z-[60] border-b transition-[background-color,border-color,backdrop-filter] duration-300",
           scrolled ? "border-line bg-deep/70 backdrop-blur-xl" : "border-transparent",
         )}
       >
@@ -99,72 +100,84 @@ export function Nav() {
               {cta.explore.label}
             </Button>
             <button
-              ref={openBtnRef}
+              ref={toggleRef}
               type="button"
               className="-mr-1.5 p-1.5 text-ink md:hidden"
-              aria-label="Menu openen"
+              aria-label={open ? "Menu sluiten" : "Menu openen"}
               aria-expanded={open}
               aria-controls="mobile-menu"
-              onClick={() => setOpen(true)}
+              onClick={() => setOpen((v) => !v)}
             >
-              <List size={24} weight="bold" />
+              <span className="ham" data-open={open}>
+                <span className="line line1" />
+                <span className="line line2" />
+                <span className="line line3" />
+              </span>
             </button>
           </div>
         </nav>
       </header>
 
-      {/*
-        Mobiele overlay als SIBLING van <header> (niet als kind), zodat de
-        backdrop-filter van de header nooit het containing block wordt.
-        Hierdoor verwijst `fixed inset-0` naar de volledige viewport.
-        Opaque achtergrond (geen bleed), GPU-transition, inert wanneer gesloten.
-      */}
+      {/* Scrim — dimt + blurt de pagina (nog herkenbaar); klik sluit. Sibling van header. */}
       <div
+        aria-hidden
+        onClick={() => setOpen(false)}
+        className={cn(
+          "fixed inset-0 z-40 bg-black/55 backdrop-blur-[2px] transition-opacity duration-[260ms] md:hidden",
+          EASE,
+          open ? "opacity-100" : "pointer-events-none opacity-0",
+        )}
+      />
+
+      {/* Drawer — schuift in met translateX, opaque, items gestaffeld. */}
+      <aside
+        ref={panelRef}
         id="mobile-menu"
+        aria-label="Menu"
         aria-hidden={!open}
         inert={!open}
         className={cn(
-          "fixed inset-0 z-[100] flex flex-col overflow-y-auto bg-base transition-[opacity,transform] duration-200 ease-out motion-reduce:transition-none md:hidden",
-          open ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-2 opacity-0",
+          "fixed inset-y-0 right-0 z-50 flex w-[min(88vw,360px)] flex-col border-l border-line bg-base transition-transform duration-[260ms] will-change-transform md:hidden",
+          EASE,
+          open ? "translate-x-0" : "translate-x-full",
         )}
         style={{
-          paddingTop: "env(safe-area-inset-top)",
-          paddingBottom: "env(safe-area-inset-bottom)",
+          paddingTop: "calc(env(safe-area-inset-top) + 88px)",
+          paddingBottom: "calc(env(safe-area-inset-bottom) + 32px)",
+          paddingRight: "env(safe-area-inset-right)",
         }}
       >
-        <div className="flex items-center justify-between px-5 py-4">
-          <Wordmark />
-          <button
-            ref={closeBtnRef}
-            type="button"
-            className="-mr-1.5 p-1.5 text-ink"
-            aria-label="Menu sluiten"
-            onClick={() => setOpen(false)}
-          >
-            <X size={26} weight="bold" />
-          </button>
-        </div>
-
-        <ul className="flex flex-1 flex-col justify-center gap-1 px-6">
-          {nav.links.map((l) => (
+        <ul className="flex flex-1 flex-col justify-center gap-1 px-7">
+          {nav.links.map((l, i) => (
             <li key={l.href}>
               <a
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className="block py-3 font-display text-[34px] font-semibold tracking-[-0.03em]"
+                style={{ transitionDelay: open ? `${130 + i * 55}ms` : "0ms" }}
+                className={cn(
+                  "block py-3 font-display text-[32px] font-semibold tracking-[-0.03em] transition-[opacity,transform] duration-[280ms] motion-reduce:transition-none",
+                  EASE,
+                  open ? "translate-x-0 opacity-100" : "translate-x-4 opacity-0",
+                )}
               >
                 {l.label}
               </a>
             </li>
           ))}
         </ul>
-
-        <div className="px-6 pb-10 pt-4">
+        <div
+          style={{ transitionDelay: open ? `${130 + nav.links.length * 55}ms` : "0ms" }}
+          className={cn(
+            "px-7 pt-4 transition-[opacity,transform] duration-[280ms] motion-reduce:transition-none",
+            EASE,
+            open ? "translate-x-0 opacity-100" : "translate-x-4 opacity-0",
+          )}
+        >
           <Button href={cta.explore.href} className="w-full" onClick={() => setOpen(false)}>
             {cta.explore.label}
           </Button>
         </div>
-      </div>
+      </aside>
     </>
   );
 }
