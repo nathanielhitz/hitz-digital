@@ -7,7 +7,7 @@ import { cta } from "@/lib/content";
 
 export function Hero() {
   return (
-    <section className="relative flex min-h-[100dvh] items-center overflow-hidden pb-20 pt-24">
+    <section className="relative flex min-h-0 items-center overflow-hidden pb-12 pt-20 md:min-h-[100dvh] md:pb-20 md:pt-24">
       {/* layered premium background */}
       <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
         <div
@@ -30,14 +30,16 @@ export function Hero() {
       </div>
 
       <Container>
-        <div className="grid items-center gap-12 md:grid-cols-[1.05fr_0.95fr] md:gap-16">
+        <div className="grid items-center gap-8 md:grid-cols-[1.05fr_0.95fr] md:gap-16">
           {/* left */}
           <Reveal>
-            <Eyebrow>Eerst zien. Dan beslissen.</Eyebrow>
-            <h1 className="mt-7 font-display text-[clamp(36px,5vw,62px)] font-semibold leading-[1.04] tracking-[-0.035em] [text-wrap:balance]">
+            <div className="hidden md:block">
+              <Eyebrow>Eerst zien. Dan beslissen.</Eyebrow>
+            </div>
+            <h1 className="mt-0 font-display text-[clamp(36px,5vw,62px)] font-semibold leading-[1.04] tracking-[-0.035em] [text-wrap:balance] md:mt-7">
               Websites die direct <span className="text-accent">professioneler</span> voelen.
             </h1>
-            <p className="mt-7 max-w-[40ch] text-[clamp(15px,1.45vw,18px)] leading-relaxed text-muted">
+            <p className="mt-5 max-w-[40ch] text-[clamp(15px,1.45vw,18px)] leading-relaxed text-muted md:mt-7">
               Moderne websites en redesigns voor kleine ondernemers. Je ziet eerst een concrete
               preview, daarna beslis je pas.
             </p>
