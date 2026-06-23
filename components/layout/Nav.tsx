@@ -137,17 +137,16 @@ export function Nav() {
         aria-hidden={!open}
         inert={!open}
         className={cn(
-          "fixed inset-y-0 right-0 z-50 flex w-[min(88vw,360px)] flex-col border-l border-line bg-base transition-transform duration-[260ms] will-change-transform md:hidden",
+          "fixed inset-x-0 top-0 z-50 flex flex-col rounded-b-[28px] border-b border-line bg-base transition-transform duration-[260ms] will-change-transform md:hidden",
           EASE,
-          open ? "translate-x-0" : "translate-x-full",
+          open ? "translate-y-0" : "-translate-y-full",
         )}
         style={{
-          paddingTop: "calc(env(safe-area-inset-top) + 88px)",
-          paddingBottom: "calc(env(safe-area-inset-bottom) + 32px)",
-          paddingRight: "env(safe-area-inset-right)",
+          paddingTop: "calc(env(safe-area-inset-top) + 92px)",
+          paddingBottom: "40px",
         }}
       >
-        <ul className="flex flex-1 flex-col justify-center gap-1 px-7">
+        <ul className="flex flex-col gap-1 px-7">
           {nav.links.map((l, i) => (
             <li key={l.href}>
               <a
@@ -157,7 +156,7 @@ export function Nav() {
                 className={cn(
                   "block py-3 font-display text-[32px] font-semibold tracking-[-0.03em] transition-[opacity,transform] duration-[280ms] motion-reduce:transition-none",
                   EASE,
-                  open ? "translate-x-0 opacity-100" : "translate-x-4 opacity-0",
+                  open ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0",
                 )}
               >
                 {l.label}
@@ -168,9 +167,9 @@ export function Nav() {
         <div
           style={{ transitionDelay: open ? `${130 + nav.links.length * 55}ms` : "0ms" }}
           className={cn(
-            "px-7 pt-4 transition-[opacity,transform] duration-[280ms] motion-reduce:transition-none",
+            "mt-6 px-7 transition-[opacity,transform] duration-[280ms] motion-reduce:transition-none",
             EASE,
-            open ? "translate-x-0 opacity-100" : "translate-x-4 opacity-0",
+            open ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0",
           )}
         >
           <Button href={cta.explore.href} className="w-full" onClick={() => setOpen(false)}>
