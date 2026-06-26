@@ -46,30 +46,68 @@ html {
 }
 
 body {
-  background-color: var(--color-base);
-  color: var(--color-ink);
-  font-family: var(--font-body);
-  line-height: 1.55;
+  background-color: #070706;
+  color: #F4F1EC;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
 }
 
-/* film grain — fixed, pointer-events-none (perf-safe, build brief §6.E) */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  opacity: 0.045;
-  mix-blend-mode: soft-light;
+::selection {
+  background: #5FA47E;
+  color: #07140e;
 }
 
-::selection {
-  background: var(--color-accent);
-  color: #fff;
+/* ---- HitzDigital design (Claude Design 2026) hover states ---- */
+/* style-hover attributes on interactive elements are non-standard; these CSS rules provide the hover behavior */
+
+.hd-navlinks a:hover {
+  color: #F4F1EC !important;
+}
+
+.hd-navlinks a[href="#contact"]:hover {
+  border-color: color-mix(in srgb, #5FA47E 55%, transparent) !important;
+  background: color-mix(in srgb, #5FA47E 12%, transparent) !important;
+}
+
+.hd-menu-link:hover {
+  color: var(--accent, #5FA47E) !important;
+}
+
+.hd-btn-primary {
+  transition: transform 0.25s, box-shadow 0.25s, filter 0.25s;
+}
+.hd-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 40px -16px rgba(0,0,0,0.7), 0 10px 26px -12px color-mix(in srgb, var(--accent, #5FA47E) 48%, transparent), inset 0 1px 0 rgba(255,255,255,0.22);
+  filter: brightness(1.04);
+}
+.hd-btn-primary:active {
+  transform: translateY(0);
+  filter: brightness(0.98);
+}
+
+.hd-btn-ghost {
+  transition: border-color 0.25s, background 0.25s, transform 0.25s;
+}
+.hd-btn-ghost:hover {
+  border-color: color-mix(in srgb, var(--accent, #5FA47E) 55%, transparent) !important;
+  background: color-mix(in srgb, var(--accent, #5FA47E) 9%, transparent) !important;
+  transform: translateY(-2px);
+}
+.hd-btn-ghost:active {
+  transform: translateY(0);
+}
+
+.hd-work a {
+  transition: opacity 0.2s;
+}
+.hd-work a:hover {
+  opacity: 0.92;
+}
+
+footer a:hover {
+  color: #F4F1EC !important;
 }
 
 :focus-visible {

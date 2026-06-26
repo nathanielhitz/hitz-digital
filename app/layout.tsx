@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Manrope } from "next/font/google";
+import { Inter } from "next/font/google";
 import { site, professionalServiceSchema } from "@/lib/site";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -8,15 +8,6 @@ import "./globals.css";
 const body = Inter({
   subsets: ["latin"],
   variable: "--font-body-src",
-  display: "swap",
-});
-
-// MVP stand-in for General Sans (build brief §2.3).
-// TODO(polish): self-host General Sans (Fontshare woff2) via next/font/local and swap here.
-const display = Manrope({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
-  variable: "--font-display-src",
   display: "swap",
 });
 
@@ -50,14 +41,15 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="nl" className={`${body.variable} ${display.variable}`}>
+    <html lang="nl" className={body.variable}>
+      <head>
+        <link rel="preconnect" href="https://api.fontshare.com" />
+        <link
+          href="https://api.fontshare.com/v2/css?f[]=general-sans@300,400,500,600,700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body>
-        <a
-          href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-accent focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white"
-        >
-          Naar inhoud
-        </a>
         {children}
         <script
           type="application/ld+json"
