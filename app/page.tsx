@@ -14,7 +14,7 @@ const BODY_HTML = `
         <a href="#diensten" style="color:inherit;text-decoration:none" style-hover="color:var(--text)">Diensten</a>
         <a href="#werkwijze" style="color:inherit;text-decoration:none" style-hover="color:var(--text)">Werkwijze</a>
         <a href="#over" style="color:inherit;text-decoration:none" style-hover="color:var(--text)">Over</a>
-        <a href="mailto:hallo@hitzdigital.nl" style="display:inline-flex;align-items:center;gap:8px;padding:9px 17px;border-radius:100px;border:1px solid var(--line);color:var(--text);text-decoration:none;font-weight:500;transition:border-color .25s,background .25s" style-hover="border-color:color-mix(in srgb,var(--accent) 55%,transparent);background:color-mix(in srgb,var(--accent) 12%,transparent)">Stuur je website</a>
+        <a href="mailto:nathanielhitzerd1999@gmail.com" style="display:inline-flex;align-items:center;gap:8px;padding:9px 17px;border-radius:100px;border:1px solid var(--line);color:var(--text);text-decoration:none;font-weight:500;transition:border-color .25s,background .25s" style-hover="border-color:color-mix(in srgb,var(--accent) 55%,transparent);background:color-mix(in srgb,var(--accent) 12%,transparent)">Stuur je website</a>
       </div>
       <button class="hd-burger" aria-label="Menu openen" aria-expanded="false" style="display:none;flex-direction:column;gap:5px;width:44px;height:44px;align-items:center;justify-content:center;background:none;border:0;cursor:pointer;padding:0">
         <span style="display:block;width:22px;height:2px;background:var(--text);border-radius:2px"></span>
@@ -32,7 +32,7 @@ const BODY_HTML = `
         <a class="hd-menu-link" href="#werkwijze" style="font-family:'General Sans',sans-serif;font-weight:600;font-size:clamp(30px,9vw,42px);letter-spacing:-0.025em;color:var(--text);text-decoration:none;padding:10px 0" style-hover="color:var(--accent)">Werkwijze</a>
         <a class="hd-menu-link" href="#over" style="font-family:'General Sans',sans-serif;font-weight:600;font-size:clamp(30px,9vw,42px);letter-spacing:-0.025em;color:var(--text);text-decoration:none;padding:10px 0" style-hover="color:var(--accent)">Over</a>
       </div>
-      <a class="hd-menu-link" href="mailto:hallo@hitzdigital.nl" style="display:flex;align-items:center;justify-content:center;gap:9px;padding:16px 26px;border-radius:100px;background:linear-gradient(135deg,var(--accent-br) 0%,var(--accent) 48%,var(--accent-dp) 100%);color:#07140e;text-decoration:none;font-weight:600;font-size:16px">Stuur je website</a>
+      <a class="hd-menu-link" href="mailto:nathanielhitzerd1999@gmail.com" style="display:flex;align-items:center;justify-content:center;gap:9px;padding:16px 26px;border-radius:100px;background:linear-gradient(135deg,var(--accent-br) 0%,var(--accent) 48%,var(--accent-dp) 100%);color:#07140e;text-decoration:none;font-weight:600;font-size:16px">Stuur je website</a>
     </div>
   </nav>
 
@@ -59,7 +59,7 @@ const BODY_HTML = `
           <a href="#diensten" class="hd-btn-primary" style="display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:100px;background:linear-gradient(135deg,var(--accent-br) 0%,var(--accent) 48%,var(--accent-dp) 100%);color:#07140e;text-decoration:none;font-weight:600;font-size:15px;box-shadow:0 12px 32px -16px rgba(0,0,0,0.7),0 6px 20px -12px color-mix(in srgb,var(--accent) 36%,transparent),inset 0 1px 0 rgba(255,255,255,0.16);transition:transform .25s,box-shadow .25s,filter .25s" style-hover="transform:translateY(-2px);box-shadow:0 16px 40px -16px rgba(0,0,0,0.7),0 10px 26px -12px color-mix(in srgb,var(--accent) 48%,transparent),inset 0 1px 0 rgba(255,255,255,0.22);filter:brightness(1.04)" style-active="transform:translateY(0);filter:brightness(0.98)">Bekijk wat mogelijk is
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
           </a>
-          <a href="mailto:hallo@hitzdigital.nl" class="hd-btn-ghost" style="display:inline-flex;align-items:center;gap:9px;padding:15px 24px;border-radius:100px;border:1px solid var(--line);color:var(--text);text-decoration:none;font-weight:500;font-size:15px;transition:border-color .25s,background .25s,transform .25s" style-hover="border-color:color-mix(in srgb,var(--accent) 55%,transparent);background:color-mix(in srgb,var(--accent) 9%,transparent);transform:translateY(-2px)" style-active="transform:translateY(0)">Stuur je website</a>
+          <a href="mailto:nathanielhitzerd1999@gmail.com" class="hd-btn-ghost" style="display:inline-flex;align-items:center;gap:9px;padding:15px 24px;border-radius:100px;border:1px solid var(--line);color:var(--text);text-decoration:none;font-weight:500;font-size:15px;transition:border-color .25s,background .25s,transform .25s" style-hover="border-color:color-mix(in srgb,var(--accent) 55%,transparent);background:color-mix(in srgb,var(--accent) 9%,transparent);transform:translateY(-2px)" style-active="transform:translateY(0)">Stuur je website</a>
         </div>
         <div class="hd-trust" style="display:flex;align-items:center;gap:16px;font-size:13.5px;color:var(--faint)">
           <span>Gratis preview</span><span style="opacity:.5">·</span><span>Geen verplichtingen</span><span style="opacity:.5">·</span><span>Persoonlijk contact</span>
@@ -278,7 +278,7 @@ const BODY_HTML = `
         <h2 style="font-family:'General Sans',sans-serif;font-weight:600;font-size:clamp(30px,4.4vw,56px);line-height:1.05;letter-spacing:-0.03em;margin-bottom:22px">Benieuwd hoe jouw website eruit kan zien?</h2>
         <p style="font-size:17px;line-height:1.6;color:var(--muted);max-width:520px;margin:0 auto 38px">Stuur je huidige website of vertel kort wat je zoekt. Ik kijk mee en maak vrijblijvend een concrete preview.</p>
         <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
-          <a href="mailto:hallo@hitzdigital.nl" class="hd-btn-primary" style="display:inline-flex;align-items:center;gap:10px;padding:15px 28px;border-radius:100px;background:linear-gradient(135deg,var(--accent-br) 0%,var(--accent) 48%,var(--accent-dp) 100%);color:#07140e;text-decoration:none;font-weight:600;font-size:15px;box-shadow:0 12px 32px -16px rgba(0,0,0,0.7),0 6px 20px -12px color-mix(in srgb,var(--accent) 36%,transparent),inset 0 1px 0 rgba(255,255,255,0.16);transition:transform .25s,box-shadow .25s,filter .25s" style-hover="transform:translateY(-2px);filter:brightness(1.04)" style-active="transform:translateY(0)">Stuur je website</a>
+          <a href="mailto:nathanielhitzerd1999@gmail.com" class="hd-btn-primary" style="display:inline-flex;align-items:center;gap:10px;padding:15px 28px;border-radius:100px;background:linear-gradient(135deg,var(--accent-br) 0%,var(--accent) 48%,var(--accent-dp) 100%);color:#07140e;text-decoration:none;font-weight:600;font-size:15px;box-shadow:0 12px 32px -16px rgba(0,0,0,0.7),0 6px 20px -12px color-mix(in srgb,var(--accent) 36%,transparent),inset 0 1px 0 rgba(255,255,255,0.16);transition:transform .25s,box-shadow .25s,filter .25s" style-hover="transform:translateY(-2px);filter:brightness(1.04)" style-active="transform:translateY(0)">Stuur je website</a>
         </div>
         <div style="margin-top:22px;font-size:13px;color:var(--faint)">Reactie binnen 1 werkdag · Vrijblijvend</div>
       </div>
@@ -287,7 +287,7 @@ const BODY_HTML = `
     <footer style="border-top:1px solid var(--line);background:var(--bg2);padding:44px clamp(20px,5vw,64px)">
       <div style="max-width:1140px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:18px;font-size:13px;color:var(--faint)">
         <div style="display:flex;align-items:center;gap:14px"><span style="font-family:'General Sans',sans-serif;font-weight:600;font-size:17px;color:var(--text)">hitz<span style="color:var(--accent)">.</span></span><span>Eerst zien. Dan beslissen.</span></div>
-        <div style="display:flex;align-items:center;gap:18px"><a href="mailto:hallo@hitzdigital.nl" style="color:var(--muted);text-decoration:none" style-hover="color:var(--text)">hallo@hitzdigital.nl</a><span>© 2026 HitzDigital · KvK 00000000</span></div>
+        <div style="display:flex;align-items:center;gap:18px"><a href="mailto:nathanielhitzerd1999@gmail.com" style="color:var(--muted);text-decoration:none" style-hover="color:var(--text)">nathanielhitzerd1999@gmail.com</a><span>© 2026 HitzDigital · KvK 00000000</span></div>
       </div>
     </footer>
   </main>

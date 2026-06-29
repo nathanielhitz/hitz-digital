@@ -5,7 +5,7 @@
 export const site = {
   name: "HitzDigital",
   url: "https://hitzdigital.nl",
-  email: "hallo@hitzdigital.nl",
+  email: "nathanielhitzerd1999@gmail.com",
   founder: "", // VUL IN: "Voornaam Achternaam"
   phone: "", // VUL IN: "+31612345678"
   whatsapp: "", // VUL IN: internationaal zonder +, bv "31612345678"
