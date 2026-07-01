@@ -35,7 +35,7 @@ export function Footer() {
         </div>
 
         <div className="mt-12 flex flex-wrap items-center justify-between gap-3 border-t border-line2 pt-6 font-mono text-[12px] text-faint">
-          <span>© 2026 HitzDigital. KvK 00000000.</span>
+          <span>© 2026 HitzDigital · Hoeksche Waard</span>
           <span>hitzdigital.nl</span>
         </div>
       </div>
