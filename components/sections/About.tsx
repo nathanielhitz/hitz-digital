@@ -52,8 +52,8 @@ export function About() {
               />
               <div className="relative aspect-[4/5] overflow-hidden rounded-[20px] border border-line ring-1 ring-white/[0.05]">
                 <Image
-                  src="/images/portrait.svg"
-                  alt="Portret van de maker achter HitzDigital (placeholder)"
+                  src="/images/Nathaniel.jpg"
+                  alt="Nathaniel, oprichter van HitzDigital"
                   fill
                   sizes="(max-width: 880px) 100vw, 400px"
                   className="object-cover"

@@ -270,7 +270,7 @@ const BODY_HTML = `
           <p style="font-size:16px;line-height:1.65;color:var(--muted);max-width:480px;margin-bottom:18px">Ik ben Nathaniel, en ik bouw HitzDigital in mijn eentje voor ondernemers in de Hoeksche Waard — cafés, schilders, installateurs, iedereen die een website wil die klopt. Geen accountmanager, geen tussenlagen: je mailt mij, en ik reageer zelf. Eerst een concrete preview, dan pas beslis je.</p>
           <div style="font-size:13.5px;color:var(--faint)">Persoonlijk contact · Duidelijke afspraken · Eerst zien, dan beslissen</div>
         </div>
-        <div style="aspect-ratio:4/5;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:repeating-linear-gradient(135deg,#16130f 0,#16130f 11px,#100e0b 11px,#100e0b 22px);position:relative"><span style="position:absolute;bottom:14px;left:16px;font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.1em;color:#a8a298">PORTRET · FOTO VOLGT</span></div>
+        <div style="aspect-ratio:4/5;border-radius:16px;overflow:hidden;border:1px solid var(--line);position:relative"><img src="/images/Nathaniel.jpg" alt="Nathaniel, oprichter van HitzDigital" width="1122" height="1402" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block"><div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(7,7,6,0.5) 0%,transparent 45%);pointer-events:none"></div></div>
       </div>
     </section>
 
