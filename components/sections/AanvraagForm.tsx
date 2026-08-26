@@ -33,6 +33,7 @@ function buildMailto(d: FormData) {
  */
 export function AanvraagForm({ initial = "website" }: { initial?: AanvraagKeuze }) {
   const [voor, setVoor] = useState<AanvraagKeuze>(initial);
+  const [bericht, setBericht] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [fallback, setFallback] = useState<string | null>(null);
 
@@ -42,6 +43,8 @@ export function AanvraagForm({ initial = "website" }: { initial?: AanvraagKeuze 
       const m = raw.match(/[?&]voor=([a-z]+)/);
       const v = m?.[1];
       if (v && aanvraagKeuzes.some((k) => k.id === v)) setVoor(v as AanvraagKeuze);
+      const pk = raw.match(/[?&]pakket=([a-z]+)/)?.[1];
+      if (pk) setBericht((cur) => cur || `Ik heb interesse in het pakket ${pk.charAt(0).toUpperCase()}${pk.slice(1)}.`);
     };
     apply();
     window.addEventListener("hashchange", apply);
@@ -142,7 +145,14 @@ export function AanvraagForm({ initial = "website" }: { initial?: AanvraagKeuze 
       <label className={label}>
         Wat speelt er?
         <input type="hidden" name="_keuze" value={keuze.label} />
-        <textarea name="bericht" rows={4} placeholder="Kort is prima." className={`${field} resize-y`} />
+        <textarea
+          name="bericht"
+          rows={4}
+          placeholder="Kort is prima."
+          value={bericht}
+          onChange={(e) => setBericht(e.target.value)}
+          className={`${field} resize-y`}
+        />
       </label>
       <Button type="submit" className="w-full sm:w-auto sm:self-center">
         {status === "sending" ? "Versturen…" : keuze.submit}

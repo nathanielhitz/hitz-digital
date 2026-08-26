@@ -23,8 +23,8 @@ export const telDisplay = "+31 6 3741 9404";
 /** Navigatie (fase 2: anker-secties; fase 3–5 worden dit routes). */
 export const nav = {
   links: [
-    { label: "Diensten", href: "/#pijlers" },
     { label: "Websites", href: "/websites" },
+    { label: "Hosting", href: "/hosting" },
     { label: "Werk", href: "/werk" },
     { label: "Over", href: "/#over" },
   ],

@@ -23,7 +23,7 @@ export const pijlers = [
     body: "Domein, hosting, e-mail en een kleine wijziging per maand in één bedrag. Maandelijks opzegbaar.",
     price: `Vanaf ${euro(online.monthly)} per maand`,
     href: "/hosting",
-    live: false,
+    live: true,
   },
   {
     id: "hulp",
@@ -136,5 +136,51 @@ export const websiteFaq = [
   {
     q: "Werk je ook buiten de Hoeksche Waard?",
     a: "Ja. Ik kom uit Puttershoek en de meeste klanten zitten in de regio, maar een website bouwen kan overal. Voor hulp aan huis blijf ik in de Hoeksche Waard.",
+  },
+];
+
+/** /hosting: wat er in elk pakket zit. */
+export const hostingAltijd = [
+  "Nederlandse servers",
+  "Dagelijkse back-ups",
+  "SSL-certificaat (het slotje)",
+  "Updates en beveiliging",
+  "Monitoring: ik zie het als je site eruit ligt",
+  "Domein op jouw naam",
+  "Maandelijks opzegbaar",
+];
+
+/** /hosting: overstappen in drie stappen. */
+export const overstappen = [
+  { n: "01", title: "Je geeft me toegang", body: "Tot je huidige hosting of domein. Weet je niet waar dat staat? Dan zoeken we het samen uit." },
+  { n: "02", title: "Ik verhuis site, domein en mail", body: "Op een moment dat het jou past. Je hoeft zelf niets in te stellen." },
+  { n: "03", title: "Niets ligt eruit", body: "Pas als alles bij mij draait en werkt, gaat het domein om. Je mail blijft gewoon binnenkomen." },
+];
+
+/** /hosting: veelgestelde vragen (ook als FAQPage-schema). */
+export const hostingFaq = [
+  {
+    q: "Wat is een kleine wijziging?",
+    a: "Een tekst, foto, prijs of openingstijd aanpassen. Iets wat in een kwartier klaar is. Een nieuwe pagina of ontwerpwerk valt erbuiten; dat doe ik graag, maar dan op kwartiertarief. Ongebruikte tijd vervalt aan het einde van de maand.",
+  },
+  {
+    q: "Wat als ik wil stoppen?",
+    a: "Je zegt op per maand, zonder opzegtermijn van maanden. Je domein loopt door tot het einde van het jaar waarvoor het geregistreerd is; daarna kun je het verlengen of meenemen naar een andere partij. Je site en je domein zijn en blijven van jou.",
+  },
+  {
+    q: "Blijft mijn domein van mij?",
+    a: "Ja. Ik registreer het op jouw naam en jouw gegevens. Ik beheer het voor je, maar jij bent de eigenaar. Wil je ooit weg, dan verhuis je het domein gewoon mee.",
+  },
+  {
+    q: "Hoe snel reageer je bij een storing?",
+    a: "Ik krijg zelf een melding als je site eruit ligt en ga er meestal direct mee aan de slag. Zie je zelf iets vreemds, app of bel me dan; je hoeft geen ticket aan te maken.",
+  },
+  {
+    q: "Kan ik mijn oude WordPress-site bij jou hosten?",
+    a: "Ja. Ook als ik de site niet gebouwd heb, kan ik hosting, domein en mail overnemen. Ik kijk dan eerst even mee of de site technisch gezond is.",
+  },
+  {
+    q: "Krijg ik een factuur met btw?",
+    a: "Ja, elke maand een nette factuur met btw. Je betaalt via automatische incasso of iDEAL. Alle prijzen op deze pagina zijn incl. 21% btw.",
   },
 ];
