@@ -1,37 +1,38 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------------------
-   HitzDigital — Dark Premium Studio design tokens (build brief §2)
+   HitzDigital — design tokens (groen, "Claude Design 2026")
+   Eén bron voor kleuren, fonts en radii. Tailwind v4 maakt hier utilities van
+   (bg-base, text-ink, border-line, text-accent, font-display, ...).
    --------------------------------------------------------------------------- */
 @theme {
-  /* dark base */
-  --color-base: #13110e;
-  --color-deep: #0f0d0b;
-  --color-panel: #1a1714;
-  --color-panel2: #211d19;
-  --color-chrome: #221e1a;
-  --color-ink: #f4efe7;
-  --color-muted: #9c9489;
-  --color-faint: #6e665c;
-  --color-line: rgba(244, 239, 231, 0.12);
-  --color-line2: rgba(244, 239, 231, 0.07);
+  /* donkere basis */
+  --color-base: #0c0b09;   /* afwisselende secties */
+  --color-deep: #070706;   /* pagina-achtergrond */
+  --color-panel: #11100e;  /* opgetilde vlakken */
+  --color-ink: #f4f1ec;    /* hoofdtekst */
+  --color-muted: #9b968d;  /* secundaire tekst */
+  --color-faint: #6b665e;  /* meta / labels */
+  --color-line: rgba(244, 241, 236, 0.1);
+  --color-line2: rgba(244, 241, 236, 0.05);
 
-  /* single accent: terracotta */
-  --color-accent: #e2613c;
-  --color-accent-bright: #f4824e;
-  --color-accent-deep: #c24a28;
-  --color-accent-tint: #fbede6;
+  /* enige accent: groen */
+  --color-accent: #5fa47e;
+  --color-accent-bright: #79bb97;
+  --color-accent-deep: #4a8466;
+  --color-accent-warm: #9ecdb4;
+  --color-on-accent: #07140e; /* tekst op accent-knoppen */
 
-  /* cream relief (one section only) */
+  /* cream relief (optioneel, één sectie) */
   --color-cream: #f7f3ec;
   --color-cream-ink: #1c1a17;
   --color-cream-muted: #6e685e;
   --color-cream-line: #e7e0d5;
 
-  /* fonts (wired via next/font in layout.tsx) */
-  --font-display: var(--font-display-src), ui-sans-serif, system-ui, sans-serif;
+  /* fonts: General Sans (koppen) via Fontshare, Inter (body) via next/font */
+  --font-display: "General Sans", var(--font-body-src), ui-sans-serif, system-ui, sans-serif;
   --font-body: var(--font-body-src), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
   --radius-card: 16px;
   --radius-browser: 14px;
@@ -39,6 +40,20 @@
 
 :root {
   color-scheme: dark;
+
+  /* Korte aliases die het hero-HTML-fragment (HeroExperience) gebruikt. */
+  --bg: var(--color-base);
+  --bg2: var(--color-deep);
+  --surface: var(--color-panel);
+  --text: var(--color-ink);
+  --muted: var(--color-muted);
+  --faint: var(--color-faint);
+  --line: var(--color-line);
+  --line2: var(--color-line2);
+  --accent: var(--color-accent);
+  --accent-br: var(--color-accent-bright);
+  --accent-dp: var(--color-accent-deep);
+  --warm: var(--color-accent-warm);
 }
 
 html {
@@ -46,68 +61,53 @@ html {
 }
 
 body {
-  background-color: #070706;
-  color: #F4F1EC;
+  background-color: var(--color-deep);
+  color: var(--color-ink);
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
 }
 
 ::selection {
-  background: #5FA47E;
-  color: #07140e;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
 }
 
-/* ---- HitzDigital design (Claude Design 2026) hover states ---- */
-/* style-hover attributes on interactive elements are non-standard; these CSS rules provide the hover behavior */
-
-.hd-navlinks a:hover {
-  color: #F4F1EC !important;
+/* Inhoud die direct na de pinned hero komt: op desktop onder de uitfadende
+   hero schuiven (zelfde conditie als scrollDriven in HeroExperience). */
+@media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
+  .hd-after-hero {
+    margin-top: -80vh;
+  }
 }
 
-.hd-navlinks a[href="#contact"]:hover {
-  border-color: color-mix(in srgb, #5FA47E 55%, transparent) !important;
-  background: color-mix(in srgb, #5FA47E 12%, transparent) !important;
-}
-
-.hd-menu-link:hover {
-  color: var(--accent, #5FA47E) !important;
-}
-
+/* Knoppen binnen het hero-fragment (rest van de site gebruikt <Button>). */
 .hd-btn-primary {
   transition: transform 0.25s, box-shadow 0.25s, filter 0.25s;
 }
 .hd-btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 16px 40px -16px rgba(0,0,0,0.7), 0 10px 26px -12px color-mix(in srgb, var(--accent, #5FA47E) 48%, transparent), inset 0 1px 0 rgba(255,255,255,0.22);
+  box-shadow:
+    0 16px 40px -16px rgba(0, 0, 0, 0.7),
+    0 10px 26px -12px color-mix(in srgb, var(--accent) 48%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
   filter: brightness(1.04);
 }
 .hd-btn-primary:active {
   transform: translateY(0);
   filter: brightness(0.98);
 }
-
 .hd-btn-ghost {
   transition: border-color 0.25s, background 0.25s, transform 0.25s;
 }
 .hd-btn-ghost:hover {
-  border-color: color-mix(in srgb, var(--accent, #5FA47E) 55%, transparent) !important;
-  background: color-mix(in srgb, var(--accent, #5FA47E) 9%, transparent) !important;
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent) !important;
+  background: color-mix(in srgb, var(--accent) 9%, transparent) !important;
   transform: translateY(-2px);
 }
 .hd-btn-ghost:active {
   transform: translateY(0);
-}
-
-.hd-work a {
-  transition: opacity 0.2s;
-}
-.hd-work a:hover {
-  opacity: 0.92;
-}
-
-footer a:hover {
-  color: #F4F1EC !important;
 }
 
 :focus-visible {
@@ -116,7 +116,6 @@ footer a:hover {
   border-radius: 2px;
 }
 
-/* respect reduced motion globally */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -149,78 +148,12 @@ footer a:hover {
     transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
     opacity 200ms ease;
 }
-.ham .line1 {
-  top: 0;
-}
-.ham .line2 {
-  top: 7px;
-}
-.ham .line3 {
-  top: 14px;
-}
-.ham[data-open="true"] .line1 {
-  transform: translateY(7px) rotate(45deg);
-}
-.ham[data-open="true"] .line2 {
-  opacity: 0;
-  transform: scaleX(0.3);
-}
-.ham[data-open="true"] .line3 {
-  transform: translateY(-7px) rotate(-45deg);
-}
+.ham .line1 { top: 0; }
+.ham .line2 { top: 7px; }
+.ham .line3 { top: 14px; }
+.ham[data-open="true"] .line1 { transform: translateY(7px) rotate(45deg); }
+.ham[data-open="true"] .line2 { opacity: 0; transform: scaleX(0.3); }
+.ham[data-open="true"] .line3 { transform: translateY(-7px) rotate(-45deg); }
 @media (prefers-reduced-motion: reduce) {
-  .ham .line {
-    transition: none;
-  }
-}
-
-/* ---- Hero preview mockup: subtle premium 3D / motion (desktop + motion-safe) ---- */
-.hero-mock__frame {
-  position: relative;
-  z-index: 1;
-}
-
-@media (min-width: 768px) {
-  .hero-mock {
-    perspective: 1800px;
-  }
-  .hero-mock__frame {
-    transform: rotateY(-9deg) rotateX(3deg);
-    transition: transform 300ms cubic-bezier(0.2, 0.7, 0.2, 1);
-  }
-  .hero-mock__backdrop {
-    transform: rotateY(-9deg) rotateX(3deg);
-    transition: transform 400ms cubic-bezier(0.2, 0.7, 0.2, 1);
-  }
-  .hero-mock__glow {
-    transition: transform 400ms cubic-bezier(0.2, 0.7, 0.2, 1);
-  }
-}
-
-/* pointer-parallax (--mx/--my set by JS, default 0) + idle float — motion-safe only */
-@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
-  .hero-mock {
-    animation: heroFloat 8s ease-in-out infinite;
-  }
-  .hero-mock__frame {
-    transform: rotateY(calc(-9deg + var(--mx, 0) * 7deg))
-      rotateX(calc(3deg + var(--my, 0) * -6deg));
-  }
-  .hero-mock__backdrop {
-    transform: rotateY(-9deg) rotateX(3deg)
-      translate3d(calc(var(--mx, 0) * 20px), calc(var(--my, 0) * 20px), 0);
-  }
-  .hero-mock__glow {
-    transform: translate3d(calc(var(--mx, 0) * -16px), calc(var(--my, 0) * -10px), 0);
-  }
-}
-
-@keyframes heroFloat {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
+  .ham .line { transition: none; }
 }

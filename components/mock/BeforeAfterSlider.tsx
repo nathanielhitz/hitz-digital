@@ -133,7 +133,7 @@ export function BeforeAfterSlider({
               e.preventDefault();
             }
           }}
-          className="absolute left-1/2 top-1/2 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-white bg-accent text-white shadow-[0_0_0_6px_rgba(226,97,60,0.18),0_8px_22px_-6px_rgba(0,0,0,0.8)]"
+          className="absolute left-1/2 top-1/2 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-white bg-accent text-on-accent shadow-[0_0_0_6px_rgba(95,164,126,0.18),0_8px_22px_-6px_rgba(0,0,0,0.8)]"
         >
           <ArrowsHorizontal size={18} weight="bold" />
         </button>

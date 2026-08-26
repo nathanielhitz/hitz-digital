@@ -38,7 +38,7 @@ export function BrowserFrame({
   children?: ReactNode;
 }) {
   return (
-    <div className={cn("overflow-hidden rounded-[14px] border border-line bg-chrome", className)}>
+    <div className={cn("overflow-hidden rounded-[14px] border border-line bg-panel", className)}>
       <div className="flex items-center gap-3 border-b border-line bg-[linear-gradient(180deg,#2A251F,#211D19)] px-3.5 py-[11px]">
         <TrafficLights />
         <span className="mx-auto max-w-[260px] flex-1 truncate rounded-md border border-line bg-[#17140F] px-3 py-[5px] text-center font-mono text-[11.5px] text-muted">

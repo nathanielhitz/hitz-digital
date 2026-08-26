@@ -1,23 +1,33 @@
 import { site } from "./site";
 
 export const contactEmail = site.email;
-export const mailto = `mailto:${site.email}`;
 
-/**
- * One label per intent. CTA's funnelen naar de contactsectie (#contact) of Calendly,
- * i.p.v. een mailto te openen — lagere drempel, betere conversie.
- */
-export const cta = {
-  explore: { label: "Bekijk wat mogelijk is", href: "#voorna" },
-  send: { label: "Stuur je website", href: "#contact" },
-  call: { label: "Plan een korte kennismaking", href: site.calendly || "#contact" },
-};
+/** mailto met onderwerp + korte invul-template, zodat elke mail met context binnenkomt. */
+const mailBody = [
+  "Hoi Nathaniel,",
+  "",
+  "- Mijn huidige website (of: ik heb er nog geen): ",
+  "- Wat voor bedrijf ik heb en waar: ",
+  "- Wat ik zoek: ",
+  "",
+  "Groet,",
+].join("\n");
+export const mailto = `mailto:${site.email}?subject=${encodeURIComponent(
+  "Aanvraag preview via hitzdigital.nl",
+)}&body=${encodeURIComponent(mailBody)}`;
 
+/** Navigatie (fase 1: anker-secties; fase 3–5: routes). */
 export const nav = {
   links: [
     { label: "Werk", href: "#werk" },
-    { label: "Aanpak", href: "#aanpak" },
+    { label: "Diensten", href: "#diensten" },
+    { label: "Werkwijze", href: "#werkwijze" },
     { label: "Over", href: "#over" },
-    { label: "Contact", href: "#contact" },
   ],
+};
+
+/** Eén label per intentie. */
+export const cta = {
+  explore: { label: "Bekijk wat mogelijk is", href: "#werk" },
+  send: { label: "Stuur je website", href: mailto },
 };

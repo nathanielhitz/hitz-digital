@@ -1,33 +1,38 @@
 import { cn } from "@/lib/cn";
 import type { ReactNode } from "react";
 
-type Variant = "base" | "deep" | "cream";
+type Variant = "deep" | "base";
+type Padding = "default" | "large";
 
 const variantClass: Record<Variant, string> = {
-  base: "bg-base text-ink",
-  deep: "bg-deep text-ink",
-  cream: "bg-cream text-cream-ink",
+  deep: "", // erft de pagina-achtergrond (--color-deep)
+  base: "bg-base",
+};
+const paddingClass: Record<Padding, string> = {
+  default: "py-[clamp(80px,12vw,140px)]",
+  large: "py-[clamp(96px,14vw,170px)]",
 };
 
+/** Sectie-ritme: hairline bovenaan, verticale clamp-padding, horizontale gutter. */
 export function Section({
   id,
-  variant = "base",
+  variant = "deep",
+  padding = "default",
   className,
-  style,
   children,
 }: {
   id?: string;
   variant?: Variant;
+  padding?: Padding;
   className?: string;
-  style?: React.CSSProperties;
   children: ReactNode;
 }) {
   return (
     <section
       id={id}
-      style={style}
       className={cn(
-        "relative z-[1] py-[clamp(72px,11vw,124px)]",
+        "relative border-t border-line px-[clamp(20px,5vw,64px)]",
+        paddingClass[padding],
         variantClass[variant],
         className,
       )}
