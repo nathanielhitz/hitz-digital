@@ -34,7 +34,7 @@ export default function VoorwaardenPage() {
             <ul>
               <li>Een website begint met een gratis demo; pas daarna maken we prijsafspraken.</li>
               <li>Je website en je domein staan op jouw naam. Ze zijn en blijven van jou.</li>
-              <li>Hosting en onderhoud betaal je per maand en zeg je per maand op.</li>
+              <li>Hosting en onderhoud betaal je per maand of per jaar, en zeg je per maand op.</li>
               <li>Een kleine wijziging is iets wat in een kwartier klaar is; ongebruikte tijd vervalt.</li>
               <li>Hulp die niet lukt, betaal je niet. Voor APK&apos;s, uitleg en advies geldt dat niet.</li>
               <li>Alle prijzen op de site zijn incl. 21% btw.</li>
@@ -83,9 +83,11 @@ export default function VoorwaardenPage() {
             </p>
             <h3>Betalen</h3>
             <p>
-              Je betaalt maandelijks vooraf, via automatische incasso (SEPA-machtiging) of iDEAL. Je krijgt elke maand
-              een factuur. Blijft betaling na een herinnering uit, dan mag ik de site tijdelijk offline zetten tot er
-              betaald is; je gegevens en je site blijven bewaard.
+              Je betaalt vooraf, per maand of per jaar; per jaar heeft mijn voorkeur, dat scheelt ons beiden
+              administratie. Betalen gaat via automatische incasso (SEPA-machtiging) of iDEAL, en je krijgt altijd een
+              factuur. Betaal je per jaar en zeg je tussentijds op, dan krijg je de resterende hele maanden terug.
+              Blijft betaling na een herinnering uit, dan mag ik de site tijdelijk offline zetten tot er betaald is; je
+              gegevens en je site blijven bewaard.
             </p>
             <h3>Opzeggen</h3>
             <p>

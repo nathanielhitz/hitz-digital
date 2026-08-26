@@ -180,7 +180,7 @@ export const hostingFaq = [
     a: "Ja. Ook als ik de site niet gebouwd heb, kan ik hosting, domein en mail overnemen. Ik kijk dan eerst even mee of de site technisch gezond is.",
   },
   {
-    q: "Krijg ik een factuur met btw?",
-    a: "Ja, elke maand een nette factuur met btw. Je betaalt via automatische incasso of iDEAL. Alle prijzen op deze pagina zijn incl. 21% btw.",
+    q: "Betaal ik per maand of per jaar?",
+    a: "Wat jij prettig vindt. Per jaar heeft mijn voorkeur: één factuur, klaar. Zeg je tussentijds op, dan krijg je de resterende hele maanden terug. Je betaalt via automatische incasso of iDEAL en krijgt altijd een nette factuur met btw. Alle prijzen zijn incl. 21% btw.",
   },
 ];

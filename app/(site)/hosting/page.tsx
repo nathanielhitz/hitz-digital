@@ -89,8 +89,8 @@ export default function HostingPage() {
             <Eyebrow>Pakketten</Eyebrow>
             <SectionTitle className="mb-4 max-w-[720px]">Drie pakketten, één maandbedrag.</SectionTitle>
             <p className="mb-[54px] max-w-[52ch] text-[16px] leading-[1.65] text-muted">
-              Alle prijzen incl. 21% btw en maandelijks opzegbaar. Een zakelijke mailbox op je eigen domein kan bij elk
-              pakket voor {euro(mailbox.monthly)} per maand extra.
+              Alle prijzen incl. 21% btw en maandelijks opzegbaar. Betalen per maand of per jaar, wat jij prettig vindt.
+              Een zakelijke mailbox op je eigen domein kan bij elk pakket voor {euro(mailbox.monthly)} per maand extra.
             </p>
           </Reveal>
           <div className="grid grid-cols-1 gap-[18px] min-[901px]:grid-cols-3">

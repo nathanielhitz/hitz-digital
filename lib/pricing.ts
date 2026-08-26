@@ -81,6 +81,7 @@ export const pricing = {
 
   terms: {
     cancellation: "Maandelijks opzegbaar. Je domein loopt door tot het einde van het registratiejaar.",
+    billing: "Betalen per maand of per jaar (voorkeur: per jaar). Bij jaarbetaling en tussentijds opzeggen gaan de resterende hele maanden retour.",
   },
 } as const;
 
