@@ -25,11 +25,14 @@ export const site = {
 
 /** ProfessionalService / lokale-dienstverlener schema; alleen gevulde velden worden meegestuurd. */
 export function professionalServiceSchema() {
+  const area = site.serviceArea.length
+    ? site.serviceArea.map((name) => ({ "@type": "Place", name }))
+    : undefined;
   const schema: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
     name: site.name,
-    description: "Moderne websites en redesigns voor kleine lokale ondernemers in de Hoeksche Waard.",
+    description: "Websites, hosting en computerhulp voor ondernemers in de Hoeksche Waard. Eén aanspreekpunt, gevestigd in Puttershoek.",
     url: site.url,
     email: site.email,
     image: `${site.url}/og/cover.svg`,
@@ -43,21 +46,26 @@ export function professionalServiceSchema() {
         itemOffered: {
           "@type": "Service",
           name: "Website laten maken",
-          description: "Nieuwe, moderne website voor kleine ondernemers zoals cafés, restaurants, schilders en installateurs.",
-          areaServed: site.serviceArea.length
-            ? site.serviceArea.map((name) => ({ "@type": "Place", name }))
-            : undefined,
+          description: "Nieuwe website of vernieuwing van een bestaande site voor ondernemers zoals cafés, schilders, installateurs en hoveniers. Eerst een gratis demo, dan pas beslissen.",
+          areaServed: area,
         },
       },
       {
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
-          name: "Website redesign",
-          description: "Redesign van een bestaande website: professioneler, mobielvriendelijk en zelf te beheren.",
-          areaServed: site.serviceArea.length
-            ? site.serviceArea.map((name) => ({ "@type": "Place", name }))
-            : undefined,
+          name: "Hosting, domein en onderhoud",
+          description: "Domein, hosting, zakelijke e-mail en kleine wijzigingen in één maandbedrag. Maandelijks opzegbaar.",
+          areaServed: area,
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Computer- en websitehulp",
+          description: "Hulp bij computer, e-mail, domein, netwerk of website. Op afstand of aan huis in de Hoeksche Waard. Niet opgelost, dan niet betalen.",
+          areaServed: area,
         },
       },
     ],

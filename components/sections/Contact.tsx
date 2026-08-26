@@ -4,7 +4,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Reveal } from "@/components/ui/Reveal";
 import { AanvraagForm } from "@/components/sections/AanvraagForm";
-import { site } from "@/lib/site";
+import { whatsapp, tel, telDisplay } from "@/lib/content";
 
 export function Contact() {
   return (
@@ -16,32 +16,26 @@ export function Contact() {
       <Container>
         <Reveal className="relative mx-auto max-w-[780px] text-center">
           <Eyebrow bar={false} className="mb-6">
-            Eerst zien. Dan beslissen.
+            Contact
           </Eyebrow>
           <SectionTitle size="lg" className="mb-[22px]">
-            Benieuwd hoe jouw website eruit kan zien?
+            Waar kan ik je mee helpen?
           </SectionTitle>
           <p className="mx-auto mb-[38px] max-w-[520px] text-[17px] leading-[1.6] text-muted">
-            Stuur je huidige website of vertel kort wat je zoekt. Ik kijk mee en maak vrijblijvend een concrete
-            preview.
+            Kies waarvoor je me nodig hebt en vertel kort wat er speelt. Ik reageer binnen 1 werkdag, vrijblijvend.
           </p>
           <AanvraagForm />
           <div className="mt-6 text-center text-[13.5px] leading-[1.9] text-faint">
             Liever direct?{" "}
-            <a
-              href={`https://wa.me/${site.whatsapp}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-muted underline"
-            >
+            <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="text-muted underline">
               WhatsApp
             </a>{" "}
             ·{" "}
-            <a href={`tel:${site.phone}`} className="text-muted underline">
-              Bel +31 6 3741 9404
+            <a href={tel} className="text-muted underline">
+              Bel {telDisplay}
             </a>
             <br />
-            Reactie binnen 1 werkdag · Vrijblijvend ·{" "}
+            Bij een storing of spoed: bel. ·{" "}
             <a href="/privacy" className="text-muted underline">
               Privacybeleid
             </a>

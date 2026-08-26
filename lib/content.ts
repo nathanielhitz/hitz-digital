@@ -6,28 +6,33 @@ export const contactEmail = site.email;
 const mailBody = [
   "Hoi Nathaniel,",
   "",
+  "- Waarvoor ik je nodig heb (website / hosting / hulp): ",
   "- Mijn huidige website (of: ik heb er nog geen): ",
   "- Wat voor bedrijf ik heb en waar: ",
-  "- Wat ik zoek: ",
   "",
   "Groet,",
 ].join("\n");
 export const mailto = `mailto:${site.email}?subject=${encodeURIComponent(
-  "Aanvraag preview via hitzdigital.nl",
+  "Aanvraag via hitzdigital.nl",
 )}&body=${encodeURIComponent(mailBody)}`;
 
-/** Navigatie (fase 1: anker-secties; fase 3–5: routes). */
+export const whatsapp = `https://wa.me/${site.whatsapp}`;
+export const tel = `tel:${site.phone}`;
+export const telDisplay = "+31 6 3741 9404";
+
+/** Navigatie (fase 2: anker-secties; fase 3–5 worden dit routes). */
 export const nav = {
   links: [
-    { label: "Werk", href: "#werk" },
-    { label: "Diensten", href: "#diensten" },
+    { label: "Diensten", href: "#pijlers" },
     { label: "Werkwijze", href: "#werkwijze" },
+    { label: "Werk", href: "#werk" },
     { label: "Over", href: "#over" },
   ],
 };
 
 /** Eén label per intentie. */
 export const cta = {
-  explore: { label: "Bekijk wat mogelijk is", href: "#werk" },
-  send: { label: "Stuur je website", href: mailto },
+  primary: { label: "Bekijk wat ik doe", href: "#pijlers" },
+  contact: { label: "Neem contact op", href: "#contact" },
+  demo: { label: "Gratis demo", href: "#contact?voor=website" },
 };

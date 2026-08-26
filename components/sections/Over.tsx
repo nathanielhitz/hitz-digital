@@ -21,7 +21,7 @@ export function Over() {
           </div>
           <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-line">
             <Image
-              src="/images/Nathaniel.jpg"
+              src="/images/nathaniel.webp"
               alt="Nathaniel, oprichter van HitzDigital"
               fill
               sizes="(max-width: 900px) 100vw, 45vw"

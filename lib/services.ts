@@ -1,35 +1,48 @@
 import { pricing, euro } from "./pricing";
 
-/** Sectie "Diensten" (fase 1: huidige copy; fase 2: drie pijlers). */
-export const diensten = [
-  {
-    n: "01",
-    title: "Nieuwe website",
-    body: "Nog geen goede site? Ik bouw een moderne website die strak, snel en duidelijk is. Een site die vertrouwen wekt en past bij je bedrijf.",
-  },
-  {
-    n: "02",
-    title: "Redesign",
-    body: "Is je huidige website verouderd? Ik geef hem een moderne uitstraling en betere structuur, zonder dat je helemaal opnieuw hoeft te beginnen.",
-  },
-  {
-    n: "03",
-    title: "Mobielvriendelijk & snel",
-    body: "Elke website werkt vlekkeloos op mobiel en laadt snel. Ook technisch SEO-klaar, zodat je vindbaar bent in Google.",
-  },
-  {
-    n: "04",
-    title: "Zelf te beheren",
-    body: "Je kunt je site zelf eenvoudig bijhouden via een overzichtelijk CMS. Geen technische kennis nodig.",
-  },
-];
+const onderhoud = pricing.hosting.find((h) => h.id === "onderhoud")!;
+const online = pricing.hosting.find((h) => h.id === "online")!;
 
-/** Sectie "Werkwijze": eerst zien, dan beslissen. */
+/** De drie pijlers (homepage #pijlers; fase 3–5 krijgt elke pijler een eigen route). */
+export const pijlers = [
+  {
+    id: "websites",
+    n: "01",
+    title: "Websites",
+    promise: "Eerst zien. Dan beslissen.",
+    body: "Een moderne site die past bij je bedrijf. Je ziet eerst een echte demo van je eigen homepage, daarna beslis je pas.",
+    price: `Vanaf ${euro(pricing.website.from)}`,
+    href: "/websites",
+    live: false,
+  },
+  {
+    id: "hosting",
+    n: "02",
+    title: "Hosting & domeinen",
+    promise: "Online blijven, zonder gedoe.",
+    body: "Domein, hosting, e-mail en een kleine wijziging per maand in één bedrag. Maandelijks opzegbaar.",
+    price: `Vanaf ${euro(online.monthly)} per maand`,
+    href: "/hosting",
+    live: false,
+  },
+  {
+    id: "hulp",
+    n: "03",
+    title: "Hulp",
+    promise: "Vastgelopen? Ik kijk direct mee.",
+    body: "Computer, e-mail, domein of website: ik los het op en leg het uit. Meestal op afstand, en anders kom ik langs.",
+    price: `${euro(pricing.hulp.quarter)} per kwartier · ${pricing.hulp.guarantee.line}`,
+    href: "/hulp",
+    live: false,
+  },
+] as const;
+
+/** Sectie "Werkwijze": eerst zien, dan beslissen (verhuist in fase 3 naar /websites). */
 export const werkwijze = [
-  { n: "01", title: "Stuur je site of vertel je idee", body: "Een mailtje, link of korte uitleg is genoeg." },
+  { n: "01", title: "Stuur je site of vertel je idee", body: "Een appje, link of korte uitleg is genoeg." },
   {
     n: "02",
-    title: "Ik maak een concrete preview",
+    title: "Ik maak een concrete demo",
     body: "Je krijgt een echte demo-site te zien, met vooral je nieuwe homepage. Geen praatje of PowerPoint, maar iets wat je zelf kunt bekijken.",
   },
   {
@@ -39,36 +52,38 @@ export const werkwijze = [
   },
 ];
 
-const onderhoud = pricing.hosting.find((h) => h.id === "onderhoud")!;
-const mailbox = pricing.addons[0];
-
-/** Sectie "Zo werkt het": aanbod-transparantie; bedragen uit lib/pricing.ts. */
-export const zoWerktHet = [
-  {
-    title: `Een prijs vanaf ${euro(pricing.website.from)}`,
-    body: `Een complete website vanaf ${euro(pricing.website.from)}, incl. btw. ${pricing.website.note}`,
-  },
+/** Sectie "Zo werk ik": vier afspraken die voor alles gelden. */
+export const zoWerkIk = [
   {
     title: "Van jou, en dat blijft zo",
-    body: "Je website én domein zet ik op jouw naam. Geen gijzeling, geen vastzitten aan mij.",
+    body: "Je website en domein staan op jouw naam. Geen gijzeling, geen vastzitten aan mij.",
   },
   {
-    title: "Hosting & onderhoud",
-    body: `${euro(onderhoud.monthly)} per maand, incl. je .nl-domein en één kleine wijziging per maand. Maandelijks opzegbaar. Zakelijke mailbox erbij voor ${euro(mailbox.monthly)} per maand. Alle prijzen incl. btw.`,
+    title: "Duidelijke prijs vooraf",
+    body: `Website vanaf ${euro(pricing.website.from)}, hosting vanaf ${euro(online.monthly)} per maand, onderhoud ${euro(onderhoud.monthly)} per maand, hulp ${euro(pricing.hulp.quarter)} per kwartier. Alles incl. btw, geen kleine lettertjes.`,
   },
   {
-    title: "Teksten & foto's",
-    body: "Teksten mag je zelf aanleveren, maar ik schrijf ze ook. Foto's lever je aan, of ik zet er passende beelden op.",
+    title: "Maandelijks opzegbaar",
+    body: "Ook de hosting. Je domein loopt gewoon door tot het einde van het jaar waarvoor het geregistreerd is.",
   },
   {
-    title: "Korte lijnen",
-    body: "Later iets aanpassen? Eén mailtje of appje. Geen accountmanager, geen ticketsysteem.",
+    title: "Eén appje is genoeg",
+    body: "Geen accountmanager, geen ticketsysteem. Je appt of belt mij, en ik reageer zelf.",
   },
 ];
 
 /** Sectie "Over". */
 export const over = {
   title: "Eén persoon. Korte lijnen. Geen gedoe.",
-  body: "Ik ben Nathaniel. Ik bouw HitzDigital in mijn eentje voor ondernemers in de Hoeksche Waard, van cafés tot vakbedrijven die online net zo verzorgd willen overkomen als in hun werk. Geen landelijk bureau met sjablonen, maar één iemand uit de regio die echte lokale bedrijven online zet. Geen accountmanager, geen tussenlagen: je mailt of appt mij, en ik reageer zelf. Eerst een concrete preview, dan pas beslis je.",
-  facts: ["Persoonlijk contact", "Duidelijke afspraken", "Eerst zien, dan beslissen"],
+  body: "Ik ben Nathaniel, uit Puttershoek. Ik bouw HitzDigital in mijn eentje voor ondernemers in de Hoeksche Waard. Ik maak je website, zorg dat hij online blijft en kijk direct mee als je computer of mail niet meewerkt. Geen landelijk bureau met sjablonen, maar iemand uit de regio die je gewoon kunt appen.",
+  facts: ["Eén aanspreekpunt", "Duidelijke afspraken", "Uit de Hoeksche Waard"],
 };
+
+/** Keuzes in het aanvraagformulier; bepalen het submit-label en de mail. */
+export const aanvraagKeuzes = [
+  { id: "website", label: "Nieuwe website", submit: "Vraag je gratis demo aan" },
+  { id: "hosting", label: "Hosting & domein", submit: "Vraag hosting aan" },
+  { id: "hulp", label: "Ik zit vast", submit: "Vraag hulp aan" },
+  { id: "anders", label: "Iets anders", submit: "Verstuur" },
+] as const;
+export type AanvraagKeuze = (typeof aanvraagKeuzes)[number]["id"];

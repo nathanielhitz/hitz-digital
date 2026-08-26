@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { MailtoLink } from "@/components/ui/MailtoLink";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { cn } from "@/lib/cn";
 import { nav, cta } from "@/lib/content";
@@ -89,12 +88,12 @@ export function Nav() {
                 {l.label}
               </a>
             ))}
-            <MailtoLink
-              href={cta.send.href}
+            <a
+              href={cta.demo.href}
               className="inline-flex items-center gap-2 rounded-full border border-line px-[17px] py-[9px] font-medium text-ink transition-[border-color,background-color] duration-[250ms] hover:border-accent/55 hover:bg-accent/12"
             >
-              {cta.send.label}
-            </MailtoLink>
+              {cta.demo.label}
+            </a>
           </div>
 
           <button
@@ -152,8 +151,8 @@ export function Nav() {
             </a>
           ))}
         </div>
-        <Button href={cta.send.href} className="w-full py-4 text-[16px]" onClick={close}>
-          {cta.send.label}
+        <Button href={cta.demo.href} className="w-full py-4 text-[16px]" onClick={close}>
+          {cta.demo.label}
         </Button>
       </div>
     </>

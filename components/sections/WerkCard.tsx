@@ -24,12 +24,16 @@ export function WerkCard({ item }: { item: WorkItem }) {
           fill
           sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 366px"
           className="object-cover object-top"
-          unoptimized={item.src.endsWith(".gif")}
         />
         <div
           className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(7,7,6,0.65)_0%,transparent_55%)]"
           aria-hidden
         />
+        {item.tag && (
+          <span className="absolute left-3 top-3 rounded-full border border-line bg-[rgba(7,7,6,0.55)] px-[10px] py-[4px] text-[10.5px] uppercase tracking-[0.12em] text-muted backdrop-blur-[6px]">
+            {item.tag}
+          </span>
+        )}
       </div>
       <div className="mt-[14px] flex items-center justify-between gap-3">
         <span className="font-display text-[16px] font-semibold">{item.title}</span>

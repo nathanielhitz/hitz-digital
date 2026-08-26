@@ -16,7 +16,7 @@ import { track } from "@vercel/analytics";
  */
 const HERO_HTML = `
   <!-- scroll experience: laptop intro (pinned) -->
-  <div class="hd-exp" style="position:relative;height:360vh">
+  <div class="hd-exp" style="position:relative;height:240vh">
     <div class="hd-sticky" style="position:sticky;top:0;height:100vh;overflow:hidden;background:radial-gradient(120% 90% at 70% 24%,#13120d 0%,#0b0a08 48%,#070706 100%)">
 
       <div class="hd-glow" style="position:absolute;right:6%;top:8%;width:46vw;height:46vw;max-width:760px;max-height:760px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--accent) 15%,transparent) 0%,color-mix(in srgb,var(--accent) 4%,transparent) 40%,transparent 70%);filter:blur(32px);pointer-events:none"></div>
@@ -28,20 +28,20 @@ const HERO_HTML = `
       <div class="hd-copy" data-screen-label="Hero copy" style="position:absolute;left:clamp(20px,5vw,64px);top:50%;z-index:5;max-width:540px;transform:translateY(-50%);will-change:transform,opacity">
         <div class="hd-kicker" style="display:inline-flex;align-items:center;gap:10px;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:26px">
           <span style="width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 9px color-mix(in srgb,var(--accent) 60%,transparent)"></span>
-          Eerst zien. Dan beslissen.
+          Hoeksche Waard · websites, hosting en hulp
         </div>
         <h1 class="hd-h1" style="font-family:'General Sans',sans-serif;font-weight:600;font-size:clamp(38px,5vw,66px);line-height:1.02;letter-spacing:-0.035em;margin-bottom:24px">
-          <span style="font-weight:300">Websites die </span><em style="font-style:normal;font-weight:600;color:var(--accent)">professioneler</em><span style="font-weight:300"> voelen. Voor de Hoeksche Waard.</span>
+          <span style="font-weight:300">Alles rond je </span><em style="font-style:normal;font-weight:600;color:var(--accent)">website</em><span style="font-weight:300">. Eén aanspreekpunt.</span>
         </h1>
-        <p class="hd-sub" style="font-size:clamp(16px,1.25vw,18.5px);line-height:1.6;color:var(--muted);max-width:470px;margin-bottom:36px">Moderne websites en redesigns voor ondernemers in de Hoeksche Waard. Je ziet eerst een concrete preview, daarna beslis je pas.</p>
+        <p class="hd-sub" style="font-size:clamp(16px,1.25vw,18.5px);line-height:1.6;color:var(--muted);max-width:470px;margin-bottom:36px">Websites, hosting en computerhulp voor ondernemers in de Hoeksche Waard. Ik bouw je site, houd hem online en kijk direct mee als iets vastloopt. Eén persoon, korte lijnen.</p>
         <div class="hd-cta" style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:26px">
-          <a href="#werk" class="hd-btn-primary" style="display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:100px;background:linear-gradient(135deg,var(--accent-br) 0%,var(--accent) 48%,var(--accent-dp) 100%);color:#07140e;text-decoration:none;font-weight:600;font-size:15px;box-shadow:0 12px 32px -16px rgba(0,0,0,0.7),0 6px 20px -12px color-mix(in srgb,var(--accent) 36%,transparent),inset 0 1px 0 rgba(255,255,255,0.16);transition:transform .25s,box-shadow .25s,filter .25s" style-hover="transform:translateY(-2px);box-shadow:0 16px 40px -16px rgba(0,0,0,0.7),0 10px 26px -12px color-mix(in srgb,var(--accent) 48%,transparent),inset 0 1px 0 rgba(255,255,255,0.22);filter:brightness(1.04)" style-active="transform:translateY(0);filter:brightness(0.98)">Bekijk wat mogelijk is
+          <a href="#pijlers" class="hd-btn-primary" style="display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:100px;background:linear-gradient(135deg,var(--accent-br) 0%,var(--accent) 48%,var(--accent-dp) 100%);color:#07140e;text-decoration:none;font-weight:600;font-size:15px;box-shadow:0 12px 32px -16px rgba(0,0,0,0.7),0 6px 20px -12px color-mix(in srgb,var(--accent) 36%,transparent),inset 0 1px 0 rgba(255,255,255,0.16);transition:transform .25s,box-shadow .25s,filter .25s" style-hover="transform:translateY(-2px);box-shadow:0 16px 40px -16px rgba(0,0,0,0.7),0 10px 26px -12px color-mix(in srgb,var(--accent) 48%,transparent),inset 0 1px 0 rgba(255,255,255,0.22);filter:brightness(1.04)" style-active="transform:translateY(0);filter:brightness(0.98)">Bekijk wat ik doe
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
           </a>
-          <a href="mailto:info@hitzdigital.nl?subject=Aanvraag%20preview%20via%20hitzdigital.nl&amp;body=Hoi%20Nathaniel%2C%0A%0A-%20Mijn%20huidige%20website%20%28of%3A%20ik%20heb%20er%20nog%20geen%29%3A%20%0A-%20Wat%20voor%20bedrijf%20ik%20heb%20en%20waar%3A%20%0A-%20Wat%20ik%20zoek%3A%20%0A%0AGroet%2C" class="hd-btn-ghost" style="display:inline-flex;align-items:center;gap:9px;padding:15px 24px;border-radius:100px;border:1px solid var(--line);color:var(--text);text-decoration:none;font-weight:500;font-size:15px;transition:border-color .25s,background .25s,transform .25s" style-hover="border-color:color-mix(in srgb,var(--accent) 55%,transparent);background:color-mix(in srgb,var(--accent) 9%,transparent);transform:translateY(-2px)" style-active="transform:translateY(0)">Stuur je website</a>
+          <a href="#contact" class="hd-btn-ghost" style="display:inline-flex;align-items:center;gap:9px;padding:15px 24px;border-radius:100px;border:1px solid var(--line);color:var(--text);text-decoration:none;font-weight:500;font-size:15px;transition:border-color .25s,background .25s,transform .25s" style-hover="border-color:color-mix(in srgb,var(--accent) 55%,transparent);background:color-mix(in srgb,var(--accent) 9%,transparent);transform:translateY(-2px)" style-active="transform:translateY(0)">Neem contact op</a>
         </div>
         <div class="hd-trust" style="display:flex;align-items:center;gap:16px;font-size:13.5px;color:var(--faint)">
-          <span>Gratis preview</span><span style="opacity:.5">·</span><span>Eén vast aanspreekpunt</span><span style="opacity:.5">·</span><span>Gemaakt in de Hoeksche Waard</span>
+          <span>Gratis demo vooraf</span><span style="opacity:.5">·</span><span>Maandelijks opzegbaar</span><span style="opacity:.5">·</span><span>Uit de Hoeksche Waard</span>
         </div>
       </div>
 
@@ -420,7 +420,7 @@ function initHero(root: HTMLElement): () => void {
     node.addEventListener(ev, fn);
     trackers.push(() => node.removeEventListener(ev, fn));
   };
-  trackOn(q(".hd-btn-primary"), "click", () => { try { track("cta_bekijk_werk"); } catch {} });
+  trackOn(q(".hd-btn-primary"), "click", () => { try { track("cta_hero_primary"); } catch {} });
   qa('a[href^="mailto:"]').forEach((a: any) =>
     trackOn(a, "click", () => { try { track("mailto_click", { label: (a.textContent || "").trim().slice(0, 40) }); } catch {} }),
   );

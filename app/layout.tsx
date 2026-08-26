@@ -11,9 +11,9 @@ const body = Inter({
   display: "swap",
 });
 
-const title = "Website laten maken in de Hoeksche Waard | HitzDigital";
+const title = "Websites, hosting en computerhulp in de Hoeksche Waard | HitzDigital";
 const description =
-  "Moderne websites en redesigns voor kleine ondernemers in de Hoeksche Waard en Puttershoek. Je ziet eerst een concrete preview, daarna beslis je pas.";
+  "Ik bouw websites voor ondernemers in de Hoeksche Waard, houd ze online en help als je computer of site vastloopt. Eén persoon, korte lijnen. Website vanaf €250, hosting vanaf €5 per maand, alles incl. btw.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
