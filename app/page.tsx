@@ -2,6 +2,8 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { track } from '@vercel/analytics'
+import { site } from '@/lib/site'
 
 const BODY_HTML = `
 
@@ -14,7 +16,7 @@ const BODY_HTML = `
         <a href="#diensten" style="color:inherit;text-decoration:none" style-hover="color:var(--text)">Diensten</a>
         <a href="#werkwijze" style="color:inherit;text-decoration:none" style-hover="color:var(--text)">Werkwijze</a>
         <a href="#over" style="color:inherit;text-decoration:none" style-hover="color:var(--text)">Over</a>
-        <a href="mailto:info@hitzdigital.nl" style="display:inline-flex;align-items:center;gap:8px;padding:9px 17px;border-radius:100px;border:1px solid var(--line);color:var(--text);text-decoration:none;font-weight:500;transition:border-color .25s,background .25s" style-hover="border-color:color-mix(in srgb,var(--accent) 55%,transparent);background:color-mix(in srgb,var(--accent) 12%,transparent)">Stuur je website</a>
+        <a href="mailto:info@hitzdigital.nl?subject=Aanvraag%20preview%20via%20hitzdigital.nl&amp;body=Hoi%20Nathaniel%2C%0A%0A-%20Mijn%20huidige%20website%20%28of%3A%20ik%20heb%20er%20nog%20geen%29%3A%20%0A-%20Wat%20voor%20bedrijf%20ik%20heb%20en%20waar%3A%20%0A-%20Wat%20ik%20zoek%3A%20%0A%0AGroet%2C" style="display:inline-flex;align-items:center;gap:8px;padding:9px 17px;border-radius:100px;border:1px solid var(--line);color:var(--text);text-decoration:none;font-weight:500;transition:border-color .25s,background .25s" style-hover="border-color:color-mix(in srgb,var(--accent) 55%,transparent);background:color-mix(in srgb,var(--accent) 12%,transparent)">Stuur je website</a>
       </div>
       <button class="hd-burger" aria-label="Menu openen" aria-expanded="false" style="display:none;flex-direction:column;gap:5px;width:44px;height:44px;align-items:center;justify-content:center;background:none;border:0;cursor:pointer;padding:0">
         <span style="display:block;width:22px;height:2px;background:var(--text);border-radius:2px"></span>
@@ -32,7 +34,7 @@ const BODY_HTML = `
         <a class="hd-menu-link" href="#werkwijze" style="font-family:'General Sans',sans-serif;font-weight:600;font-size:clamp(30px,9vw,42px);letter-spacing:-0.025em;color:var(--text);text-decoration:none;padding:10px 0" style-hover="color:var(--accent)">Werkwijze</a>
         <a class="hd-menu-link" href="#over" style="font-family:'General Sans',sans-serif;font-weight:600;font-size:clamp(30px,9vw,42px);letter-spacing:-0.025em;color:var(--text);text-decoration:none;padding:10px 0" style-hover="color:var(--accent)">Over</a>
       </div>
-      <a class="hd-menu-link" href="mailto:info@hitzdigital.nl" style="display:flex;align-items:center;justify-content:center;gap:9px;padding:16px 26px;border-radius:100px;background:linear-gradient(135deg,var(--accent-br) 0%,var(--accent) 48%,var(--accent-dp) 100%);color:#07140e;text-decoration:none;font-weight:600;font-size:16px">Stuur je website</a>
+      <a class="hd-menu-link" href="mailto:info@hitzdigital.nl?subject=Aanvraag%20preview%20via%20hitzdigital.nl&amp;body=Hoi%20Nathaniel%2C%0A%0A-%20Mijn%20huidige%20website%20%28of%3A%20ik%20heb%20er%20nog%20geen%29%3A%20%0A-%20Wat%20voor%20bedrijf%20ik%20heb%20en%20waar%3A%20%0A-%20Wat%20ik%20zoek%3A%20%0A%0AGroet%2C" style="display:flex;align-items:center;justify-content:center;gap:9px;padding:16px 26px;border-radius:100px;background:linear-gradient(135deg,var(--accent-br) 0%,var(--accent) 48%,var(--accent-dp) 100%);color:#07140e;text-decoration:none;font-weight:600;font-size:16px">Stuur je website</a>
     </div>
   </nav>
 
@@ -52,17 +54,17 @@ const BODY_HTML = `
           Eerst zien. Dan beslissen.
         </div>
         <h1 class="hd-h1" style="font-family:'General Sans',sans-serif;font-weight:600;font-size:clamp(38px,5vw,66px);line-height:1.02;letter-spacing:-0.035em;margin-bottom:24px">
-          <span style="font-weight:300">Websites die </span><em style="font-style:normal;font-weight:600;color:var(--accent)">professioneler</em><span style="font-weight:300"> voelen.</span>
+          <span style="font-weight:300">Websites die </span><em style="font-style:normal;font-weight:600;color:var(--accent)">professioneler</em><span style="font-weight:300"> voelen — voor de Hoeksche Waard.</span>
         </h1>
-        <p class="hd-sub" style="font-size:clamp(16px,1.25vw,18.5px);line-height:1.6;color:var(--muted);max-width:470px;margin-bottom:36px">Moderne websites en redesigns voor ondernemers. Je ziet eerst een concrete preview, daarna beslis je pas.</p>
+        <p class="hd-sub" style="font-size:clamp(16px,1.25vw,18.5px);line-height:1.6;color:var(--muted);max-width:470px;margin-bottom:36px">Moderne websites en redesigns voor ondernemers in de Hoeksche Waard. Je ziet eerst een concrete preview, daarna beslis je pas.</p>
         <div class="hd-cta" style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:26px">
-          <a href="#diensten" class="hd-btn-primary" style="display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:100px;background:linear-gradient(135deg,var(--accent-br) 0%,var(--accent) 48%,var(--accent-dp) 100%);color:#07140e;text-decoration:none;font-weight:600;font-size:15px;box-shadow:0 12px 32px -16px rgba(0,0,0,0.7),0 6px 20px -12px color-mix(in srgb,var(--accent) 36%,transparent),inset 0 1px 0 rgba(255,255,255,0.16);transition:transform .25s,box-shadow .25s,filter .25s" style-hover="transform:translateY(-2px);box-shadow:0 16px 40px -16px rgba(0,0,0,0.7),0 10px 26px -12px color-mix(in srgb,var(--accent) 48%,transparent),inset 0 1px 0 rgba(255,255,255,0.22);filter:brightness(1.04)" style-active="transform:translateY(0);filter:brightness(0.98)">Bekijk wat mogelijk is
+          <a href="#werk" class="hd-btn-primary" style="display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:100px;background:linear-gradient(135deg,var(--accent-br) 0%,var(--accent) 48%,var(--accent-dp) 100%);color:#07140e;text-decoration:none;font-weight:600;font-size:15px;box-shadow:0 12px 32px -16px rgba(0,0,0,0.7),0 6px 20px -12px color-mix(in srgb,var(--accent) 36%,transparent),inset 0 1px 0 rgba(255,255,255,0.16);transition:transform .25s,box-shadow .25s,filter .25s" style-hover="transform:translateY(-2px);box-shadow:0 16px 40px -16px rgba(0,0,0,0.7),0 10px 26px -12px color-mix(in srgb,var(--accent) 48%,transparent),inset 0 1px 0 rgba(255,255,255,0.22);filter:brightness(1.04)" style-active="transform:translateY(0);filter:brightness(0.98)">Bekijk wat mogelijk is
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
           </a>
-          <a href="mailto:info@hitzdigital.nl" class="hd-btn-ghost" style="display:inline-flex;align-items:center;gap:9px;padding:15px 24px;border-radius:100px;border:1px solid var(--line);color:var(--text);text-decoration:none;font-weight:500;font-size:15px;transition:border-color .25s,background .25s,transform .25s" style-hover="border-color:color-mix(in srgb,var(--accent) 55%,transparent);background:color-mix(in srgb,var(--accent) 9%,transparent);transform:translateY(-2px)" style-active="transform:translateY(0)">Stuur je website</a>
+          <a href="mailto:info@hitzdigital.nl?subject=Aanvraag%20preview%20via%20hitzdigital.nl&amp;body=Hoi%20Nathaniel%2C%0A%0A-%20Mijn%20huidige%20website%20%28of%3A%20ik%20heb%20er%20nog%20geen%29%3A%20%0A-%20Wat%20voor%20bedrijf%20ik%20heb%20en%20waar%3A%20%0A-%20Wat%20ik%20zoek%3A%20%0A%0AGroet%2C" class="hd-btn-ghost" style="display:inline-flex;align-items:center;gap:9px;padding:15px 24px;border-radius:100px;border:1px solid var(--line);color:var(--text);text-decoration:none;font-weight:500;font-size:15px;transition:border-color .25s,background .25s,transform .25s" style-hover="border-color:color-mix(in srgb,var(--accent) 55%,transparent);background:color-mix(in srgb,var(--accent) 9%,transparent);transform:translateY(-2px)" style-active="transform:translateY(0)">Stuur je website</a>
         </div>
         <div class="hd-trust" style="display:flex;align-items:center;gap:16px;font-size:13.5px;color:var(--faint)">
-          <span>Gratis preview</span><span style="opacity:.5">·</span><span>Geen verplichtingen</span><span style="opacity:.5">·</span><span>Persoonlijk contact</span>
+          <span>Gratis preview</span><span style="opacity:.5">·</span><span>Eén vast aanspreekpunt</span><span style="opacity:.5">·</span><span>Gemaakt in de Hoeksche Waard</span>
         </div>
       </div>
 
@@ -233,8 +235,23 @@ const BODY_HTML = `
         <h2 style="font-family:'General Sans',sans-serif;font-weight:600;font-size:clamp(28px,3.6vw,46px);line-height:1.06;letter-spacing:-0.03em;max-width:720px;margin-bottom:64px">In drie stappen naar een betere website.</h2>
         <div class="hd-steps" style="display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,4vw,56px);position:relative">
           <div><div style="display:flex;align-items:center;gap:14px;margin-bottom:18px"><span style="width:11px;height:11px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px color-mix(in srgb,var(--accent) 55%,transparent)"></span><span style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--faint)">01</span></div><div style="font-family:'General Sans',sans-serif;font-weight:600;font-size:20px;margin-bottom:10px">Stuur je site of vertel je idee</div><p style="font-size:15px;line-height:1.6;color:var(--muted);max-width:300px">Een mailtje, link of korte uitleg is genoeg.</p></div>
-          <div><div style="display:flex;align-items:center;gap:14px;margin-bottom:18px"><span style="width:11px;height:11px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px color-mix(in srgb,var(--accent) 55%,transparent)"></span><span style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--faint)">02</span></div><div style="font-family:'General Sans',sans-serif;font-weight:600;font-size:20px;margin-bottom:10px">Ik maak een concrete preview</div><p style="font-size:15px;line-height:1.6;color:var(--muted);max-width:300px">Je ziet hoe je nieuwe website of redesign eruit kan zien.</p></div>
-          <div><div style="display:flex;align-items:center;gap:14px;margin-bottom:18px"><span style="width:11px;height:11px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px color-mix(in srgb,var(--accent) 55%,transparent)"></span><span style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--faint)">03</span></div><div style="font-family:'General Sans',sans-serif;font-weight:600;font-size:20px;margin-bottom:10px">Dan pas beslis je</div><p style="font-size:15px;line-height:1.6;color:var(--muted);max-width:300px">Bevalt het? Dan werken we verder. Zo niet, dan zit je nergens aan vast.</p></div>
+          <div><div style="display:flex;align-items:center;gap:14px;margin-bottom:18px"><span style="width:11px;height:11px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px color-mix(in srgb,var(--accent) 55%,transparent)"></span><span style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--faint)">02</span></div><div style="font-family:'General Sans',sans-serif;font-weight:600;font-size:20px;margin-bottom:10px">Ik maak een concrete preview</div><p style="font-size:15px;line-height:1.6;color:var(--muted);max-width:300px">Je krijgt een echte demo-site te zien — met vooral je nieuwe homepage. Geen praatje of PowerPoint, maar iets wat je zelf kunt bekijken.</p></div>
+          <div><div style="display:flex;align-items:center;gap:14px;margin-bottom:18px"><span style="width:11px;height:11px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px color-mix(in srgb,var(--accent) 55%,transparent)"></span><span style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--faint)">03</span></div><div style="font-family:'General Sans',sans-serif;font-weight:600;font-size:20px;margin-bottom:10px">Dan pas beslis je</div><p style="font-size:15px;line-height:1.6;color:var(--muted);max-width:300px">Bevalt het? Dan werk ik het samen met jou uit tot een complete website. Zo niet? Dan zit je nergens aan vast — de demo blijft gratis.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Zo werkt het -->
+    <section id="zo-werkt-het" style="border-top:1px solid var(--line);padding:clamp(80px,12vw,140px) clamp(20px,5vw,64px)">
+      <div class="hd-reveal" style="max-width:1140px;margin:0 auto">
+        <div style="display:inline-flex;align-items:center;gap:10px;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:22px"><span style="width:22px;height:2px;background:var(--accent)"></span>Zo werkt het</div>
+        <h2 style="font-family:'General Sans',sans-serif;font-weight:600;font-size:clamp(28px,3.6vw,46px);line-height:1.06;letter-spacing:-0.03em;max-width:720px;margin-bottom:54px">Duidelijk vooraf. Geen verrassingen achteraf.</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:clamp(24px,4vw,40px)">
+          <div style="display:flex;gap:14px;align-items:flex-start"><span style="width:9px;height:9px;border-radius:50%;background:var(--accent);flex:none;margin-top:8px;box-shadow:0 0 10px color-mix(in srgb,var(--accent) 55%,transparent)"></span><div><div style="font-family:'General Sans',sans-serif;font-weight:600;font-size:17px;margin-bottom:6px">Een prijs vanaf €250</div><p style="font-size:14.5px;line-height:1.55;color:var(--muted)">Een complete website vanaf €250, incl. btw. De exacte prijs hoor je na de gratis demo. Tot dan zit je nergens aan vast.</p></div></div>
+          <div style="display:flex;gap:14px;align-items:flex-start"><span style="width:9px;height:9px;border-radius:50%;background:var(--accent);flex:none;margin-top:8px;box-shadow:0 0 10px color-mix(in srgb,var(--accent) 55%,transparent)"></span><div><div style="font-family:'General Sans',sans-serif;font-weight:600;font-size:17px;margin-bottom:6px">Van jou, en dat blijft zo</div><p style="font-size:14.5px;line-height:1.55;color:var(--muted)">Je website én domein zet ik op jouw naam. Geen gijzeling, geen vastzitten aan mij.</p></div></div>
+          <div style="display:flex;gap:14px;align-items:flex-start"><span style="width:9px;height:9px;border-radius:50%;background:var(--accent);flex:none;margin-top:8px;box-shadow:0 0 10px color-mix(in srgb,var(--accent) 55%,transparent)"></span><div><div style="font-family:'General Sans',sans-serif;font-weight:600;font-size:17px;margin-bottom:6px">Hosting &amp; onderhoud</div><p style="font-size:14.5px;line-height:1.55;color:var(--muted)">€15 per maand, incl. je .nl-domein en één kleine wijziging per maand. Maandelijks opzegbaar. Zakelijke mailbox erbij voor €5 per maand. Alle prijzen incl. btw.</p></div></div>
+          <div style="display:flex;gap:14px;align-items:flex-start"><span style="width:9px;height:9px;border-radius:50%;background:var(--accent);flex:none;margin-top:8px;box-shadow:0 0 10px color-mix(in srgb,var(--accent) 55%,transparent)"></span><div><div style="font-family:'General Sans',sans-serif;font-weight:600;font-size:17px;margin-bottom:6px">Teksten &amp; foto's</div><p style="font-size:14.5px;line-height:1.55;color:var(--muted)">Teksten mag je zelf aanleveren, maar ik schrijf ze ook. Foto's lever je aan, of ik zet er passende beelden op.</p></div></div>
+          <div style="display:flex;gap:14px;align-items:flex-start"><span style="width:9px;height:9px;border-radius:50%;background:var(--accent);flex:none;margin-top:8px;box-shadow:0 0 10px color-mix(in srgb,var(--accent) 55%,transparent)"></span><div><div style="font-family:'General Sans',sans-serif;font-weight:600;font-size:17px;margin-bottom:6px">Korte lijnen</div><p style="font-size:14.5px;line-height:1.55;color:var(--muted)">Later iets aanpassen? Eén mailtje of appje. Geen accountmanager, geen ticketsysteem.</p></div></div>
         </div>
       </div>
     </section>
@@ -266,7 +283,7 @@ const BODY_HTML = `
         <div>
           <div style="display:inline-flex;align-items:center;gap:10px;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:22px"><span style="width:22px;height:2px;background:var(--accent)"></span>Over HitzDigital</div>
           <h2 style="font-family:'General Sans',sans-serif;font-weight:600;font-size:clamp(26px,3.2vw,40px);line-height:1.1;letter-spacing:-0.03em;margin-bottom:24px">Eén persoon. Korte lijnen. Geen gedoe.</h2>
-          <p style="font-size:16px;line-height:1.65;color:var(--muted);max-width:480px;margin-bottom:18px">Ik ben Nathaniel, en ik bouw HitzDigital in mijn eentje voor ondernemers in de Hoeksche Waard — cafés, schilders, installateurs, iedereen die een website wil die klopt. Geen accountmanager, geen tussenlagen: je mailt mij, en ik reageer zelf. Eerst een concrete preview, dan pas beslis je.</p>
+          <p style="font-size:16px;line-height:1.65;color:var(--muted);max-width:480px;margin-bottom:18px">Ik ben Nathaniel. Ik bouw HitzDigital in mijn eentje voor ondernemers in de Hoeksche Waard, van cafés tot vakbedrijven die online net zo verzorgd willen overkomen als in hun werk. Geen landelijk bureau met sjablonen, maar één iemand uit de regio die echte lokale bedrijven online zet. Geen accountmanager, geen tussenlagen: je mailt of appt mij, en ik reageer zelf. Eerst een concrete preview, dan pas beslis je.</p>
           <div style="font-size:13.5px;color:var(--faint)">Persoonlijk contact · Duidelijke afspraken · Eerst zien, dan beslissen</div>
         </div>
         <div style="aspect-ratio:4/5;border-radius:16px;overflow:hidden;border:1px solid var(--line);position:relative"><img src="/images/Nathaniel.jpg" alt="Nathaniel, oprichter van HitzDigital" width="1122" height="1402" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block"><div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(7,7,6,0.5) 0%,transparent 45%);pointer-events:none"></div></div>
@@ -280,17 +297,26 @@ const BODY_HTML = `
         <div style="display:inline-flex;align-items:center;gap:10px;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:24px">Eerst zien. Dan beslissen.</div>
         <h2 style="font-family:'General Sans',sans-serif;font-weight:600;font-size:clamp(30px,4.4vw,56px);line-height:1.05;letter-spacing:-0.03em;margin-bottom:22px">Benieuwd hoe jouw website eruit kan zien?</h2>
         <p style="font-size:17px;line-height:1.6;color:var(--muted);max-width:520px;margin:0 auto 38px">Stuur je huidige website of vertel kort wat je zoekt. Ik kijk mee en maak vrijblijvend een concrete preview.</p>
-        <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
-          <a href="mailto:info@hitzdigital.nl" class="hd-btn-primary" style="display:inline-flex;align-items:center;gap:10px;padding:15px 28px;border-radius:100px;background:linear-gradient(135deg,var(--accent-br) 0%,var(--accent) 48%,var(--accent-dp) 100%);color:#07140e;text-decoration:none;font-weight:600;font-size:15px;box-shadow:0 12px 32px -16px rgba(0,0,0,0.7),0 6px 20px -12px color-mix(in srgb,var(--accent) 36%,transparent),inset 0 1px 0 rgba(255,255,255,0.16);transition:transform .25s,box-shadow .25s,filter .25s" style-hover="transform:translateY(-2px);filter:brightness(1.04)" style-active="transform:translateY(0)">Stuur je website</a>
-        </div>
-        <div style="margin-top:22px;font-size:13px;color:var(--faint)">Reactie binnen 1 werkdag · Vrijblijvend</div>
+        <form id="hd-form" novalidate style="max-width:520px;margin:0 auto;text-align:left;display:flex;flex-direction:column;gap:14px">
+          <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:0;height:0;opacity:0">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px">
+            <label style="display:flex;flex-direction:column;gap:7px;font-size:13px;color:var(--muted)">Naam<input name="naam" required autocomplete="name" style="background:rgba(244,241,236,0.04);border:1px solid var(--line);border-radius:10px;padding:12px 14px;color:var(--text);font-size:15px;font-family:inherit;width:100%;box-sizing:border-box"></label>
+            <label style="display:flex;flex-direction:column;gap:7px;font-size:13px;color:var(--muted)">E-mailadres<input type="email" name="email" required autocomplete="email" style="background:rgba(244,241,236,0.04);border:1px solid var(--line);border-radius:10px;padding:12px 14px;color:var(--text);font-size:15px;font-family:inherit;width:100%;box-sizing:border-box"></label>
+          </div>
+          <label style="display:flex;flex-direction:column;gap:7px;font-size:13px;color:var(--muted)">Je huidige website (of: ik heb er nog geen)<input name="website" placeholder="https://… of: nog geen site" style="background:rgba(244,241,236,0.04);border:1px solid var(--line);border-radius:10px;padding:12px 14px;color:var(--text);font-size:15px;font-family:inherit;width:100%;box-sizing:border-box"></label>
+          <label style="display:flex;flex-direction:column;gap:7px;font-size:13px;color:var(--muted)">Wat voor bedrijf heb je en waar zit je?<input name="bedrijf" placeholder="bv. schildersbedrijf in Oud-Beijerland" style="background:rgba(244,241,236,0.04);border:1px solid var(--line);border-radius:10px;padding:12px 14px;color:var(--text);font-size:15px;font-family:inherit;width:100%;box-sizing:border-box"></label>
+          <label style="display:flex;flex-direction:column;gap:7px;font-size:13px;color:var(--muted)">Wat zoek je?<textarea name="bericht" rows="4" placeholder="Kort is prima." style="background:rgba(244,241,236,0.04);border:1px solid var(--line);border-radius:10px;padding:12px 14px;color:var(--text);font-size:15px;font-family:inherit;width:100%;box-sizing:border-box;resize:vertical"></textarea></label>
+          <button type="submit" class="hd-btn-primary" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:15px 28px;border-radius:100px;background:linear-gradient(135deg,var(--accent-br) 0%,var(--accent) 48%,var(--accent-dp) 100%);color:#07140e;border:0;cursor:pointer;font-weight:600;font-size:15px;font-family:inherit;box-shadow:0 12px 32px -16px rgba(0,0,0,0.7),0 6px 20px -12px color-mix(in srgb,var(--accent) 36%,transparent),inset 0 1px 0 rgba(255,255,255,0.16)">Vraag je gratis preview aan</button>
+          <div class="hd-form-status" role="status" aria-live="polite" style="font-size:13.5px;min-height:18px;text-align:center;color:var(--faint)"></div>
+        </form>
+        <div style="margin-top:24px;font-size:13.5px;color:var(--faint);text-align:center;line-height:1.9">Liever direct? <a href="https://wa.me/${site.whatsapp}" target="_blank" rel="noopener noreferrer" style="color:var(--muted);text-decoration:underline">WhatsApp</a> · <a href="tel:${site.phone}" style="color:var(--muted);text-decoration:underline">Bel +31 6 3741 9404</a><br>Reactie binnen 1 werkdag · Vrijblijvend · <a href="/privacy" style="color:var(--muted);text-decoration:underline">Privacybeleid</a></div>
       </div>
     </section>
 
     <footer style="border-top:1px solid var(--line);background:var(--bg2);padding:44px clamp(20px,5vw,64px)">
       <div style="max-width:1140px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:18px;font-size:13px;color:var(--faint)">
         <div style="display:flex;align-items:center;gap:14px"><span style="font-family:'General Sans',sans-serif;font-weight:600;font-size:17px;color:var(--text)">hitz<span style="color:var(--accent)">.</span></span><span>Eerst zien. Dan beslissen.</span></div>
-        <div style="display:flex;align-items:center;gap:18px"><a href="mailto:info@hitzdigital.nl" style="color:var(--muted);text-decoration:none" style-hover="color:var(--text)">info@hitzdigital.nl</a><span>© 2026 HitzDigital · Hoeksche Waard</span></div>
+        <div style="display:flex;align-items:center;gap:18px"><a href="mailto:info@hitzdigital.nl?subject=Aanvraag%20preview%20via%20hitzdigital.nl&amp;body=Hoi%20Nathaniel%2C%0A%0A-%20Mijn%20huidige%20website%20%28of%3A%20ik%20heb%20er%20nog%20geen%29%3A%20%0A-%20Wat%20voor%20bedrijf%20ik%20heb%20en%20waar%3A%20%0A-%20Wat%20ik%20zoek%3A%20%0A%0AGroet%2C" style="color:var(--muted);text-decoration:none" style-hover="color:var(--text)">info@hitzdigital.nl</a><a href="/privacy" style="color:var(--muted);text-decoration:none" style-hover="color:var(--text)">Privacy</a><span>© 2026 HitzDigital · Hoeksche Waard</span></div>
       </div>
     </footer>
   </main>
@@ -351,6 +377,13 @@ function initHitzAnimation(el: HTMLElement): () => void {
   let pinLen = 1
   let raf = 0, menuRaf = 0
   let io: IntersectionObserver | null = null
+  let loopIO: IntersectionObserver | null = null
+  let running = false, expVisible = true
+  const trackers: Array<() => void> = []
+  const startLoop = () => { if (running) return; running = true; raf = requestAnimationFrame(loop) }
+  const stopLoop = () => { running = false; if (raf) { cancelAnimationFrame(raf); raf = 0 } }
+  const evalLoop = () => { if (expVisible && !document.hidden) startLoop(); else stopLoop() }
+  const onVis = () => evalLoop()
 
   // ---------- helpers ----------
   const eo = (t: number) => 1 - Math.pow(1 - Math.max(0, Math.min(1, t)), 3)
@@ -521,7 +554,7 @@ function initHitzAnimation(el: HTMLElement): () => void {
     else { mx += (tmx - mx) * 0.06; my += (tmy - my) * 0.06 }
 
     render(intro)
-    raf = requestAnimationFrame(loop)
+    if (running) raf = requestAnimationFrame(loop)
   }
 
   function render(intro: number) {
@@ -639,17 +672,71 @@ function initHitzAnimation(el: HTMLElement): () => void {
   qa('.hd-menu-close, .hd-menu-link').forEach((menuEl: any) => menuEl.addEventListener('click', closeMenu))
   document.addEventListener('keydown', onKey as EventListener)
 
-  raf = requestAnimationFrame(loop)
+  // ---------- conversie-tracking (Vercel Analytics custom events) ----------
+  const trackOn = (node: any, ev: string, fn: (e: Event) => void) => {
+    if (!node) return
+    node.addEventListener(ev, fn)
+    trackers.push(() => node.removeEventListener(ev, fn))
+  }
+  qa('a[href^="mailto:"]').forEach((a: any) =>
+    trackOn(a, 'click', () => { try { track('mailto_click', { label: (a.textContent || '').trim().slice(0, 40) }) } catch {} })
+  )
+  qa('.hd-work a').forEach((a: any) =>
+    trackOn(a, 'click', () => { try { const t = a.querySelector('span'); track('portfolio_click', { project: ((t && t.textContent) || '').trim().slice(0, 60) }) } catch {} })
+  )
+  trackOn(q('.hd-btn-primary'), 'click', () => { try { track('cta_bekijk_werk') } catch {} })
+
+  // ---------- contactformulier (Formspree indien ingevuld, anders mailto-fallback) ----------
+  const form: any = q('#hd-form')
+  if (form) {
+    const status: any = q('.hd-form-status')
+    const buildMailto = (d: FormData) => {
+      const bodyText = `Naam: ${d.get('naam') || ''}\nE-mail: ${d.get('email') || ''}\nHuidige website: ${d.get('website') || ''}\nBedrijf en plaats: ${d.get('bedrijf') || ''}\n\n${d.get('bericht') || ''}`
+      return `mailto:info@hitzdigital.nl?subject=${encodeURIComponent('Aanvraag preview via hitzdigital.nl')}&body=${encodeURIComponent(bodyText)}`
+    }
+    const onSubmit = async (e: Event) => {
+      e.preventDefault()
+      const d = new FormData(form)
+      if (d.get('_gotcha')) return
+      if (!site.formEndpoint) { window.location.href = buildMailto(d); return }
+      try {
+        if (status) status.textContent = 'Versturen…'
+        const res = await fetch(site.formEndpoint, { method: 'POST', body: d, headers: { Accept: 'application/json' } })
+        if (!res.ok) throw new Error('bad status')
+        form.reset()
+        if (status) { status.style.color = 'var(--accent-br)'; status.textContent = 'Gelukt! Je aanvraag is verstuurd — ik reageer binnen 1 werkdag.' }
+        try { track('form_submit') } catch {}
+      } catch {
+        if (status) { status.style.color = 'var(--faint)'; status.innerHTML = 'Versturen lukte niet. Mail me gerust direct via <a href="' + buildMailto(d) + '" style="color:var(--accent-br)">info@hitzdigital.nl</a>.' }
+      }
+    }
+    form.addEventListener('submit', onSubmit)
+    trackers.push(() => form.removeEventListener('submit', onSubmit))
+  }
+
+  // ---------- animatielus pauzeren buiten beeld / bij verborgen tabblad (INP/CPU/batterij) ----------
+  document.addEventListener('visibilitychange', onVis)
+  if (typeof IntersectionObserver !== 'undefined' && exp) {
+    loopIO = new IntersectionObserver((ents) => { expVisible = ents.some((en) => en.isIntersecting); evalLoop() }, { threshold: 0 })
+    loopIO.observe(exp)
+    evalLoop()
+  } else {
+    startLoop()
+  }
 
   // ---------- cleanup ----------
   return () => {
+    running = false
     if (raf) cancelAnimationFrame(raf)
     if (menuRaf) cancelAnimationFrame(menuRaf)
     if (io) io.disconnect()
+    if (loopIO) loopIO.disconnect()
+    trackers.forEach((fn) => fn())
     el.removeEventListener('pointermove', onMove as EventListener)
     el.removeEventListener('pointerleave', onLeave)
     window.removeEventListener('resize', onResize)
     document.removeEventListener('keydown', onKey as EventListener)
+    document.removeEventListener('visibilitychange', onVis)
     document.body.style.overflow = ''
   }
 

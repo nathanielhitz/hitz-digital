@@ -7,15 +7,20 @@ export const site = {
   url: "https://www.hitzdigital.nl",
   email: "info@hitzdigital.nl",
   founder: "Nathaniel",
-  phone: "", // VUL IN: "+31612345678"
-  whatsapp: "", // VUL IN: internationaal zonder +, bv "31612345678"
+  phone: "+31637419404",
+  whatsapp: "31637419404",
   calendly: "", // VUL IN: "https://calendly.com/jouw-naam/kennismaking"
   kvk: "", // VUL IN: KvK-nummer
-  city: "", // VUL IN: plaats
-  region: "", // VUL IN: provincie/regio (voor een eventueel vestigingsadres)
-  serviceArea: ["Hoeksche Waard", "Puttershoek"], // regio's die actief bediend worden
+  city: "Puttershoek",
+  region: "Zuid-Holland",
+  serviceArea: ["Hoeksche Waard", "Oud-Beijerland", "Puttershoek", "Strijen", "Numansdorp", "'s-Gravendeel", "Klaaswaal"], // regio's die actief bediend worden
   socials: [] as string[], // VUL IN: ["https://www.linkedin.com/in/..."]
   formEndpoint: "", // VUL IN bij Formspree: "https://formspree.io/f/xxxxxxx"
+  // VUL IN met ECHTE reviews (met toestemming). Zolang leeg wordt er GEEN Review/AggregateRating-schema meegestuurd.
+  reviews: [] as { author: string; rating: number; text: string }[],
+  // VUL IN met veelgestelde vragen. LET OP: koppel dit aan een ZICHTBAAR FAQ-blok op de pagina
+  // vóór je erop leunt — schema zonder bijbehorende zichtbare tekst geldt als schema-spam.
+  faq: [] as { q: string; a: string }[],
 };
 
 /** ProfessionalService / lokale-dienstverlener schema; alleen gevulde velden worden meegestuurd. */
@@ -68,6 +73,21 @@ export function professionalServiceSchema() {
     };
   }
   if (site.socials.length) schema.sameAs = site.socials;
+  // Alleen echte reviews → AggregateRating + Review (nooit verzinnen; zie audit-regel).
+  if (site.reviews.length) {
+    const sum = site.reviews.reduce((acc, r) => acc + r.rating, 0);
+    schema.aggregateRating = {
+      "@type": "AggregateRating",
+      ratingValue: (sum / site.reviews.length).toFixed(1),
+      reviewCount: site.reviews.length,
+    };
+    schema.review = site.reviews.map((r) => ({
+      "@type": "Review",
+      author: { "@type": "Person", name: r.author },
+      reviewRating: { "@type": "Rating", ratingValue: r.rating, bestRating: 5 },
+      reviewBody: r.text,
+    }));
+  }
   return schema;
 }
 
@@ -80,5 +100,22 @@ export function websiteSchema() {
     name: site.name,
     inLanguage: "nl",
     publisher: { "@type": "ProfessionalService", name: site.name },
+  };
+}
+
+/**
+ * FAQPage-schema. Geeft `null` zolang er geen FAQ-items zijn, zodat er niets leegs
+ * naar Google gaat. Activeer pas als de vragen OOK zichtbaar op de pagina staan.
+ */
+export function faqPageSchema() {
+  if (!site.faq.length) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: site.faq.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
   };
 }

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { site, professionalServiceSchema, websiteSchema } from "@/lib/site";
+import { site, professionalServiceSchema, websiteSchema, faqPageSchema } from "@/lib/site";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
@@ -11,7 +11,7 @@ const body = Inter({
   display: "swap",
 });
 
-const title = "HitzDigital — Websites die direct professioneler voelen";
+const title = "Website laten maken in de Hoeksche Waard | HitzDigital";
 const description =
   "Moderne websites en redesigns voor kleine ondernemers in de Hoeksche Waard en Puttershoek. Je ziet eerst een concrete preview, daarna beslis je pas.";
 
@@ -38,6 +38,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const faqSchema = faqPageSchema();
   return (
     <html lang="nl" className={body.variable}>
       <head>
@@ -57,6 +58,12 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema()) }}
         />
+        {faqSchema && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+          />
+        )}
         <Analytics />
         <SpeedInsights />
       </body>
