@@ -25,6 +25,7 @@ export const nav = {
   links: [
     { label: "Websites", href: "/websites" },
     { label: "Hosting", href: "/hosting" },
+    { label: "Hulp", href: "/hulp" },
     { label: "Werk", href: "/werk" },
     { label: "Over", href: "/#over" },
   ],
@@ -33,8 +34,9 @@ export const nav = {
 /** Eén label per intentie. */
 export const cta = {
   primary: { label: "Bekijk wat ik doe", href: "#pijlers" },
-  contact: { label: "Neem contact op", href: "/#contact" },
-  /** Query vóór de hash: zo scrolt de browser naar #contact én leest het formulier ?voor=. */
-  demo: { label: "Gratis demo", href: "/?voor=website#contact" },
-  demoLang: { label: "Vraag je gratis demo aan", href: "/?voor=website#contact" },
+  contact: { label: "Neem contact op", href: "/contact" },
+  demo: { label: "Gratis demo", href: "/contact?voor=website" },
+  demoLang: { label: "Vraag je gratis demo aan", href: "/contact?voor=website" },
+  hosting: { label: "Vraag hosting aan", href: "/contact?voor=hosting" },
+  hulp: { label: "Vraag hulp aan", href: "/contact?voor=hulp" },
 };

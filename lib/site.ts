@@ -15,7 +15,6 @@ export const site = {
   region: "Zuid-Holland",
   serviceArea: ["Hoeksche Waard", "Oud-Beijerland", "Puttershoek", "Strijen", "Numansdorp", "'s-Gravendeel", "Klaaswaal"], // regio's die actief bediend worden
   socials: [] as string[], // VUL IN: ["https://www.linkedin.com/in/..."]
-  formEndpoint: "", // VUL IN bij Formspree: "https://formspree.io/f/xxxxxxx"
   // VUL IN met ECHTE reviews (met toestemming). Zolang leeg wordt er GEEN Review/AggregateRating-schema meegestuurd.
   reviews: [] as { author: string; rating: number; text: string }[],
   // VUL IN met veelgestelde vragen. LET OP: koppel dit aan een ZICHTBAAR FAQ-blok op de pagina

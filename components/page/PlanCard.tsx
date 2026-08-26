@@ -49,7 +49,7 @@ export function PlanCard({ plan }: { plan: Plan }) {
       {plan.fairUse && <p className="mt-4 text-[12.5px] leading-[1.5] text-faint">{plan.fairUse}</p>}
       <div className="mt-auto pt-6">
         <Button
-          href={`/?voor=hosting&pakket=${plan.id}#contact`}
+          href={`/contact?voor=hosting&pakket=${plan.id}`}
           variant={plan.featured ? "primary" : "ghost"}
           className="w-full"
         >

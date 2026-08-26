@@ -192,7 +192,7 @@ export default function HostingPage() {
         title="Zeker weten dat je site gewoon werkt?"
         body="Vertel kort waar je site en domein nu staan. Ik laat je weten wat het wordt en regel de overstap."
         label="Vraag hosting aan"
-        href="/?voor=hosting#contact"
+        href="/contact?voor=hosting"
       />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
     </main>

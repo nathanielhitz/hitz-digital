@@ -33,7 +33,7 @@ export const pijlers = [
     body: "Computer, e-mail, domein of website: ik los het op en leg het uit. Meestal op afstand, en anders kom ik langs.",
     price: `${euro(pricing.hulp.quarter)} per kwartier · ${pricing.hulp.guarantee.line}`,
     href: "/hulp",
-    live: false,
+    live: true,
   },
 ] as const;
 
@@ -183,4 +183,65 @@ export const hostingFaq = [
     q: "Betaal ik per maand of per jaar?",
     a: "Wat jij prettig vindt. Per jaar heeft mijn voorkeur: één factuur, klaar. Zeg je tussentijds op, dan krijg je de resterende hele maanden terug. Je betaalt via automatische incasso of iDEAL en krijgt altijd een nette factuur met btw. Alle prijzen zijn incl. 21% btw.",
   },
+];
+
+/** /hulp: waar ik bij help. */
+export const hulpHelp = [
+  { title: "E-mail, domein en hosting", body: "Zakelijke mail instellen, overstappen, DNS, een verlopen domein." },
+  { title: "Je website, ook als ik hem niet gebouwd heb", body: "WordPress-fixes, updates, een formulier dat niet werkt, een trage site." },
+  { title: "Google Bedrijfsprofiel, Maps en reviews", body: "Goed vindbaar, met juiste openingstijden, foto's en een link naar je site." },
+  { title: "Werkplek", body: "Laptop of pc inrichten, opschonen, sneller maken, back-up en beveiliging." },
+  { title: "Printers, wifi, telefoon en tablet", body: "Alles wat moet samenwerken met je mail en je site." },
+  { title: "Netwerk op kantoor met TP-Link Omada", body: "Wifi-punten, gastnetwerk en beheer, netjes ingericht en uitgelegd." },
+  { title: "Lichte hardware-check en schoonmaak", body: "Stof eruit, ventilatie na, schijf en geheugen gecontroleerd." },
+];
+
+/** /hulp: wat ik niet doe (met doorverwijzing). */
+export const hulpNiet = [
+  "Een pc vanaf nul bouwen of repareren op onderdelenniveau (scherm, moederbord, voeding)",
+  "Datarecovery van kapotte schijven",
+  "Kassasystemen en boekhoudsoftware inrichten",
+  "Spoed buiten werktijden",
+];
+
+/** /hulp: hoe het werkt. */
+export const hulpStappen = [
+  { n: "01", title: "Je belt of appt", body: "Vertel kort wat er misgaat. Een foto van het scherm helpt al." },
+  { n: "02", title: "Ik kijk direct mee", body: "Via schermdeling, meestal binnen een kwartier begonnen. Moet ik langskomen? Dan kom ik langs." },
+  { n: "03", title: "Je betaalt alleen de tijd die het kost", body: "Per kwartier, incl. btw. En niks als het niet lukt." },
+];
+
+/** /hulp: veelgestelde vragen (ook als FAQPage-schema). */
+export const hulpFaq = [
+  {
+    q: "Kom je aan huis?",
+    a: "Ja, in de Hoeksche Waard zonder voorrijkosten. De meeste problemen los ik sneller op afstand op, dus dat probeer ik eerst. Aan huis reken ik per half uur, met een minimum van een uur.",
+  },
+  {
+    q: "Hoe snel kun je?",
+    a: "Op afstand vaak dezelfde dag, soms direct. Aan huis meestal binnen een paar werkdagen. Spoed buiten werktijden doe ik niet.",
+  },
+  {
+    q: "Hoe werkt op afstand meekijken?",
+    a: "Je opent een link die ik je stuur, en ik zie je scherm terwijl we bellen. Jij houdt de controle en kunt altijd afsluiten. Er blijft niets achter op je computer.",
+  },
+  {
+    q: "Wat als het niet lukt?",
+    a: "Dan betaal je niets voor die hulp. We spreken vooraf af wat het probleem is; los ik dat niet op, dan kost het je niks. Voor de APK's, uitleg en advies geldt dat niet, en ook niet als de oorzaak buiten mijn bereik ligt en ik je dat gemeld heb.",
+  },
+  {
+    q: "Help je ook met mijn telefoon of tablet?",
+    a: "Ja. Mail instellen, foto's overzetten, een nieuwe telefoon inrichten, opruimen en beveiligen: het hoort er allemaal bij.",
+  },
+  {
+    q: "Help je ook particulieren?",
+    a: "Ja, in de Hoeksche Waard, tegen hetzelfde tarief: €15 per kwartier incl. btw. Ondernemers gaan voor als het druk is, maar je bent welkom.",
+  },
+];
+
+/** /contact: korte vragen onder het formulier. */
+export const contactFaq = [
+  { q: "Wat gebeurt er na mijn bericht?", a: "Je krijgt binnen 1 werkdag antwoord van mij, per mail of app. Bij een website-aanvraag stel ik een paar korte vragen en ga ik aan de slag met je gratis demo." },
+  { q: "Kom je langs?", a: "Voor hulp kom ik langs in de Hoeksche Waard als op afstand niet lukt. Voor een website-gesprek kom ik graag even bij je kijken, maar het kan ook telefonisch." },
+  { q: "Is een demo echt gratis?", a: "Ja. Je krijgt een echte, werkende voorproef van je homepage. Bevalt hij niet, dan stopt het daar, zonder kosten." },
 ];

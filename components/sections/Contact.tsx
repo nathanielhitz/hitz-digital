@@ -5,8 +5,10 @@ import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Reveal } from "@/components/ui/Reveal";
 import { AanvraagForm } from "@/components/sections/AanvraagForm";
 import { whatsapp, tel, telDisplay } from "@/lib/content";
+import { canSend } from "@/app/actions/contact";
 
-export function Contact() {
+export async function Contact() {
+  const sendable = await canSend();
   return (
     <Section id="contact" padding="large" className="overflow-hidden">
       <div
@@ -24,7 +26,7 @@ export function Contact() {
           <p className="mx-auto mb-[38px] max-w-[520px] text-[17px] leading-[1.6] text-muted">
             Kies waarvoor je me nodig hebt en vertel kort wat er speelt. Ik reageer binnen 1 werkdag, vrijblijvend.
           </p>
-          <AanvraagForm />
+          <AanvraagForm canSend={sendable} />
           <div className="mt-6 text-center text-[13.5px] leading-[1.9] text-faint">
             Liever direct?{" "}
             <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="text-muted underline">
