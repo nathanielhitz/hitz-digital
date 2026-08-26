@@ -26,10 +26,6 @@ const HERO_HTML = `
 
       <!-- hero copy -->
       <div class="hd-copy" data-screen-label="Hero copy" style="position:absolute;left:clamp(20px,5vw,64px);top:50%;z-index:5;max-width:540px;transform:translateY(-50%);will-change:transform,opacity">
-        <div class="hd-kicker" style="display:inline-flex;align-items:center;gap:10px;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:26px">
-          <span style="width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 9px color-mix(in srgb,var(--accent) 60%,transparent)"></span>
-          Hoeksche Waard · websites, hosting en hulp
-        </div>
         <h1 class="hd-h1" style="font-family:'General Sans',sans-serif;font-weight:600;font-size:clamp(38px,5vw,66px);line-height:1.02;letter-spacing:-0.035em;margin-bottom:24px">
           <span style="font-weight:300">Alles rond je </span><em style="font-style:normal;font-weight:600;color:var(--accent)">website</em><span style="font-weight:300">. Eén aanspreekpunt.</span>
         </h1>
