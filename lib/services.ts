@@ -13,7 +13,7 @@ export const pijlers = [
     body: "Een moderne site die past bij je bedrijf. Je ziet eerst een echte demo van je eigen homepage, daarna beslis je pas.",
     price: `Vanaf ${euro(pricing.website.from)}`,
     href: "/websites",
-    live: false,
+    live: true,
   },
   {
     id: "hosting",
@@ -87,3 +87,54 @@ export const aanvraagKeuzes = [
   { id: "anders", label: "Iets anders", submit: "Verstuur" },
 ] as const;
 export type AanvraagKeuze = (typeof aanvraagKeuzes)[number]["id"];
+
+/** /websites: nieuw of vernieuwen. */
+export const websiteOpties = [
+  {
+    title: "Nog geen goede site",
+    body: "Ik bouw een moderne website die strak, snel en duidelijk is. Een site die vertrouwen wekt en past bij je bedrijf, met teksten en foto's die kloppen.",
+  },
+  {
+    title: "Je site is verouderd",
+    body: "Ik geef je huidige site een nieuwe uitstraling en een betere structuur. Wat goed is blijft, wat in de weg zit gaat eruit. Je hoeft niet opnieuw te beginnen.",
+  },
+];
+
+/** /websites: wat er standaard bij zit. */
+export const websiteInbegrepen = [
+  "Ontworpen voor je telefoon, want daar kijken je klanten",
+  "Snel, ook op een trage verbinding",
+  "Vindbaar in Google op je dienst en je plaats",
+  "Zelf teksten, foto's en prijzen aanpassen",
+  "Teksten en foto's geregeld, of je levert ze zelf aan",
+  "Domein op jouw naam",
+  "Hosting bij mij of ergens anders, jouw keuze",
+];
+
+/** /websites: veelgestelde vragen (ook als FAQPage-schema). */
+export const websiteFaq = [
+  {
+    q: "Hoe lang duurt het?",
+    a: "De demo van je homepage heb je meestal binnen een week. De complete website staat daarna in twee tot vier weken live, afhankelijk van hoe snel teksten en foto's rond zijn.",
+  },
+  {
+    q: "Wat is de demo precies?",
+    a: "Een echte, werkende voorproef van je nieuwe homepage die je zelf in je browser kunt bekijken. Geen schets of PowerPoint. Zo zie je hoe je site eruit gaat zien voordat je iets beslist.",
+  },
+  {
+    q: "Wat als de demo niet bevalt?",
+    a: "Dan stopt het daar, zonder kosten en zonder verplichtingen. De demo is en blijft gratis.",
+  },
+  {
+    q: "Moet ik zelf teksten schrijven?",
+    a: "Nee. Je mag ze zelf aanleveren, maar ik schrijf ze ook voor je op basis van een kort gesprek. Foto's lever je aan, of ik zorg voor passende beelden.",
+  },
+  {
+    q: "Kan ik de site zelf aanpassen?",
+    a: "Ja. Teksten, foto's, prijzen en openingstijden pas je zelf aan zonder technische kennis. Wil je dat liever niet zelf doen, dan zit een kleine wijziging per maand in het onderhoudspakket.",
+  },
+  {
+    q: "Werk je ook buiten de Hoeksche Waard?",
+    a: "Ja. Ik kom uit Puttershoek en de meeste klanten zitten in de regio, maar een website bouwen kan overal. Voor hulp aan huis blijf ik in de Hoeksche Waard.",
+  },
+];

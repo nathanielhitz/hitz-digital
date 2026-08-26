@@ -7,7 +7,7 @@ import { werkwijze } from "@/lib/services";
 
 export function Werkwijze() {
   return (
-    <Section id="werkwijze" variant="base">
+    <Section id="werkwijze">
       <Container>
         <Reveal>
           <Eyebrow>Werkwijze</Eyebrow>

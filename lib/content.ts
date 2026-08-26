@@ -23,16 +23,18 @@ export const telDisplay = "+31 6 3741 9404";
 /** Navigatie (fase 2: anker-secties; fase 3–5 worden dit routes). */
 export const nav = {
   links: [
-    { label: "Diensten", href: "#pijlers" },
-    { label: "Werkwijze", href: "#werkwijze" },
-    { label: "Werk", href: "#werk" },
-    { label: "Over", href: "#over" },
+    { label: "Diensten", href: "/#pijlers" },
+    { label: "Websites", href: "/websites" },
+    { label: "Werk", href: "/werk" },
+    { label: "Over", href: "/#over" },
   ],
 };
 
 /** Eén label per intentie. */
 export const cta = {
   primary: { label: "Bekijk wat ik doe", href: "#pijlers" },
-  contact: { label: "Neem contact op", href: "#contact" },
-  demo: { label: "Gratis demo", href: "#contact?voor=website" },
+  contact: { label: "Neem contact op", href: "/#contact" },
+  /** Query vóór de hash: zo scrolt de browser naar #contact én leest het formulier ?voor=. */
+  demo: { label: "Gratis demo", href: "/?voor=website#contact" },
+  demoLang: { label: "Vraag je gratis demo aan", href: "/?voor=website#contact" },
 };

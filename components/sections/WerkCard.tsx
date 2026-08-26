@@ -2,22 +2,22 @@
 
 import Image from "next/image";
 import { track } from "@vercel/analytics";
-import type { WorkItem } from "@/lib/work";
+import { workHref, type WorkItem } from "@/lib/work";
 
 export function WerkCard({ item }: { item: WorkItem }) {
+  const internal = Boolean(item.client);
   return (
     <a
-      href={item.href}
-      target="_blank"
-      rel="noopener noreferrer"
+      href={workHref(item)}
+      {...(internal ? {} : { target: "_blank", rel: "noopener noreferrer" })}
       onClick={() => {
         try {
-          track("portfolio_click", { project: item.title });
+          track("portfolio_click", { project: item.title, internal });
         } catch {}
       }}
-      className="block text-inherit transition-opacity duration-200 hover:opacity-[0.92]"
+      className="group block text-inherit"
     >
-      <div className="relative aspect-[3/4] overflow-hidden rounded-[13px] border border-line">
+      <div className="relative aspect-[3/4] overflow-hidden rounded-[13px] border border-line transition-[border-color,transform] duration-300 group-hover:-translate-y-1 group-hover:border-accent/35">
         <Image
           src={item.src}
           alt={item.alt}
@@ -32,6 +32,11 @@ export function WerkCard({ item }: { item: WorkItem }) {
         {item.tag && (
           <span className="absolute left-3 top-3 rounded-full border border-line bg-[rgba(7,7,6,0.55)] px-[10px] py-[4px] text-[10.5px] uppercase tracking-[0.12em] text-muted backdrop-blur-[6px]">
             {item.tag}
+          </span>
+        )}
+        {internal && (
+          <span className="absolute bottom-3 left-3 text-[12.5px] font-medium text-ink/90 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            Bekijk de case →
           </span>
         )}
       </div>

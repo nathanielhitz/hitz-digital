@@ -26,7 +26,7 @@ export function Footer() {
             <ul className="flex flex-col gap-2 text-[14px]">
               {pijlers.map((p) => (
                 <li key={p.id}>
-                  <a href={p.live ? p.href : "#pijlers"} className={linkCls}>
+                  <a href={p.live ? p.href : "/#pijlers"} className={linkCls}>
                     {p.title}
                   </a>
                 </li>
@@ -37,9 +37,9 @@ export function Footer() {
           <div>
             <h2 className="mb-3 text-[12px] uppercase tracking-[0.14em] text-faint">Meer</h2>
             <ul className="flex flex-col gap-2 text-[14px]">
-              <li><a href="#werkwijze" className={linkCls}>Werkwijze</a></li>
-              <li><a href="#werk" className={linkCls}>Werk</a></li>
-              <li><a href="#contact" className={linkCls}>Contact</a></li>
+              <li><a href="/websites#werkwijze" className={linkCls}>Werkwijze</a></li>
+              <li><a href="/werk" className={linkCls}>Werk</a></li>
+              <li><a href="/#contact" className={linkCls}>Contact</a></li>
               <li><a href="/privacy" className={linkCls}>Privacy</a></li>
             </ul>
           </div>

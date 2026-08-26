@@ -52,7 +52,7 @@ export function BeforeAfterSlider({
     <div
       ref={containerRef}
       className={cn(
-        "relative h-[clamp(260px,38vw,400px)] cursor-ew-resize touch-pan-y select-none",
+        "relative cursor-ew-resize touch-pan-y select-none overflow-hidden",
         className,
       )}
       style={{ "--pos": `${initial}%` } as React.CSSProperties}
@@ -77,7 +77,7 @@ export function BeforeAfterSlider({
           src={afterSrc}
           alt={afterAlt}
           fill
-          sizes="(max-width: 880px) 100vw, 880px"
+          sizes="(max-width: 900px) 100vw, 480px"
           className="object-cover object-left-top"
         />
         <span className="absolute right-3 top-3 rounded-full border border-line bg-[rgba(244,239,231,0.10)] px-[11px] py-1 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-ink">
@@ -94,7 +94,7 @@ export function BeforeAfterSlider({
           src={beforeSrc}
           alt={beforeAlt}
           fill
-          sizes="(max-width: 880px) 100vw, 880px"
+          sizes="(max-width: 900px) 100vw, 480px"
           className="object-cover object-left-top"
         />
         <span className="absolute left-3 top-3 rounded-full border border-black/10 bg-black/10 px-[11px] py-1 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[#6b6b6b]">
