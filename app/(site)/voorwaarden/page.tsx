@@ -157,7 +157,7 @@ export default function VoorwaardenPage() {
             <p>
               Ik kan deze voorwaarden aanpassen. Bij lopende abonnementen laat ik dat minstens een maand vooraf weten;
               ben je het er niet mee eens, dan kun je gewoon per maand opzeggen. Op onze afspraken geldt Nederlands
-              recht. Komen we er samen niet uit, dan is de rechter in het arrondissement Rotterdam bevoegd.
+              recht.
             </p>
 
             <p className="mt-10 text-[13.5px] text-faint">
