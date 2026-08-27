@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { site } from "@/lib/site";
 import { cases } from "@/lib/work";
+import { supportArticles } from "@/lib/support";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
@@ -16,6 +17,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "yearly" as const,
       priority: 0.6,
+    })),
+    { url: `${site.url}/support`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
+    ...supportArticles.map((a) => ({
+      url: `${site.url}/support/${a.slug}`,
+      lastModified: new Date(a.updatedIso),
+      changeFrequency: "yearly" as const,
+      priority: 0.5,
     })),
     { url: `${site.url}/voorwaarden`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
     { url: `${site.url}/privacy`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },

@@ -40,6 +40,7 @@ export function Footer() {
               <li><a href="/websites#werkwijze" className={linkCls}>Werkwijze</a></li>
               <li><a href="/werk" className={linkCls}>Werk</a></li>
               <li><a href="/contact" className={linkCls}>Contact</a></li>
+              <li><a href="/support" className={linkCls}>Support</a></li>
               <li><a href="/privacy" className={linkCls}>Privacy</a></li>
               <li><a href="/voorwaarden" className={linkCls}>Voorwaarden</a></li>
             </ul>
