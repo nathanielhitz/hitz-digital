@@ -7,7 +7,18 @@ export const ogSize = { width: 1200, height: 630 };
  * Gebruik: `renderOg({ title: "Online blijven, *zonder gedoe*.", kicker: "Hosting & domeinen" })`.
  */
 export function renderOg({ title, kicker, sub }: { title: string; kicker?: string; sub?: string }) {
-  const parts = title.split("*");
+  // Woorden met kleurvlag: tekst tussen sterretjes krijgt het accent. Per woord een flex-item zodat Satori netjes afbreekt.
+  const words: { t: string; accent: boolean }[] = [];
+  title.split("*").forEach((seg, i) => {
+    seg.split(/\s+/).filter(Boolean).forEach((w) => {
+      if (/^[.,!?:;]+$/.test(w) && words.length) words[words.length - 1].t += w;
+      else if (/^[.,!?:;]/.test(w) && words.length) {
+        words[words.length - 1].t += w[0];
+        if (w.length > 1) words.push({ t: w.slice(1), accent: i % 2 === 1 });
+      } else words.push({ t: w, accent: i % 2 === 1 });
+    });
+  });
+  // Leestekens die aan een accentwoord kleven (bv. "website.") houden de kleur van het woord ervoor.
   return new ImageResponse(
     (
       <div
@@ -34,14 +45,12 @@ export function renderOg({ title, kicker, sub }: { title: string; kicker?: strin
           )}
         </div>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ display: "flex", fontSize: 66, fontWeight: 700, letterSpacing: -2, lineHeight: 1.08, maxWidth: 1000 }}>
-            <span>
-              {parts.map((t, i) => (
-                <span key={i} style={{ color: i % 2 === 1 ? "#5FA47E" : "#F4F1EC" }}>
-                  {t}
-                </span>
-              ))}
-            </span>
+          <div style={{ display: "flex", flexWrap: "wrap", fontSize: 66, fontWeight: 700, letterSpacing: -2, lineHeight: 1.08, maxWidth: 1040 }}>
+            {words.map((w, i) => (
+              <span key={i} style={{ color: w.accent ? "#5FA47E" : "#F4F1EC", marginRight: 18 }}>
+                {w.t}
+              </span>
+            ))}
           </div>
           {sub && (
             <div style={{ display: "flex", fontSize: 26, color: "#9B968D", marginTop: 26, maxWidth: 900, lineHeight: 1.35 }}>
