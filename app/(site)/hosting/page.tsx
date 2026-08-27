@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/page/PageHero";
 import { CtaBand } from "@/components/page/CtaBand";
+import { WhatsAppFab } from "@/components/ui/WhatsAppFab";
 import { FaqList } from "@/components/page/FaqList";
 import { PlanCard } from "@/components/page/PlanCard";
 import { Container } from "@/components/layout/Container";
@@ -195,6 +196,7 @@ export default function HostingPage() {
         href="/contact?voor=hosting"
       />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      <WhatsAppFab afterId="pakketten" untilId="cta" />
     </main>
   );
 }

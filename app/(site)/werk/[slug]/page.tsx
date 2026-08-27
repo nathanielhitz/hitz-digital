@@ -3,6 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { PageHero } from "@/components/page/PageHero";
 import { CtaBand } from "@/components/page/CtaBand";
+import { WhatsAppFab } from "@/components/ui/WhatsAppFab";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/Button";
@@ -84,7 +85,7 @@ export default async function CasePage({ params }: { params: Promise<Params> }) 
         </Container>
       </section>
 
-      <Section variant="base">
+      <Section id="case" variant="base">
         <Container>
           <div className="grid grid-cols-1 gap-12 min-[901px]:grid-cols-3">
             <Reveal>
@@ -178,6 +179,7 @@ export default async function CasePage({ params }: { params: Promise<Params> }) 
         href={cta.demoLang.href}
       />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      <WhatsAppFab afterId="case" untilId="cta" />
     </main>
   );
 }

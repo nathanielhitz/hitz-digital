@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { PageHero } from "@/components/page/PageHero";
 import { CtaBand } from "@/components/page/CtaBand";
+import { WhatsAppFab } from "@/components/ui/WhatsAppFab";
 import { FaqList } from "@/components/page/FaqList";
 import { Werkwijze } from "@/components/sections/Werkwijze";
 import { Container } from "@/components/layout/Container";
@@ -198,6 +199,7 @@ export default function WebsitesPage() {
         label={cta.demoLang.label}
         href={cta.demoLang.href}
       />
+      <WhatsAppFab afterId="nieuw-of-vernieuwen" untilId="cta" />
     </main>
   );
 }
