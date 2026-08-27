@@ -12,7 +12,7 @@ export default function NotFound() {
         textAlign: "center",
         background: "#070706",
         color: "#F4F1EC",
-        fontFamily: "'General Sans', var(--font-body-src, Inter), system-ui, sans-serif",
+        fontFamily: "var(--font-display-src, var(--font-body-src, Inter)), system-ui, sans-serif",
       }}
     >
       <div style={{ fontWeight: 600, fontSize: 22, letterSpacing: "-0.02em" }}>

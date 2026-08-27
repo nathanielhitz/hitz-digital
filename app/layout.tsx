@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import { site, professionalServiceSchema, websiteSchema, faqPageSchema } from "@/lib/site";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -9,6 +10,19 @@ const body = Inter({
   subsets: ["latin"],
   variable: "--font-body-src",
   display: "swap",
+});
+
+/** General Sans (koppen), self-hosted: geen externe request, geen render-blocking CSS. */
+const display = localFont({
+  src: [
+    { path: "./fonts/GeneralSans-Light.woff2", weight: "300", style: "normal" },
+    { path: "./fonts/GeneralSans-Medium.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/GeneralSans-Semibold.woff2", weight: "600", style: "normal" },
+    { path: "./fonts/GeneralSans-Bold.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-display-src",
+  display: "swap",
+  preload: true,
 });
 
 const title = "Websites, hosting en computerhulp in de Hoeksche Waard | HitzDigital";
@@ -40,14 +54,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const faqSchema = faqPageSchema();
   return (
-    <html lang="nl" className={body.variable}>
-      <head>
-        <link rel="preconnect" href="https://api.fontshare.com" />
-        <link
-          href="https://api.fontshare.com/v2/css?f[]=general-sans@300,400,500,600,700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html lang="nl" className={`${body.variable} ${display.variable}`}>
       <body>
         {children}
         <script

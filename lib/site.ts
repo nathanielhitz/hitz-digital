@@ -34,7 +34,7 @@ export function professionalServiceSchema() {
     description: "Websites, hosting en computerhulp voor ondernemers in de Hoeksche Waard. Eén aanspreekpunt, gevestigd in Puttershoek.",
     url: site.url,
     email: site.email,
-    image: `${site.url}/og/cover.svg`,
+    image: `${site.url}/opengraph-image`,
     knowsLanguage: "nl",
     areaServed: site.serviceArea.length
       ? site.serviceArea.map((name) => ({ "@type": "Place", name }))

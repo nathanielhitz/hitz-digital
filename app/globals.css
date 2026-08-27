@@ -12,7 +12,7 @@
   --color-panel: #11100e;  /* opgetilde vlakken */
   --color-ink: #f4f1ec;    /* hoofdtekst */
   --color-muted: #9b968d;  /* secundaire tekst */
-  --color-faint: #6b665e;  /* meta / labels */
+  --color-faint: #847f77;  /* meta / labels; ≥4.5:1 op alle donkere vlakken (AA) */
   --color-line: rgba(244, 241, 236, 0.1);
   --color-line2: rgba(244, 241, 236, 0.05);
 
@@ -29,8 +29,8 @@
   --color-cream-muted: #6e685e;
   --color-cream-line: #e7e0d5;
 
-  /* fonts: General Sans (koppen) via Fontshare, Inter (body) via next/font */
-  --font-display: "General Sans", var(--font-body-src), ui-sans-serif, system-ui, sans-serif;
+  /* fonts: General Sans (koppen) self-hosted via next/font/local, Inter (body) via next/font/google */
+  --font-display: var(--font-display-src), var(--font-body-src), ui-sans-serif, system-ui, sans-serif;
   --font-body: var(--font-body-src), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
@@ -80,6 +80,27 @@ body {
   .hd-after-hero {
     margin-top: -80vh;
   }
+}
+
+
+/* Hero-fragment: mobiele layout ook zonder JS (server-render = eindtoestand, geen layout shift).
+   Spiegelt de 'small'-tak van doLayout() in HeroExperience; !important omdat het fragment inline styles heeft. */
+@media (max-width: 900px) {
+  .hd-exp { height: auto !important; }
+  .hd-sticky {
+    position: static !important; height: auto !important; min-height: 100vh !important; overflow: visible !important;
+    padding-top: 94px !important; padding-bottom: 40px !important;
+    display: flex !important; flex-direction: column !important; justify-content: center !important; z-index: auto !important; opacity: 1 !important;
+  }
+  .hd-copy {
+    position: relative !important; left: auto !important; right: auto !important; top: auto !important; transform: none !important;
+    max-width: 560px !important; margin: 0 auto !important; padding: 0 clamp(20px, 7vw, 40px) !important; text-align: center !important;
+  }
+  .hd-copy .hd-kicker, .hd-copy .hd-cta, .hd-copy .hd-trust { justify-content: center !important; }
+  .hd-copy .hd-sub { margin: 0 auto 32px !important; }
+  .hd-scene { position: relative !important; inset: auto !important; height: 480px !important; width: 100% !important; margin-top: 12px !important; }
+  .hd-cue, .hd-stage3d, .hd-flayer { display: none !important; }
+  .hd-phone { display: block !important; }
 }
 
 /* Knoppen binnen het hero-fragment (rest van de site gebruikt <Button>). */

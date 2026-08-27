@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
     title,
     description: c.intro,
     alternates: { canonical: `/werk/${c.slug}` },
-    openGraph: { title, description: c.intro, url: `/werk/${c.slug}`, type: "article", images: [c.desktop] },
+    openGraph: { title, description: c.intro, url: `/werk/${c.slug}`, type: "article" },
   };
 }
 

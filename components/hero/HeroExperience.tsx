@@ -26,7 +26,7 @@ const HERO_HTML = `
 
       <!-- hero copy -->
       <div class="hd-copy" data-screen-label="Hero copy" style="position:absolute;left:clamp(20px,5vw,64px);top:50%;z-index:5;max-width:540px;transform:translateY(-50%);will-change:transform,opacity">
-        <h1 class="hd-h1" style="font-family:'General Sans',sans-serif;font-weight:600;font-size:clamp(38px,5vw,66px);line-height:1.02;letter-spacing:-0.035em;margin-bottom:24px">
+        <h1 class="hd-h1" style="font-family:var(--font-display);font-weight:600;font-size:clamp(38px,5vw,66px);line-height:1.02;letter-spacing:-0.035em;margin-bottom:24px">
           <span style="font-weight:300">Alles rond je </span><em style="font-style:normal;font-weight:600;color:var(--accent)">website</em><span style="font-weight:300">. Eén aanspreekpunt.</span>
         </h1>
         <p class="hd-sub" style="font-size:clamp(16px,1.25vw,18.5px);line-height:1.6;color:var(--muted);max-width:470px;margin-bottom:36px">Websites, hosting en computerhulp voor ondernemers in de Hoeksche Waard. Ik bouw je site, houd hem online en kijk direct mee als iets vastloopt. Eén persoon, korte lijnen.</p>
@@ -88,10 +88,10 @@ const HERO_HTML = `
                 <div class="hd-site" aria-hidden="true" role="presentation" style="position:absolute;inset:0;opacity:0">
                   <div style="position:absolute;inset:0;background:repeating-linear-gradient(135deg,#15130f 0,#15130f 9px,#100e0b 9px,#100e0b 18px)"></div>
                   <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,7,6,0.5) 0%,transparent 30%,rgba(7,7,6,0.8) 100%)"></div>
-                  <div style="position:absolute;top:14px;left:18px;font-family:'General Sans',sans-serif;font-weight:600;font-size:13px;letter-spacing:0.06em;color:#F4F1EC">VOLMER TECHNIEK</div>
+                  <div style="position:absolute;top:14px;left:18px;font-family:var(--font-display);font-weight:600;font-size:13px;letter-spacing:0.06em;color:#F4F1EC">VOLMER TECHNIEK</div>
                   <div style="position:absolute;top:15px;right:18px;display:flex;align-items:center;gap:12px;font-size:10px;color:#a8a298"><span>Diensten</span><span>Werk</span><span>Contact</span><span style="padding:5px 10px;border:1px solid rgba(255,255,255,0.18);border-radius:100px;color:#F4F1EC">Bel direct</span></div>
                   <div style="position:absolute;left:24px;bottom:60px;right:24px">
-                    <div style="font-family:'General Sans',sans-serif;font-weight:600;font-size:29px;line-height:1.04;letter-spacing:-0.02em;color:#F7F4EF;max-width:80%">On-site verspaning zonder stilstand.</div>
+                    <div style="font-family:var(--font-display);font-weight:600;font-size:29px;line-height:1.04;letter-spacing:-0.02em;color:#F7F4EF;max-width:80%">On-site verspaning zonder stilstand.</div>
                     <div style="display:flex;gap:10px;margin-top:15px"><span style="padding:9px 16px;border-radius:100px;background:var(--accent);color:#07140e;font-weight:600;font-size:11px">Offerte aanvragen</span><span style="padding:9px 16px;border-radius:100px;border:1px solid rgba(255,255,255,0.2);color:#F4F1EC;font-size:11px">Bekijk diensten</span></div>
                   </div>
                 </div>
@@ -166,9 +166,9 @@ const HERO_HTML = `
               <div class="hd-psite" aria-hidden="true" role="presentation" style="position:absolute;inset:0;opacity:0">
                 <div style="position:absolute;top:0;left:0;right:0;height:152px;background:repeating-linear-gradient(135deg,#16130f 0,#16130f 9px,#100e0b 9px,#100e0b 18px)"></div>
                 <div style="position:absolute;top:0;left:0;right:0;height:152px;background:linear-gradient(180deg,rgba(7,7,6,0.25),transparent 60%,rgba(7,7,6,0.6))"></div>
-                <div style="position:absolute;top:15px;left:15px;font-family:'General Sans',sans-serif;font-weight:600;font-size:11px;letter-spacing:0.05em;color:#F4F1EC">VOLMER</div>
+                <div style="position:absolute;top:15px;left:15px;font-family:var(--font-display);font-weight:600;font-size:11px;letter-spacing:0.05em;color:#F4F1EC">VOLMER</div>
                 <div style="position:absolute;top:14px;right:15px;display:flex;flex-direction:column;gap:3px"><span style="width:15px;height:2px;background:#a8a298"></span><span style="width:15px;height:2px;background:#a8a298"></span></div>
-                <div style="position:absolute;top:104px;left:15px;right:15px;font-family:'General Sans',sans-serif;font-weight:600;font-size:17px;line-height:1.12;color:#F7F4EF">Verspaning zonder stilstand.</div>
+                <div style="position:absolute;top:104px;left:15px;right:15px;font-family:var(--font-display);font-weight:600;font-size:17px;line-height:1.12;color:#F7F4EF">Verspaning zonder stilstand.</div>
                 <div style="position:absolute;top:170px;left:15px;padding:8px 14px;border-radius:100px;background:var(--accent);color:#07140e;font-weight:600;font-size:10px">Offerte aanvragen</div>
                 <div style="position:absolute;top:212px;left:15px;right:15px;display:flex;flex-direction:column;gap:9px"><div style="height:8px;width:72%;border-radius:3px;background:rgba(244,241,236,0.2)"></div><div style="height:8px;width:92%;border-radius:3px;background:rgba(244,241,236,0.12)"></div><div style="height:8px;width:58%;border-radius:3px;background:rgba(244,241,236,0.12)"></div></div>
               </div>
