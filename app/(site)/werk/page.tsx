@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/page/PageHero";
 import { CtaBand } from "@/components/page/CtaBand";
+import { WhatsAppFab } from "@/components/ui/WhatsAppFab";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Reveal } from "@/components/ui/Reveal";
@@ -27,7 +28,7 @@ export default function WerkPage() {
         title="Voorbeelden van mijn werk."
         lead="Geen sjablonen, geen stockfoto's. Sites die ik gebouwd heb voor bedrijven in de regio, en een paar eigen projecten. Bij de klanten lees je hoe het ging."
       />
-      <Section className="pt-0 border-t-0">
+      <Section id="cases" className="pt-0 border-t-0">
         <Container>
           <Reveal>
             <div className="grid grid-cols-1 gap-[22px] min-[561px]:grid-cols-2 min-[901px]:grid-cols-3">
@@ -44,6 +45,7 @@ export default function WerkPage() {
         label={cta.demoLang.label}
         href={cta.demoLang.href}
       />
+      <WhatsAppFab afterId="cases" untilId="cta" />
     </main>
   );
 }

@@ -18,7 +18,7 @@ export function CtaBand({
   href: string;
 }) {
   return (
-    <Section padding="large" className="overflow-hidden">
+    <Section id="cta" padding="large" className="overflow-hidden">
       <div
         className="pointer-events-none absolute left-1/2 top-[30%] h-[50vw] w-[50vw] max-h-[680px] max-w-[680px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--glow)_10%,transparent),transparent_66%)] blur-[40px]"
         aria-hidden

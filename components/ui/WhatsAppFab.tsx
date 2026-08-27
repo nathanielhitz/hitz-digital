@@ -10,6 +10,8 @@ type Props = {
   afterId?: string;
   /** Sectie-id waar de knop weer verdwijnt (daar staat contact al). */
   untilId?: string;
+  /** Extra klassen, bv. `max-[900px]:hidden` op pagina's met de mobiele StickyCallBar. */
+  className?: string;
 };
 
 /**
@@ -18,7 +20,7 @@ type Props = {
  * - verdwijnt weer zodra `untilId` in beeld komt (daar staat WhatsApp al)
  * - rAF-throttled, passieve listeners, SSR-safe (start verborgen)
  */
-export function WhatsAppFab({ afterId = "pijlers", untilId = "contact" }: Props) {
+export function WhatsAppFab({ afterId = "pijlers", untilId = "contact", className }: Props) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -63,6 +65,7 @@ export function WhatsAppFab({ afterId = "pijlers", untilId = "contact" }: Props)
         "hover:-translate-y-0.5 hover:brightness-[1.04] hover:shadow-btn-hover active:translate-y-0",
         "min-[901px]:bottom-7 min-[901px]:right-7",
         visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0",
+        className,
       )}
     >
       <WhatsappLogo size={22} weight="fill" aria-hidden />

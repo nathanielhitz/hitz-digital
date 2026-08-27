@@ -3,6 +3,7 @@ import { PageHero } from "@/components/page/PageHero";
 import { CtaBand } from "@/components/page/CtaBand";
 import { FaqList } from "@/components/page/FaqList";
 import { StickyCallBar } from "@/components/page/StickyCallBar";
+import { WhatsAppFab } from "@/components/ui/WhatsAppFab";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/Button";
@@ -208,6 +209,7 @@ export default function HulpPage() {
         href={cta.hulp.href}
       />
       <StickyCallBar />
+      <WhatsAppFab afterId="apk" untilId="cta" className="max-[900px]:hidden" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
     </main>
   );
