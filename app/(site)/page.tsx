@@ -4,6 +4,7 @@ import { ZoWerkIk } from "@/components/sections/ZoWerkIk";
 import { Werk } from "@/components/sections/Werk";
 import { Over } from "@/components/sections/Over";
 import { Contact } from "@/components/sections/Contact";
+import { WhatsAppFab } from "@/components/ui/WhatsAppFab";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
         <Over />
         <Contact />
       </main>
+      <WhatsAppFab />
     </>
   );
 }
