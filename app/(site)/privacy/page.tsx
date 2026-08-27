@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 };
 
 export default function PrivacyPage() {
-  const updated = "26 augustus 2026";
+  const updated = "27 augustus 2026";
   return (
     <main id="main" className="relative z-[2] bg-deep">
       <PageHero
@@ -48,13 +48,15 @@ export default function PrivacyPage() {
             <p>
               Ik gebruik deze gegevens om contact met je op te nemen, je aanvraag te beoordelen en (op jouw verzoek) een
               demo, offerte of afspraak te maken. De grondslag is het op jouw verzoek nemen van stappen vóór een
-              overeenkomst, en daarna de uitvoering van die overeenkomst. Ik gebruik je gegevens niet voor reclame en
-              verkoop ze niet aan derden.
+              overeenkomst, en daarna de uitvoering van die overeenkomst. Neem je contact op met een losse vraag, dan is
+              de grondslag mijn gerechtvaardigd belang om te kunnen antwoorden. Ik gebruik je gegevens niet voor reclame
+              en verkoop ze niet aan derden.
             </p>
 
             <h2>Hoe lang bewaar ik ze?</h2>
             <p>
-              Aanvragen die niet tot een opdracht leiden verwijder ik uiterlijk binnen 12 maanden. Word je klant, dan
+              Aanvragen komen als e-mail in mijn mailbox terecht. Aanvragen die niet tot een opdracht leiden verwijder
+              ik uiterlijk binnen 12 maanden. Word je klant, dan
               bewaar ik de gegevens zolang dat nodig is voor de opdracht of het abonnement en voor de wettelijke
               administratietermijn (7 jaar voor facturen).
             </p>
@@ -62,19 +64,43 @@ export default function PrivacyPage() {
             <h2>Wie verwerkt gegevens namens mij?</h2>
             <ul>
               <li>
-                <strong>Vercel</strong> host deze website en levert geanonimiseerde, cookieloze bezoekstatistieken
-                (aantal bezoekers en paginaweergaven). Er worden geen tracking-cookies geplaatst en geen individuele
-                bezoekers geïdentificeerd.
+                <strong>Vercel</strong> (Vercel Inc., Verenigde Staten) host deze website en levert geanonimiseerde,
+                cookieloze bezoekstatistieken en prestatiemetingen (Vercel Analytics en Speed Insights): aantal bezoekers,
+                paginaweergaven, laadtijden en of knoppen zoals &ldquo;WhatsApp&rdquo; of &ldquo;Verstuur&rdquo; worden
+                gebruikt. Er worden geen tracking-cookies geplaatst, IP-adressen worden niet opgeslagen en individuele
+                bezoekers worden niet geïdentificeerd. De website draait op servers in de EU; Vercel is een Amerikaans
+                bedrijf en valt onder het EU-VS Data Privacy Framework.
               </li>
               <li>
-                <strong>Het contactformulier</strong> verstuurt je bericht op dit moment via je eigen e-mailprogramma;
-                er wordt geen externe formulierdienst gebruikt.
+                <strong>Resend</strong> verstuurt de berichten uit het contactformulier als e-mail naar mijn mailbox.
+                Resend ziet daarbij alleen wat je zelf in het formulier invult, verwerkt dat op servers in de EU en
+                bewaart een kopie tijdelijk in zijn verzendlogboek. Werkt het versturen via de server niet, dan opent
+                het formulier je eigen e-mailprogramma en gaat je bericht rechtstreeks naar mij.
+              </li>
+              <li>
+                <strong>Vimexx</strong> (Nederland) host mijn zakelijke e-mail. Je aanvraag en onze verdere mailwisseling
+                staan daar in mijn mailbox.
+              </li>
+              <li>
+                <strong>WhatsApp</strong> (Meta Platforms Ireland) als je zelf kiest om me via WhatsApp te benaderen; daar
+                geldt het privacybeleid van WhatsApp.
               </li>
               <li>
                 <strong>Boekhouding en facturatie</strong> lopen via e-Boekhouden.nl (Nederland). Daar staan je naam,
                 adres en factuurgegevens als je klant bent.
               </li>
             </ul>
+            <p>
+              Met deze partijen zijn verwerkersafspraken gemaakt en je gegevens worden binnen de EU verwerkt. Andere
+              partijen krijgen je gegevens niet, tenzij ik daar wettelijk toe verplicht ben.
+            </p>
+
+            <h2>Beveiliging</h2>
+            <p>
+              De verbinding met deze website is versleuteld (HTTPS). Het formulier controleert invoer aan de serverkant
+              en heeft een eenvoudige spamfilter die geen persoonsgegevens vastlegt. Alleen ik heb toegang tot de mailbox
+              waar aanvragen binnenkomen; die is beveiligd met tweestapsverificatie.
+            </p>
 
             <h2>Websites die ik voor je host</h2>
             <p>
@@ -89,7 +115,9 @@ export default function PrivacyPage() {
             <h2>Cookies</h2>
             <p>
               Deze website plaatst geen tracking- of marketingcookies. De bezoekstatistieken zijn cookieloos en anoniem,
-              dus een cookiemelding is niet nodig.
+              dus een cookiemelding is niet nodig. Kies je handmatig voor de lichte of donkere weergave, dan wordt die
+              keuze alleen in je eigen browser opgeslagen (localStorage) zodat de site zich dat onthoudt. Dat is puur
+              functioneel en verlaat je apparaat niet.
             </p>
 
             <h2>Je rechten</h2>
