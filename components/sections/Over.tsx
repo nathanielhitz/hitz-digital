@@ -28,7 +28,7 @@ export function Over() {
               className="object-cover object-center"
             />
             <div
-              className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(7,7,6,0.5)_0%,transparent_45%)]"
+              className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,color-mix(in_srgb,var(--scrim)_50%,transparent)_0%,transparent_45%)]"
               aria-hidden
             />
           </div>

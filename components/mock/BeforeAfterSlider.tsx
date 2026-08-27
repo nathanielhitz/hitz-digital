@@ -80,7 +80,7 @@ export function BeforeAfterSlider({
           sizes="(max-width: 900px) 100vw, 480px"
           className="object-cover object-left-top"
         />
-        <span className="absolute right-3 top-3 rounded-full border border-line bg-[rgba(244,239,231,0.10)] px-[11px] py-1 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-ink">
+        <span className="absolute right-3 top-3 rounded-full border border-on-scrim/20 bg-scrim/45 px-[11px] py-1 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-on-scrim backdrop-blur-[4px]">
           Na
         </span>
       </div>
@@ -97,14 +97,14 @@ export function BeforeAfterSlider({
           sizes="(max-width: 900px) 100vw, 480px"
           className="object-cover object-left-top"
         />
-        <span className="absolute left-3 top-3 rounded-full border border-black/10 bg-black/10 px-[11px] py-1 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[#6b6b6b]">
+        <span className="absolute left-3 top-3 rounded-full border border-on-scrim/20 bg-scrim/45 px-[11px] py-1 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-on-scrim-muted backdrop-blur-[4px]">
           Voor
         </span>
       </div>
 
       {/* HANDLE */}
       <div
-        className="absolute inset-y-0 z-10 w-0.5 -translate-x-1/2 bg-[rgba(244,239,231,0.9)]"
+        className="absolute inset-y-0 z-10 w-0.5 -translate-x-1/2 bg-on-scrim/90"
         style={{ left: "var(--pos)" }}
       >
         <button
@@ -133,7 +133,7 @@ export function BeforeAfterSlider({
               e.preventDefault();
             }
           }}
-          className="absolute left-1/2 top-1/2 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-white bg-accent text-on-accent shadow-[0_0_0_6px_rgba(95,164,126,0.18),0_8px_22px_-6px_rgba(0,0,0,0.8)]"
+          className="absolute left-1/2 top-1/2 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-on-scrim bg-btn text-on-accent shadow-grip"
         >
           <ArrowsHorizontal size={18} weight="bold" />
         </button>

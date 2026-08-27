@@ -4,7 +4,7 @@ import { whatsapp, tel } from "@/lib/content";
 export function StickyCallBar() {
   return (
     <div
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-[rgba(7,7,6,0.86)] px-4 pb-[calc(env(safe-area-inset-bottom)+10px)] pt-[10px] backdrop-blur-[14px] min-[901px]:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-glass/86 px-4 pb-[calc(env(safe-area-inset-bottom)+10px)] pt-[10px] backdrop-blur-[14px] min-[901px]:hidden"
       role="region"
       aria-label="Direct contact"
     >

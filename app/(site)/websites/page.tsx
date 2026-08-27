@@ -38,7 +38,7 @@ export default function WebsitesPage() {
         crumbs={[{ label: "Websites" }]}
         title={
           <>
-            Een website die direct <em className="not-italic text-accent">professioneler</em> voelt.
+            Een website die direct <em className="hd-accent-word not-italic text-accent">professioneler</em> voelt.
           </>
         }
         lead="Voor cafés, schilders, installateurs, hoveniers en andere vakbedrijven in de Hoeksche Waard. Je ziet eerst een echte demo van je eigen site. Daarna beslis je."
@@ -51,7 +51,7 @@ export default function WebsitesPage() {
           </>
         }
         aside={
-          <div className="relative aspect-[16/10] overflow-hidden rounded-2xl border border-line shadow-[0_30px_60px_-40px_rgba(0,0,0,0.85)]">
+          <div className="relative aspect-[16/10] overflow-hidden rounded-2xl border border-line shadow-card">
             <Image
               src="/images/werk/mourits-desktop.webp"
               alt="Website van Mourits Schilderwerken op desktop"
@@ -166,7 +166,7 @@ export default function WebsitesPage() {
                   Lees de hele case <span aria-hidden>→</span>
                 </a>
               </div>
-              <div className="mx-auto w-full max-w-[420px] overflow-hidden rounded-[22px] border border-line shadow-[0_30px_60px_-40px_rgba(0,0,0,0.85)]">
+              <div className="mx-auto w-full max-w-[420px] overflow-hidden rounded-[22px] border border-line shadow-card">
                 <BeforeAfterSlider
                   beforeSrc={voorNa.voorNa.voor}
                   afterSrc={voorNa.voorNa.na}

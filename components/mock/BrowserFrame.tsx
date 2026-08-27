@@ -5,9 +5,9 @@ import type { ReactNode } from "react";
 function TrafficLights({ hidden = false }: { hidden?: boolean }) {
   return (
     <span className={cn("flex gap-[7px]", hidden && "invisible")} aria-hidden>
-      <i className="block h-[11px] w-[11px] rounded-full bg-[#E0685C]" />
-      <i className="block h-[11px] w-[11px] rounded-full bg-[#E6B23E]" />
-      <i className="block h-[11px] w-[11px] rounded-full bg-[#5FB45A]" />
+      <i className="block h-[11px] w-[11px] rounded-full bg-tl-red" />
+      <i className="block h-[11px] w-[11px] rounded-full bg-tl-yellow" />
+      <i className="block h-[11px] w-[11px] rounded-full bg-tl-green" />
     </span>
   );
 }
@@ -39,9 +39,9 @@ export function BrowserFrame({
 }) {
   return (
     <div className={cn("overflow-hidden rounded-[14px] border border-line bg-panel", className)}>
-      <div className="flex items-center gap-3 border-b border-line bg-[linear-gradient(180deg,#2A251F,#211D19)] px-3.5 py-[11px]">
+      <div className="flex items-center gap-3 border-b border-line bg-[linear-gradient(180deg,var(--chrome-hi),var(--chrome-lo))] px-3.5 py-[11px]">
         <TrafficLights />
-        <span className="mx-auto max-w-[260px] flex-1 truncate rounded-md border border-line bg-[#17140F] px-3 py-[5px] text-center font-mono text-[11.5px] text-muted">
+        <span className="mx-auto max-w-[260px] flex-1 truncate rounded-md border border-line bg-chrome-url px-3 py-[5px] text-center font-mono text-[11.5px] text-muted">
           {url}
         </span>
         <TrafficLights hidden />

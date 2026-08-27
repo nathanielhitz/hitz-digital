@@ -2,34 +2,184 @@
 
 /* ---------------------------------------------------------------------------
    HitzDigital — design tokens (groen, "Claude Design 2026")
-   Eén bron voor kleuren, fonts en radii. Tailwind v4 maakt hier utilities van
-   (bg-base, text-ink, border-line, text-accent, font-display, ...).
+   Twee thema's, één bron.
+   1. :root            = light ("Warm Paper"), tevens de fallback zonder JS.
+   2. prefers dark     = dark, tenzij expliciet data-theme="light".
+   3. [data-theme=dark]= dark, gezet door next-themes (localStorage) vóór hydration.
+   Tailwind v4 maakt via @theme inline utilities van de runtime-variabelen
+   (bg-panel, text-ink, border-line, bg-glass/72, shadow-card, ...), dus
+   componenten hoeven geen dark:-varianten.
    --------------------------------------------------------------------------- */
+
+/* Merk-invariant: knop, schermen van de mockups, macOS-stoplichten. Zelfde in beide thema's. */
+:root {
+  --btn-hi: #79bb97;
+  --btn: #5fa47e;
+  --btn-lo: #4a8466;
+  --on-accent: #07140e;
+
+  --notch: #080706; /* telefoonnotch, altijd zwart */
+
+  --tl-red: #e0685c;
+  --tl-yellow: #e6b23e;
+  --tl-green: #5fb45a;
+
+  /* Foto-overlay: blijft donker in beide thema's (tekst erop is on-scrim). */
+  --scrim: #070706;
+  --on-scrim: #f4f1ec;
+  --on-scrim-muted: #c9c3b8;
+}
+
+/* ---- Light: Warm Paper ---- */
+:root {
+  color-scheme: light;
+
+  --deep: #f6f3ed;
+  --base: #eeeae2;
+  --panel: #fffdf9;
+  --ink: #1c1a17;
+  --muted: #5b564e;
+  --faint: #69635a;   /* ≥4.5:1 op deep/base/panel */
+  --line: rgba(28, 26, 23, 0.12);
+  --line2: rgba(28, 26, 23, 0.06);
+
+  --accent: #29704d;        /* tekst/dots: AA op alle vlakken */
+  --accent-bright: #2b7350;
+  --accent-deep: #1f5a3d;
+  --accent-warm: #8bc3a6;
+  --focus: #29704d;
+  --accent-sheen: #3f9d6c;   /* lichtste stop van het accentwoord (≥3:1 op papier, alleen voor grote koppen) */
+  --accent-halo: rgba(95, 164, 126, 0.38);
+
+  --glass-base: #f9f7f2;          /* nav, bars, drijvende panelen */
+  --shadow-ink: rgba(28, 26, 23, 0.42); /* zachte warme schaduw */
+  --glow: rgba(41, 112, 77, 0.6);      /* groene glows, ~40% zwakker */
+  --field: rgba(28, 26, 23, 0.03);
+
+  --chrome-hi: #ede9e1;   /* browser-mockup chrome */
+  --chrome-lo: #e4dfd6;
+  --chrome-url: #f6f3ed;
+
+  --hero-1: #fbf9f4;      /* hero-stage gradient */
+  --hero-2: #f3efe7;
+  --hero-3: #eae5dc;
+  --hero-cool: rgba(118, 138, 168, 0.08);
+  --vignette: rgba(28, 26, 23, 0.1);
+  --code-fg: #5b564e;
+  --code-comment: #7d867b;
+
+  /* Scherm van de mockups: lichte mock-site op papier */
+  --sc-1: #efeae1;
+  --sc-2: #e3ded4;
+  --sc-3: #f3efe8;
+  --sc-4: #fbf9f4;
+  --device-ink: #1c1a17;   /* tekst ín de mock-site op het scherm */
+  --device-muted: #5b564e;
+
+  /* Laptop/telefoon-behuizing: licht aluminium op papier */
+  --dv-1: #ece8e0;
+  --dv-2: #e2ddd4;
+  --dv-3: #d3cdc3;
+  --dv-4: #c5beb3;
+  --dv-5: #b7afa3;
+  --dv-6: #a49c90;
+  --dv-edge: rgba(28, 26, 23, 0.14);
+
+  --sh-card: 0 30px 60px -40px rgba(28, 26, 23, 0.22);
+  --sh-card-accent: 0 30px 60px -40px rgba(41, 112, 77, 0.28);
+  --sh-photo: 0 40px 80px -50px rgba(28, 26, 23, 0.3);
+  --sh-dot: 0 0 8px rgba(41, 112, 77, 0.35);
+  --sh-btn: 0 12px 28px -16px rgba(28, 26, 23, 0.25), 0 6px 20px -12px rgba(41, 112, 77, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  --sh-btn-hover: 0 16px 36px -16px rgba(28, 26, 23, 0.28), 0 10px 26px -12px rgba(41, 112, 77, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.36);
+  --sh-grip: 0 0 0 6px rgba(41, 112, 77, 0.16), 0 8px 22px -6px rgba(28, 26, 23, 0.35);
+}
+
+/* ---- Dark (huidige site) ---- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --deep: #070706; --base: #0c0b09; --panel: #11100e;
+    --ink: #f4f1ec; --muted: #9b968d; --faint: #847f77;
+    --line: rgba(244, 241, 236, 0.1); --line2: rgba(244, 241, 236, 0.05);
+    --accent: #5fa47e; --accent-bright: #79bb97; --accent-deep: #4a8466; --accent-warm: #9ecdb4; --focus: #79bb97; --accent-sheen: #8fd0ac; --accent-halo: rgba(95, 164, 126, 0.28); --accent-sheen: #8fd0ac; --accent-halo: rgba(95, 164, 126, 0.28);
+    --glass-base: #12100e; --shadow-ink: #000; --glow: #5fa47e; --field: rgba(244, 241, 236, 0.04);
+    --chrome-hi: #2a251f; --chrome-lo: #211d19; --chrome-url: #17140f;
+    --hero-1: #13120d; --hero-2: #0b0a08; --hero-3: #070706; --hero-cool: rgba(118, 138, 168, 0.06); --vignette: rgba(0, 0, 0, 0.62);
+    --code-fg: #837c70; --code-comment: #6b7268;
+    --dv-1: #2a2620; --dv-2: #1a1712; --dv-3: #16130f; --dv-4: #110f0c; --dv-5: #0b0a08; --dv-6: #080706; --dv-edge: rgba(255, 255, 255, 0.06);
+    --sc-1: #16130f; --sc-2: #110f0c; --sc-3: #0b0a08; --sc-4: #080706; --device-ink: #f4f1ec; --device-muted: #a8a298;
+    --sh-card: 0 30px 60px -40px rgba(0, 0, 0, 0.85);
+    --sh-card-accent: 0 30px 60px -40px rgba(95, 164, 126, 0.35);
+    --sh-photo: 0 40px 80px -50px rgba(0, 0, 0, 0.9);
+    --sh-dot: 0 0 10px rgba(95, 164, 126, 0.55);
+    --sh-btn: 0 12px 32px -16px rgba(0, 0, 0, 0.7), 0 6px 20px -12px rgba(95, 164, 126, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+    --sh-btn-hover: 0 16px 40px -16px rgba(0, 0, 0, 0.7), 0 10px 26px -12px rgba(95, 164, 126, 0.48), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    --sh-grip: 0 0 0 6px rgba(95, 164, 126, 0.18), 0 8px 22px -6px rgba(0, 0, 0, 0.8);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --deep: #070706; --base: #0c0b09; --panel: #11100e;
+  --ink: #f4f1ec; --muted: #9b968d; --faint: #847f77;
+  --line: rgba(244, 241, 236, 0.1); --line2: rgba(244, 241, 236, 0.05);
+  --accent: #5fa47e; --accent-bright: #79bb97; --accent-deep: #4a8466; --accent-warm: #9ecdb4; --focus: #79bb97; --accent-sheen: #8fd0ac; --accent-halo: rgba(95, 164, 126, 0.28);
+  --glass-base: #12100e; --shadow-ink: #000; --glow: #5fa47e; --field: rgba(244, 241, 236, 0.04);
+  --chrome-hi: #2a251f; --chrome-lo: #211d19; --chrome-url: #17140f;
+  --hero-1: #13120d; --hero-2: #0b0a08; --hero-3: #070706; --hero-cool: rgba(118, 138, 168, 0.06); --vignette: rgba(0, 0, 0, 0.62);
+  --code-fg: #837c70; --code-comment: #6b7268;
+  --dv-1: #2a2620; --dv-2: #1a1712; --dv-3: #16130f; --dv-4: #110f0c; --dv-5: #0b0a08; --dv-6: #080706; --dv-edge: rgba(255, 255, 255, 0.06);
+    --sc-1: #16130f; --sc-2: #110f0c; --sc-3: #0b0a08; --sc-4: #080706; --device-ink: #f4f1ec; --device-muted: #a8a298;
+  --sh-card: 0 30px 60px -40px rgba(0, 0, 0, 0.85);
+  --sh-card-accent: 0 30px 60px -40px rgba(95, 164, 126, 0.35);
+  --sh-photo: 0 40px 80px -50px rgba(0, 0, 0, 0.9);
+  --sh-dot: 0 0 10px rgba(95, 164, 126, 0.55);
+  --sh-btn: 0 12px 32px -16px rgba(0, 0, 0, 0.7), 0 6px 20px -12px rgba(95, 164, 126, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  --sh-btn-hover: 0 16px 40px -16px rgba(0, 0, 0, 0.7), 0 10px 26px -12px rgba(95, 164, 126, 0.48), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  --sh-grip: 0 0 0 6px rgba(95, 164, 126, 0.18), 0 8px 22px -6px rgba(0, 0, 0, 0.8);
+}
+
+/* Tailwind-utilities uit de runtime-variabelen. */
+@theme inline {
+  --color-base: var(--base);
+  --color-deep: var(--deep);
+  --color-panel: var(--panel);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
+  --color-line2: var(--line2);
+
+  --color-accent: var(--accent);
+  --color-accent-bright: var(--accent-bright);
+  --color-accent-deep: var(--accent-deep);
+  --color-accent-warm: var(--accent-warm);
+  --color-on-accent: var(--on-accent);
+  --color-glow: var(--glow);
+
+  --color-glass: var(--glass-base);
+  --color-scrim: var(--scrim);
+  --color-on-scrim: var(--on-scrim);
+  --color-on-scrim-muted: var(--on-scrim-muted);
+  --color-field: var(--field);
+  --color-chrome-hi: var(--chrome-hi);
+  --color-chrome-lo: var(--chrome-lo);
+  --color-chrome-url: var(--chrome-url);
+  --color-tl-red: var(--tl-red);
+  --color-tl-yellow: var(--tl-yellow);
+  --color-tl-green: var(--tl-green);
+
+  --shadow-card: var(--sh-card);
+  --shadow-card-accent: var(--sh-card-accent);
+  --shadow-photo: var(--sh-photo);
+  --shadow-dot: var(--sh-dot);
+  --shadow-btn: var(--sh-btn);
+  --shadow-btn-hover: var(--sh-btn-hover);
+  --shadow-grip: var(--sh-grip);
+
+  --background-image-btn: linear-gradient(135deg, var(--btn-hi) 0%, var(--btn) 48%, var(--btn-lo) 100%);
+}
+
 @theme {
-  /* donkere basis */
-  --color-base: #0c0b09;   /* afwisselende secties */
-  --color-deep: #070706;   /* pagina-achtergrond */
-  --color-panel: #11100e;  /* opgetilde vlakken */
-  --color-ink: #f4f1ec;    /* hoofdtekst */
-  --color-muted: #9b968d;  /* secundaire tekst */
-  --color-faint: #847f77;  /* meta / labels; ≥4.5:1 op alle donkere vlakken (AA) */
-  --color-line: rgba(244, 241, 236, 0.1);
-  --color-line2: rgba(244, 241, 236, 0.05);
-
-  /* enige accent: groen */
-  --color-accent: #5fa47e;
-  --color-accent-bright: #79bb97;
-  --color-accent-deep: #4a8466;
-  --color-accent-warm: #9ecdb4;
-  --color-on-accent: #07140e; /* tekst op accent-knoppen */
-
-  /* cream relief (optioneel, één sectie) */
-  --color-cream: #f7f3ec;
-  --color-cream-ink: #1c1a17;
-  --color-cream-muted: #6e685e;
-  --color-cream-line: #e7e0d5;
-
-  /* fonts: General Sans (koppen) self-hosted via next/font/local, Inter (body) via next/font/google */
   --font-display: var(--font-display-src), var(--font-body-src), ui-sans-serif, system-ui, sans-serif;
   --font-body: var(--font-body-src), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
@@ -39,21 +189,15 @@
 }
 
 :root {
-  color-scheme: dark;
-
   /* Korte aliases die het hero-HTML-fragment (HeroExperience) gebruikt. */
-  --bg: var(--color-base);
-  --bg2: var(--color-deep);
-  --surface: var(--color-panel);
-  --text: var(--color-ink);
-  --muted: var(--color-muted);
-  --faint: var(--color-faint);
-  --line: var(--color-line);
-  --line2: var(--color-line2);
-  --accent: var(--color-accent);
-  --accent-br: var(--color-accent-bright);
-  --accent-dp: var(--color-accent-deep);
-  --warm: var(--color-accent-warm);
+  --bg: var(--base);
+  --bg2: var(--deep);
+  --surface: var(--panel);
+  --text: var(--ink);
+  --accent-br: var(--accent-bright);
+  --accent-dp: var(--accent-deep);
+  --warm: var(--accent-warm);
+  --glass: var(--glass-base);
 }
 
 html {
@@ -61,8 +205,8 @@ html {
 }
 
 body {
-  background-color: var(--color-deep);
-  color: var(--color-ink);
+  background-color: var(--deep);
+  color: var(--ink);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -70,8 +214,25 @@ body {
 }
 
 ::selection {
-  background: var(--color-accent);
-  color: var(--color-on-accent);
+  background: var(--btn);
+  color: var(--on-accent);
+}
+
+/* Accentwoord in koppen: gradient-tekst met zachte gloed, zodat het groen ook op papier "licht geeft". */
+.hd-accent-word {
+  background-image: linear-gradient(160deg, var(--accent-sheen) 0%, var(--accent) 55%, var(--accent-deep) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--accent);
+  filter: drop-shadow(0 0 22px var(--accent-halo));
+}
+
+/* Hero-grain: overlay op donker, multiply op papier. */
+.hd-grain { opacity: 0.045; mix-blend-mode: overlay; }
+:root[data-theme="light"] .hd-grain { opacity: 0.035; mix-blend-mode: multiply; }
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .hd-grain { opacity: 0.035; mix-blend-mode: multiply; }
 }
 
 /* Inhoud die direct na de pinned hero komt: op desktop onder de uitfadende
@@ -96,7 +257,7 @@ body {
     position: relative !important; left: auto !important; right: auto !important; top: auto !important; transform: none !important;
     max-width: 560px !important; margin: 0 auto !important; padding: 0 clamp(20px, 7vw, 40px) !important; text-align: center !important;
   }
-  .hd-copy .hd-kicker, .hd-copy .hd-cta, .hd-copy .hd-trust { justify-content: center !important; }
+  .hd-copy .hd-kicker, .hd-copy .hd-cta { justify-content: center !important; }
   .hd-copy .hd-sub { margin: 0 auto 32px !important; }
   .hd-scene { position: relative !important; inset: auto !important; height: 480px !important; width: 100% !important; margin-top: 12px !important; }
   .hd-cue, .hd-stage3d, .hd-flayer { display: none !important; }
@@ -109,10 +270,7 @@ body {
 }
 .hd-btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow:
-    0 16px 40px -16px rgba(0, 0, 0, 0.7),
-    0 10px 26px -12px color-mix(in srgb, var(--accent) 48%, transparent),
-    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  box-shadow: var(--sh-btn-hover);
   filter: brightness(1.04);
 }
 .hd-btn-primary:active {
@@ -132,7 +290,7 @@ body {
 }
 
 :focus-visible {
-  outline: 3px solid var(--color-accent-bright);
+  outline: 3px solid var(--focus);
   outline-offset: 3px;
   border-radius: 2px;
 }

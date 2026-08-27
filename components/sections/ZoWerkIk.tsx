@@ -16,7 +16,7 @@ export function ZoWerkIk() {
             {zoWerkIk.map((item) => (
               <div key={item.title} className="flex items-start gap-[14px]">
                 <span
-                  className="mt-2 h-[9px] w-[9px] flex-none rounded-full bg-accent shadow-[0_0_10px_rgba(95,164,126,0.55)]"
+                  className="mt-2 h-[9px] w-[9px] flex-none rounded-full bg-accent shadow-dot"
                   aria-hidden
                 />
                 <div>

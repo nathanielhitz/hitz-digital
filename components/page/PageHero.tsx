@@ -20,7 +20,7 @@ export function PageHero({
   return (
     <section className="relative px-[clamp(20px,5vw,64px)] pb-[clamp(56px,8vw,96px)] pt-[clamp(120px,16vw,168px)]">
       <div
-        className="pointer-events-none absolute right-[6%] top-[8%] h-[40vw] max-h-[620px] w-[40vw] max-w-[620px] rounded-full bg-[radial-gradient(circle,rgba(95,164,126,0.14)_0%,rgba(95,164,126,0.04)_40%,transparent_70%)] blur-[32px]"
+        className="pointer-events-none absolute right-[6%] top-[8%] h-[40vw] max-h-[620px] w-[40vw] max-w-[620px] rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--glow)_14%,transparent)_0%,color-mix(in_srgb,var(--glow)_4%,transparent)_40%,transparent_70%)] blur-[32px]"
         aria-hidden
       />
       <Container className="relative">

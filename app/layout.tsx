@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import { site, professionalServiceSchema, websiteSchema, faqPageSchema } from "@/lib/site";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { ThemeProvider } from "next-themes";
 import "./globals.css";
 
 const body = Inter({
@@ -54,9 +55,13 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const faqSchema = faqPageSchema();
   return (
-    <html lang="nl" className={`${body.variable} ${display.variable}`}>
+    <html lang="nl" className={`${body.variable} ${display.variable}`} suppressHydrationWarning>
       <body>
-        {children}
+        {/* next-themes zet data-theme + color-scheme op <html> via een inline script vóór hydration:
+            systeemvoorkeur als default, handmatige keuze in localStorage ("theme"). Geen flash. */}
+        <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem disableTransitionOnChange>
+          {children}
+        </ThemeProvider>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(professionalServiceSchema()) }}

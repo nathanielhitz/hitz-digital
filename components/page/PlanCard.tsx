@@ -16,7 +16,7 @@ export function PlanCard({ plan }: { plan: Plan }) {
   return (
     <div
       className={`relative flex h-full flex-col rounded-2xl border p-[clamp(24px,2.6vw,34px)] ${
-        plan.featured ? "border-accent/50 bg-panel shadow-[0_30px_60px_-40px_rgba(95,164,126,0.35)]" : "border-line bg-panel"
+        plan.featured ? "border-accent/50 bg-panel shadow-card-accent" : "border-line bg-panel"
       }`}
     >
       {plan.featured && (

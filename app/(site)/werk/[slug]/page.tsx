@@ -70,7 +70,7 @@ export default async function CasePage({ params }: { params: Promise<Params> }) 
       <section className="px-[clamp(20px,5vw,64px)] pb-[clamp(56px,8vw,96px)]">
         <Container>
           <Reveal>
-            <div className="relative aspect-[16/10] overflow-hidden rounded-2xl border border-line shadow-[0_40px_80px_-50px_rgba(0,0,0,0.9)]">
+            <div className="relative aspect-[16/10] overflow-hidden rounded-2xl border border-line shadow-photo">
               <Image
                 src={c.desktop}
                 alt={`Website van ${c.title} op desktop`}
@@ -128,7 +128,7 @@ export default async function CasePage({ params }: { params: Promise<Params> }) 
                   Sleep de greep om de oude en de nieuwe site te vergelijken, zoals een klant ze op zijn telefoon ziet.
                 </p>
               </div>
-              <div className="mx-auto w-full max-w-[420px] overflow-hidden rounded-[22px] border border-line shadow-[0_30px_60px_-40px_rgba(0,0,0,0.85)]">
+              <div className="mx-auto w-full max-w-[420px] overflow-hidden rounded-[22px] border border-line shadow-card">
                 <BeforeAfterSlider
                   beforeSrc={c.voorNa.voor}
                   afterSrc={c.voorNa.na}

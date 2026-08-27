@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Wordmark } from "@/components/ui/Wordmark";
+import { ThemeSwitch } from "@/components/ui/ThemeSwitch";
 import { cn } from "@/lib/cn";
 import { nav, cta } from "@/lib/content";
 
@@ -71,7 +72,7 @@ export function Nav() {
       <header
         className={cn(
           "fixed inset-x-0 top-0 z-50 border-b transition-[background-color,border-color,backdrop-filter] duration-[350ms]",
-          scrolled ? "border-line bg-[rgba(9,9,8,0.72)] backdrop-blur-[14px]" : "border-transparent",
+          scrolled ? "border-line bg-glass/72 backdrop-blur-[14px]" : "border-transparent",
         )}
       >
         <nav
@@ -88,6 +89,7 @@ export function Nav() {
                 {l.label}
               </a>
             ))}
+            <ThemeSwitch />
             <a
               href={cta.demo.href}
               className="inline-flex items-center gap-2 rounded-full border border-line px-[17px] py-[9px] font-medium text-ink transition-[border-color,background-color] duration-[250ms] hover:border-accent/55 hover:bg-accent/12"
@@ -124,7 +126,7 @@ export function Nav() {
         aria-hidden={!open}
         inert={!open}
         className={cn(
-          "fixed inset-0 z-[60] flex flex-col bg-[rgba(7,7,6,0.97)] px-[clamp(20px,7vw,40px)] pb-11 pt-[22px] backdrop-blur-[12px] transition-opacity duration-[260ms] min-[901px]:hidden",
+          "fixed inset-0 z-[60] flex flex-col bg-glass/97 px-[clamp(20px,7vw,40px)] pb-11 pt-[22px] backdrop-blur-[12px] transition-opacity duration-[260ms] min-[901px]:hidden",
           open ? "opacity-100" : "pointer-events-none opacity-0",
         )}
       >
@@ -150,6 +152,10 @@ export function Nav() {
               {l.label}
             </a>
           ))}
+        </div>
+        <div className="mb-6 flex items-center justify-between text-[14px] text-muted">
+          <span>Weergave</span>
+          <ThemeSwitch size="lg" />
         </div>
         <Button href={cta.demo.href} className="w-full py-4 text-[16px]" onClick={close}>
           {cta.demo.label}

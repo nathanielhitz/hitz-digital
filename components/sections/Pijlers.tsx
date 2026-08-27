@@ -36,7 +36,7 @@ export function Pijlers() {
                 {p.live ? (
                   <a
                     href={p.href}
-                    className={`${cls} hover:-translate-y-1 hover:border-accent/40 hover:shadow-[0_30px_60px_-40px_rgba(0,0,0,0.85)]`}
+                    className={`${cls} hover:-translate-y-1 hover:border-accent/40 hover:shadow-card`}
                   >
                     {inner}
                   </a>

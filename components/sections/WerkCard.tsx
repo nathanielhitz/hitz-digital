@@ -26,16 +26,16 @@ export function WerkCard({ item }: { item: WorkItem }) {
           className="object-cover object-top"
         />
         <div
-          className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(7,7,6,0.65)_0%,transparent_55%)]"
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,color-mix(in_srgb,var(--scrim)_65%,transparent)_0%,transparent_55%)]"
           aria-hidden
         />
         {item.tag && (
-          <span className="absolute left-3 top-3 rounded-full border border-line bg-[rgba(7,7,6,0.55)] px-[10px] py-[4px] text-[10.5px] uppercase tracking-[0.12em] text-muted backdrop-blur-[6px]">
+          <span className="absolute left-3 top-3 rounded-full border border-on-scrim/15 bg-scrim/55 px-[10px] py-[4px] text-[10.5px] uppercase tracking-[0.12em] text-on-scrim-muted backdrop-blur-[6px]">
             {item.tag}
           </span>
         )}
         {internal && (
-          <span className="absolute bottom-3 left-3 text-[12.5px] font-medium text-ink/90 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          <span className="absolute bottom-3 left-3 text-[12.5px] font-medium text-on-scrim/90 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
             Bekijk de case →
           </span>
         )}

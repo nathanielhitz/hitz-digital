@@ -11,33 +11,31 @@ import { track } from "@vercel/analytics";
  *
  * Contract met de pagina: het element dat direct ná deze hero komt krijgt
  * class `hd-after-hero` (CSS trekt het op desktop -80vh omhoog, zie globals.css).
- * Verwacht CSS-variabelen --bg/--bg2/--text/--muted/--faint/--line/--accent/
- * --accent-br/--accent-dp/--warm op :root (aliases in globals.css).
+ * Kleuren: alleen CSS-variabelen (globals.css). Themavolgend: --hero-*, --glass, --text,
+ * --line, --accent*, --shadow-ink, --code-*. Merk-invariant: --btn*, --dv-* (het apparaat
+ * zelf blijft donker, zoals een echte laptop) en --device-ink/--device-muted (mock-site op het scherm).
  */
 const HERO_HTML = `
   <!-- scroll experience: laptop intro (pinned) -->
   <div class="hd-exp" style="position:relative;height:240vh">
-    <div class="hd-sticky" style="position:sticky;top:0;height:100vh;overflow:hidden;background:radial-gradient(120% 90% at 70% 24%,#13120d 0%,#0b0a08 48%,#070706 100%)">
+    <div class="hd-sticky" style="position:sticky;top:0;height:100vh;overflow:hidden;background:radial-gradient(120% 90% at 70% 24%,var(--hero-1) 0%,var(--hero-2) 48%,var(--hero-3) 100%)">
 
       <div class="hd-glow" style="position:absolute;right:6%;top:8%;width:46vw;height:46vw;max-width:760px;max-height:760px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--accent) 15%,transparent) 0%,color-mix(in srgb,var(--accent) 4%,transparent) 40%,transparent 70%);filter:blur(32px);pointer-events:none"></div>
-      <div class="hd-glow-cool" style="position:absolute;right:34%;bottom:4%;width:30vw;height:30vw;max-width:440px;max-height:440px;border-radius:50%;background:radial-gradient(circle,rgba(118,138,168,0.06) 0%,transparent 66%);filter:blur(30px);pointer-events:none"></div>
-      <div class="hd-vignette" style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(130% 100% at 50% 42%,transparent 50%,rgba(0,0,0,0.62) 100%)"></div>
-      <div class="hd-grain" style="position:absolute;inset:0;pointer-events:none;opacity:0.045;mix-blend-mode:overlay;background-image:url('data:image/svg+xml;utf8,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22&gt;&lt;filter id=%22n%22&gt;&lt;feTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%222%22/&gt;&lt;/filter&gt;&lt;rect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/&gt;&lt;/svg&gt;')"></div>
+      <div class="hd-glow-cool" style="position:absolute;right:34%;bottom:4%;width:30vw;height:30vw;max-width:440px;max-height:440px;border-radius:50%;background:radial-gradient(circle,var(--hero-cool) 0%,transparent 66%);filter:blur(30px);pointer-events:none"></div>
+      <div class="hd-vignette" style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(130% 100% at 50% 42%,transparent 50%,var(--vignette) 100%)"></div>
+      <div class="hd-grain" style="position:absolute;inset:0;pointer-events:none;background-image:url('data:image/svg+xml;utf8,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22&gt;&lt;filter id=%22n%22&gt;&lt;feTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%222%22/&gt;&lt;/filter&gt;&lt;rect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/&gt;&lt;/svg&gt;')"></div>
 
       <!-- hero copy -->
       <div class="hd-copy" data-screen-label="Hero copy" style="position:absolute;left:clamp(20px,5vw,64px);top:50%;z-index:5;max-width:540px;transform:translateY(-50%);will-change:transform,opacity">
         <h1 class="hd-h1" style="font-family:var(--font-display);font-weight:600;font-size:clamp(38px,5vw,66px);line-height:1.02;letter-spacing:-0.035em;margin-bottom:24px">
-          <span style="font-weight:300">Alles rond je </span><em style="font-style:normal;font-weight:600;color:var(--accent)">website</em><span style="font-weight:300">. Eén aanspreekpunt.</span>
+          <span style="font-weight:300">Alles rond je </span><em class="hd-accent-word" style="font-style:normal;font-weight:600;color:var(--accent)">website</em><span style="font-weight:300">. Eén aanspreekpunt.</span>
         </h1>
         <p class="hd-sub" style="font-size:clamp(16px,1.25vw,18.5px);line-height:1.6;color:var(--muted);max-width:470px;margin-bottom:36px">Websites, hosting en computerhulp voor ondernemers in de Hoeksche Waard. Ik bouw je site, houd hem online en kijk direct mee als iets vastloopt. Eén persoon, korte lijnen.</p>
-        <div class="hd-cta" style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:26px">
-          <a href="#pijlers" class="hd-btn-primary" style="display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:100px;background:linear-gradient(135deg,var(--accent-br) 0%,var(--accent) 48%,var(--accent-dp) 100%);color:#07140e;text-decoration:none;font-weight:600;font-size:15px;box-shadow:0 12px 32px -16px rgba(0,0,0,0.7),0 6px 20px -12px color-mix(in srgb,var(--accent) 36%,transparent),inset 0 1px 0 rgba(255,255,255,0.16);transition:transform .25s,box-shadow .25s,filter .25s" style-hover="transform:translateY(-2px);box-shadow:0 16px 40px -16px rgba(0,0,0,0.7),0 10px 26px -12px color-mix(in srgb,var(--accent) 48%,transparent),inset 0 1px 0 rgba(255,255,255,0.22);filter:brightness(1.04)" style-active="transform:translateY(0);filter:brightness(0.98)">Bekijk wat ik doe
+        <div class="hd-cta" style="display:flex;flex-wrap:wrap;gap:14px">
+          <a href="#pijlers" class="hd-btn-primary" style="display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:100px;background:linear-gradient(135deg,var(--btn-hi) 0%,var(--btn) 48%,var(--btn-lo) 100%);color:var(--on-accent);text-decoration:none;font-weight:600;font-size:15px;box-shadow:var(--sh-btn);transition:transform .25s,box-shadow .25s,filter .25s" style-hover="transform:translateY(-2px);box-shadow:0 16px 40px -16px color-mix(in srgb,var(--shadow-ink) 70%,transparent),0 10px 26px -12px color-mix(in srgb,var(--accent) 48%,transparent),inset 0 1px 0 color-mix(in srgb,var(--device-ink) 22%,transparent);filter:brightness(1.04)" style-active="transform:translateY(0);filter:brightness(0.98)">Bekijk wat ik doe
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
           </a>
           <a href="/contact" class="hd-btn-ghost" style="display:inline-flex;align-items:center;gap:9px;padding:15px 24px;border-radius:100px;border:1px solid var(--line);color:var(--text);text-decoration:none;font-weight:500;font-size:15px;transition:border-color .25s,background .25s,transform .25s" style-hover="border-color:color-mix(in srgb,var(--accent) 55%,transparent);background:color-mix(in srgb,var(--accent) 9%,transparent);transform:translateY(-2px)" style-active="transform:translateY(0)">Neem contact op</a>
-        </div>
-        <div class="hd-trust" style="display:flex;align-items:center;gap:16px;font-size:13.5px;color:var(--faint)">
-          <span>Gratis demo vooraf</span><span style="opacity:.5">·</span><span>Maandelijks opzegbaar</span><span style="opacity:.5">·</span><span>Uit de Hoeksche Waard</span>
         </div>
       </div>
 
@@ -48,7 +46,7 @@ const HERO_HTML = `
 
       <!-- 3D scene -->
       <div class="hd-scene" style="position:absolute;inset:0;z-index:3;perspective:1700px;perspective-origin:58% 44%">
-        <div class="hd-floor" style="position:absolute;left:50%;bottom:9%;width:60%;height:64px;transform:translateX(-50%);background:radial-gradient(ellipse at center,rgba(0,0,0,0.6) 0%,transparent 72%);filter:blur(18px);pointer-events:none"></div>
+        <div class="hd-floor" style="position:absolute;left:50%;bottom:9%;width:60%;height:64px;transform:translateX(-50%);background:radial-gradient(ellipse at center,color-mix(in srgb,var(--shadow-ink) 60%,transparent) 0%,transparent 72%);filter:blur(18px);pointer-events:none"></div>
 
         <div class="hd-stage3d" style="position:absolute;left:50%;top:50%;width:640px;height:520px;margin-left:-320px;margin-top:-260px;transform-style:preserve-3d;transform:scale(0.8) rotateX(8deg) rotateY(-16deg)">
 
@@ -62,87 +60,87 @@ const HERO_HTML = `
           </svg>
 
           <div class="hd-mac" style="position:absolute;left:0;top:24px;width:640px;transform-style:preserve-3d;will-change:transform">
-            <div class="hd-lid" style="position:relative;width:640px;height:404px;border-radius:16px;transform-style:preserve-3d;transform-origin:center bottom;transform:rotateX(-6deg);background:linear-gradient(155deg,#2a2620 0%,#17140f 48%,#0d0b08 100%);box-shadow:inset 0 1px 0 color-mix(in srgb,var(--accent) 10%,transparent),0 0 0 1px rgba(255,255,255,0.06),0 40px 80px -36px rgba(0,0,0,0.9),0 26px 90px -30px color-mix(in srgb,var(--accent) 16%,transparent);padding:13px;backface-visibility:hidden">
-              <div class="hd-cam" style="position:absolute;top:6px;left:50%;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:#2a2620"></div>
-              <div class="hd-display" style="position:relative;width:100%;height:100%;border-radius:7px;overflow:hidden;background:#080706;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.8)">
-                <div class="hd-backlight" style="position:absolute;inset:0;opacity:0;background:linear-gradient(160deg,#12110c 0%,#0a0908 100%)">
+            <div class="hd-lid" style="position:relative;width:640px;height:404px;border-radius:16px;transform-style:preserve-3d;transform-origin:center bottom;transform:rotateX(-6deg);background:linear-gradient(155deg,var(--dv-1) 0%,var(--dv-3) 48%,var(--dv-5) 100%);box-shadow:inset 0 1px 0 color-mix(in srgb,var(--accent) 10%,transparent),0 0 0 1px var(--dv-edge),0 40px 80px -36px color-mix(in srgb,var(--shadow-ink) 90%,transparent),0 26px 90px -30px color-mix(in srgb,var(--accent) 16%,transparent);padding:13px;backface-visibility:hidden">
+              <div class="hd-cam" style="position:absolute;top:6px;left:50%;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--dv-1)"></div>
+              <div class="hd-display" style="position:relative;width:100%;height:100%;border-radius:7px;overflow:hidden;background:var(--sc-4);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--sc-4) 80%,transparent)">
+                <div class="hd-backlight" style="position:absolute;inset:0;opacity:0;background:linear-gradient(160deg,var(--sc-2) 0%,var(--sc-3) 100%)">
                   <div style="position:absolute;inset:0;background-image:linear-gradient(var(--line2) 1px,transparent 1px),linear-gradient(90deg,var(--line2) 1px,transparent 1px);background-size:34px 34px;opacity:.6"></div>
                 </div>
                 <div class="hd-wire-screen" style="position:absolute;inset:0;opacity:0;padding:14px">
                   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:13px">
-                    <div style="width:54px;height:8px;border-radius:3px;background:rgba(244,241,236,0.16)"></div>
-                    <div style="display:flex;gap:7px;align-items:center"><span style="width:26px;height:6px;border-radius:3px;background:rgba(244,241,236,0.1)"></span><span style="width:26px;height:6px;border-radius:3px;background:rgba(244,241,236,0.1)"></span><span style="width:40px;height:15px;border-radius:100px;border:1px dashed rgba(244,241,236,0.22)"></span></div>
+                    <div style="width:54px;height:8px;border-radius:3px;background:color-mix(in srgb,var(--device-ink) 16%,transparent)"></div>
+                    <div style="display:flex;gap:7px;align-items:center"><span style="width:26px;height:6px;border-radius:3px;background:color-mix(in srgb,var(--device-ink) 10%,transparent)"></span><span style="width:26px;height:6px;border-radius:3px;background:color-mix(in srgb,var(--device-ink) 10%,transparent)"></span><span style="width:40px;height:15px;border-radius:100px;border:1px dashed color-mix(in srgb,var(--device-ink) 22%,transparent)"></span></div>
                   </div>
-                  <div style="height:150px;border:1px dashed rgba(244,241,236,0.2);border-radius:8px;position:relative;margin-bottom:13px"><div style="position:absolute;top:10px;left:12px;display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:100px;background:rgba(18,16,14,0.72);border:1px solid var(--line);font-size:9px;color:var(--text)"><span style="width:4px;height:4px;border-radius:50%;background:var(--accent)"></span>Mobielvriendelijk</div>
-                    <div style="position:absolute;left:14px;bottom:14px;width:46%;height:12px;border-radius:3px;background:rgba(244,241,236,0.18)"></div>
-                    <div style="position:absolute;left:14px;bottom:34px;width:60%;height:12px;border-radius:3px;background:rgba(244,241,236,0.22)"></div>
-                    <div style="position:absolute;right:16px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:1px dashed rgba(244,241,236,0.22);border-radius:6px"></div>
+                  <div style="height:150px;border:1px dashed color-mix(in srgb,var(--device-ink) 20%,transparent);border-radius:8px;position:relative;margin-bottom:13px"><div style="position:absolute;top:10px;left:12px;display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:100px;background:color-mix(in srgb,var(--sc-4) 72%,transparent);border:1px solid color-mix(in srgb,var(--device-ink) 12%,transparent);font-size:9px;color:var(--device-ink)"><span style="width:4px;height:4px;border-radius:50%;background:var(--accent)"></span>Mobielvriendelijk</div>
+                    <div style="position:absolute;left:14px;bottom:14px;width:46%;height:12px;border-radius:3px;background:color-mix(in srgb,var(--device-ink) 18%,transparent)"></div>
+                    <div style="position:absolute;left:14px;bottom:34px;width:60%;height:12px;border-radius:3px;background:color-mix(in srgb,var(--device-ink) 22%,transparent)"></div>
+                    <div style="position:absolute;right:16px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:1px dashed color-mix(in srgb,var(--device-ink) 22%,transparent);border-radius:6px"></div>
                   </div>
                   <div style="display:flex;gap:12px;margin-bottom:12px">
-                    <div style="flex:1;height:64px;border:1px dashed rgba(244,241,236,0.2);border-radius:7px"></div>
-                    <div style="flex:1;height:64px;border:1px dashed rgba(244,241,236,0.2);border-radius:7px"></div>
-                    <div style="flex:1;height:64px;border:1px dashed rgba(244,241,236,0.2);border-radius:7px"></div>
+                    <div style="flex:1;height:64px;border:1px dashed color-mix(in srgb,var(--device-ink) 20%,transparent);border-radius:7px"></div>
+                    <div style="flex:1;height:64px;border:1px dashed color-mix(in srgb,var(--device-ink) 20%,transparent);border-radius:7px"></div>
+                    <div style="flex:1;height:64px;border:1px dashed color-mix(in srgb,var(--device-ink) 20%,transparent);border-radius:7px"></div>
                   </div>
-                  <div style="display:flex;gap:10px"><div style="width:96px;height:13px;border-radius:3px;background:rgba(244,241,236,0.16)"></div><div style="width:64px;height:13px;border-radius:3px;background:rgba(244,241,236,0.1)"></div></div>
+                  <div style="display:flex;gap:10px"><div style="width:96px;height:13px;border-radius:3px;background:color-mix(in srgb,var(--device-ink) 16%,transparent)"></div><div style="width:64px;height:13px;border-radius:3px;background:color-mix(in srgb,var(--device-ink) 10%,transparent)"></div></div>
                 </div>
                 <div class="hd-site" aria-hidden="true" role="presentation" style="position:absolute;inset:0;opacity:0">
-                  <div style="position:absolute;inset:0;background:repeating-linear-gradient(135deg,#15130f 0,#15130f 9px,#100e0b 9px,#100e0b 18px)"></div>
-                  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,7,6,0.5) 0%,transparent 30%,rgba(7,7,6,0.8) 100%)"></div>
-                  <div style="position:absolute;top:14px;left:18px;font-family:var(--font-display);font-weight:600;font-size:13px;letter-spacing:0.06em;color:#F4F1EC">VOLMER TECHNIEK</div>
-                  <div style="position:absolute;top:15px;right:18px;display:flex;align-items:center;gap:12px;font-size:10px;color:#a8a298"><span>Diensten</span><span>Werk</span><span>Contact</span><span style="padding:5px 10px;border:1px solid rgba(255,255,255,0.18);border-radius:100px;color:#F4F1EC">Bel direct</span></div>
+                  <div style="position:absolute;inset:0;background:repeating-linear-gradient(135deg,var(--sc-1) 0,var(--sc-1) 9px,var(--sc-2) 9px,var(--sc-2) 18px)"></div>
+                  <div style="position:absolute;inset:0;background:linear-gradient(180deg,color-mix(in srgb,var(--sc-4) 50%,transparent) 0%,transparent 30%,color-mix(in srgb,var(--sc-4) 80%,transparent) 100%)"></div>
+                  <div style="position:absolute;top:14px;left:18px;font-family:var(--font-display);font-weight:600;font-size:13px;letter-spacing:0.06em;color:var(--device-ink)">VOLMER TECHNIEK</div>
+                  <div style="position:absolute;top:15px;right:18px;display:flex;align-items:center;gap:12px;font-size:10px;color:var(--device-muted)"><span>Diensten</span><span>Werk</span><span>Contact</span><span style="padding:5px 10px;border:1px solid color-mix(in srgb,var(--device-ink) 18%,transparent);border-radius:100px;color:var(--device-ink)">Bel direct</span></div>
                   <div style="position:absolute;left:24px;bottom:60px;right:24px">
-                    <div style="font-family:var(--font-display);font-weight:600;font-size:29px;line-height:1.04;letter-spacing:-0.02em;color:#F7F4EF;max-width:80%">On-site verspaning zonder stilstand.</div>
-                    <div style="display:flex;gap:10px;margin-top:15px"><span style="padding:9px 16px;border-radius:100px;background:var(--accent);color:#07140e;font-weight:600;font-size:11px">Offerte aanvragen</span><span style="padding:9px 16px;border-radius:100px;border:1px solid rgba(255,255,255,0.2);color:#F4F1EC;font-size:11px">Bekijk diensten</span></div>
+                    <div style="font-family:var(--font-display);font-weight:600;font-size:29px;line-height:1.04;letter-spacing:-0.02em;color:var(--device-ink);max-width:80%">On-site verspaning zonder stilstand.</div>
+                    <div style="display:flex;gap:10px;margin-top:15px"><span style="padding:9px 16px;border-radius:100px;background:var(--btn);color:var(--on-accent);font-weight:600;font-size:11px">Offerte aanvragen</span><span style="padding:9px 16px;border-radius:100px;border:1px solid color-mix(in srgb,var(--device-ink) 20%,transparent);color:var(--device-ink);font-size:11px">Bekijk diensten</span></div>
                   </div>
                 </div>
                 <div class="hd-screenglow" style="position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(120% 80% at 30% 0%,color-mix(in srgb,var(--accent) 10%,transparent),transparent 60%)"></div>
               </div>
             </div>
-            <div class="hd-deck" style="position:absolute;left:-12px;top:404px;width:664px;height:452px;border-radius:0 0 18px 18px;transform-origin:center top;transform:rotateX(74deg);background:linear-gradient(180deg,#1a1712 0%,#110f0c 60%,#0b0a08 100%);box-shadow:0 0 0 1px rgba(255,255,255,0.04);backface-visibility:hidden">
-              <div style="position:absolute;top:0;left:50%;width:150px;height:9px;margin-left:-75px;border-radius:0 0 7px 7px;background:linear-gradient(180deg,#070706,#16130e)"></div>
-              <div class="hd-keys" style="position:absolute;top:40px;left:46px;right:46px;height:230px;border-radius:8px;background:#0a0807;box-shadow:inset 0 1px 0 rgba(255,255,255,0.03);background-image:linear-gradient(rgba(255,255,255,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.05) 1px,transparent 1px);background-size:25px 22px;background-position:8px 8px"></div>
-              <div class="hd-trackpad" style="position:absolute;bottom:34px;left:50%;width:230px;height:120px;margin-left:-115px;border-radius:11px;background:linear-gradient(180deg,#141009,#0d0b08);box-shadow:inset 0 0 0 1px rgba(255,255,255,0.05)"></div>
+            <div class="hd-deck" style="position:absolute;left:-12px;top:404px;width:664px;height:452px;border-radius:0 0 18px 18px;transform-origin:center top;transform:rotateX(74deg);background:linear-gradient(180deg,var(--dv-2) 0%,var(--dv-4) 60%,var(--dv-5) 100%);box-shadow:0 0 0 1px var(--dv-edge);backface-visibility:hidden">
+              <div style="position:absolute;top:0;left:50%;width:150px;height:9px;margin-left:-75px;border-radius:0 0 7px 7px;background:linear-gradient(180deg,var(--dv-6),var(--dv-3))"></div>
+              <div class="hd-keys" style="position:absolute;top:40px;left:46px;right:46px;height:230px;border-radius:8px;background:var(--dv-5);box-shadow:inset 0 1px 0 var(--dv-edge);background-image:linear-gradient(var(--dv-edge) 1px,transparent 1px),linear-gradient(90deg,var(--dv-edge) 1px,transparent 1px);background-size:25px 22px;background-position:8px 8px"></div>
+              <div class="hd-trackpad" style="position:absolute;bottom:34px;left:50%;width:230px;height:120px;margin-left:-115px;border-radius:11px;background:linear-gradient(180deg,var(--dv-4),var(--dv-5));box-shadow:inset 0 0 0 1px var(--dv-edge)"></div>
             </div>
           </div>
 
           <!-- floating layers (minimal) -->
           <div class="hd-flayer" data-k="grid" style="position:absolute;left:58px;top:30px;width:226px;height:148px;opacity:0;will-change:transform,opacity">
-            <div style="width:100%;height:100%;border-radius:12px;border:1px solid var(--line);background:rgba(18,16,14,0.55);backdrop-filter:blur(6px);position:relative;overflow:hidden">
+            <div style="width:100%;height:100%;border-radius:12px;border:1px solid var(--line);background:color-mix(in srgb,var(--glass) 55%,transparent);backdrop-filter:blur(6px);position:relative;overflow:hidden">
               <div style="position:absolute;inset:0;background-image:linear-gradient(color-mix(in srgb,var(--accent) 13%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--accent) 13%,transparent) 1px,transparent 1px);background-size:26px 26px"></div>
               <div style="position:absolute;bottom:8px;left:10px;font-family:ui-monospace,Menlo,monospace;font-size:9px;letter-spacing:0.08em;color:var(--accent-br)">Duidelijke structuur</div>
             </div>
           </div>
 
           <div class="hd-flayer" data-k="nav" style="position:absolute;left:54px;top:-34px;width:300px;height:50px;opacity:0;will-change:transform,opacity">
-            <div style="width:100%;height:100%;border-radius:12px;border:1px solid var(--line);background:rgba(18,16,14,0.8);backdrop-filter:blur(10px);box-shadow:0 18px 40px -22px rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:space-between;padding:0 16px">
-              <div style="width:64px;height:9px;border-radius:3px;background:rgba(244,241,236,0.5)"></div>
-              <div style="display:flex;gap:8px;align-items:center"><span style="width:34px;height:7px;border-radius:3px;background:rgba(244,241,236,0.2)"></span><span style="display:inline-flex;align-items:center;padding:3px 8px;border-radius:100px;background:var(--accent);color:#07140e;font-size:8px;font-weight:600;letter-spacing:0.02em">SEO-klaar</span></div>
+            <div style="width:100%;height:100%;border-radius:12px;border:1px solid var(--line);background:color-mix(in srgb,var(--glass) 80%,transparent);backdrop-filter:blur(10px);box-shadow:0 18px 40px -22px color-mix(in srgb,var(--shadow-ink) 80%,transparent);display:flex;align-items:center;justify-content:space-between;padding:0 16px">
+              <div style="width:64px;height:9px;border-radius:3px;background:color-mix(in srgb,var(--text) 50%,transparent)"></div>
+              <div style="display:flex;gap:8px;align-items:center"><span style="width:34px;height:7px;border-radius:3px;background:color-mix(in srgb,var(--text) 20%,transparent)"></span><span style="display:inline-flex;align-items:center;padding:3px 8px;border-radius:100px;background:var(--btn);color:var(--on-accent);font-size:8px;font-weight:600;letter-spacing:0.02em">SEO-klaar</span></div>
             </div>
           </div>
 
           <div class="hd-flayer" data-k="img" style="position:absolute;left:368px;top:48px;width:236px;height:158px;opacity:0;will-change:transform,opacity">
-            <div style="width:100%;height:100%;border-radius:13px;overflow:hidden;border:1px solid var(--line);box-shadow:0 26px 60px -28px rgba(0,0,0,0.85);background:repeating-linear-gradient(135deg,#17140f 0,#17140f 9px,#110f0c 9px,#110f0c 18px);position:relative">
+            <div style="width:100%;height:100%;border-radius:13px;overflow:hidden;border:1px solid var(--line);box-shadow:0 26px 60px -28px color-mix(in srgb,var(--shadow-ink) 85%,transparent);background:repeating-linear-gradient(135deg,var(--sc-1) 0,var(--sc-1) 9px,var(--sc-2) 9px,var(--sc-2) 18px);position:relative">
               <div style="position:absolute;inset:0;background:radial-gradient(120% 90% at 70% 10%,color-mix(in srgb,var(--accent) 10%,transparent),transparent 60%)"></div>
-              <div style="position:absolute;bottom:10px;left:12px;font-family:ui-monospace,Menlo,monospace;font-size:9px;letter-spacing:0.1em;color:#a8a298">Moderne uitstraling</div>
+              <div style="position:absolute;bottom:10px;left:12px;font-family:ui-monospace,Menlo,monospace;font-size:9px;letter-spacing:0.1em;color:var(--device-muted)">Moderne uitstraling</div>
             </div>
           </div>
 
           <div class="hd-flayer" data-k="head" style="position:absolute;left:-46px;top:188px;width:264px;height:126px;opacity:0;will-change:transform,opacity">
-            <div style="width:100%;height:100%;border-radius:14px;border:1px solid var(--line);background:rgba(18,16,14,0.84);backdrop-filter:blur(12px);box-shadow:0 28px 60px -26px rgba(0,0,0,0.85);padding:18px;display:flex;flex-direction:column;gap:11px;justify-content:center">
-              <div style="height:11px;width:62%;border-radius:4px;background:rgba(247,244,239,0.8)"></div>
+            <div style="width:100%;height:100%;border-radius:14px;border:1px solid var(--line);background:color-mix(in srgb,var(--glass) 84%,transparent);backdrop-filter:blur(12px);box-shadow:0 28px 60px -26px color-mix(in srgb,var(--shadow-ink) 85%,transparent);padding:18px;display:flex;flex-direction:column;gap:11px;justify-content:center">
+              <div style="height:11px;width:62%;border-radius:4px;background:color-mix(in srgb,var(--text) 80%,transparent)"></div>
               <div style="display:flex;align-items:center;gap:9px"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex:none"></span><span style="font-size:12.5px;color:var(--text)">Zelf te beheren</span></div>
               <div style="display:flex;align-items:center;gap:9px"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex:none"></span><span style="font-size:12.5px;color:var(--text)">Gebruiksvriendelijk</span></div>
-              <div style="height:8px;width:48%;border-radius:4px;background:rgba(244,241,236,0.22)"></div>
+              <div style="height:8px;width:48%;border-radius:4px;background:color-mix(in srgb,var(--text) 22%,transparent)"></div>
             </div>
           </div>
 
           <div class="hd-flayer" data-k="code" aria-hidden="true" role="presentation" style="position:absolute;left:300px;top:320px;width:262px;height:124px;opacity:0;will-change:transform,opacity">
-            <div style="width:100%;height:100%;border-radius:12px;border:1px solid var(--line);background:rgba(14,12,10,0.9);backdrop-filter:blur(10px);box-shadow:0 24px 56px -26px rgba(0,0,0,0.85);padding:14px 16px;font-family:ui-monospace,Menlo,monospace;font-size:10.5px;line-height:1.7;color:#837c70">
-              <div style="color:#6b7268">// snelle laadtijd</div>
-              <div><span style="color:var(--accent-br)">&lt;section</span> <span style="color:#a8a298">class</span>=<span style="color:var(--warm)">"hero"</span><span style="color:var(--accent-br)">&gt;</span></div>
-              <div style="padding-left:14px">build<span style="color:#a8a298">(</span><span style="color:var(--accent-dp)">layout</span><span style="color:#a8a298">)</span></div>
-              <div style="padding-left:14px">render<span style="color:#a8a298">(</span><span style="color:var(--warm)">site</span><span style="color:#a8a298">)</span> <span style="color:#6b7268">// schone code</span></div>
-              <div><span style="color:var(--accent-br)">&lt;/section&gt;</span> <span style="color:#6b7268">// betere prestaties</span></div>
+            <div style="width:100%;height:100%;border-radius:12px;border:1px solid var(--line);background:color-mix(in srgb,var(--glass) 90%,transparent);backdrop-filter:blur(10px);box-shadow:0 24px 56px -26px color-mix(in srgb,var(--shadow-ink) 85%,transparent);padding:14px 16px;font-family:ui-monospace,Menlo,monospace;font-size:10.5px;line-height:1.7;color:var(--code-fg)">
+              <div style="color:var(--code-comment)">// snelle laadtijd</div>
+              <div><span style="color:var(--accent-br)">&lt;section</span> <span style="color:var(--device-muted)">class</span>=<span style="color:var(--warm)">"hero"</span><span style="color:var(--accent-br)">&gt;</span></div>
+              <div style="padding-left:14px">build<span style="color:var(--device-muted)">(</span><span style="color:var(--accent-dp)">layout</span><span style="color:var(--device-muted)">)</span></div>
+              <div style="padding-left:14px">render<span style="color:var(--device-muted)">(</span><span style="color:var(--warm)">site</span><span style="color:var(--device-muted)">)</span> <span style="color:var(--code-comment)">// schone code</span></div>
+              <div><span style="color:var(--accent-br)">&lt;/section&gt;</span> <span style="color:var(--code-comment)">// betere prestaties</span></div>
             </div>
           </div>
 
@@ -150,32 +148,32 @@ const HERO_HTML = `
 
         <!-- mobile phone hero -->
         <div class="hd-phone" style="display:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:222px;z-index:5;will-change:transform,opacity">
-          <div class="hd-ptag" style="position:absolute;left:-32px;top:52px;z-index:6;opacity:0;display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:100px;background:rgba(18,16,14,0.92);border:1px solid var(--line);backdrop-filter:blur(8px);box-shadow:0 14px 30px -18px rgba(0,0,0,0.8);font-size:11px;color:var(--text);white-space:nowrap"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent)"></span>SEO-klaar</div>
-          <div class="hd-ptag" style="position:absolute;right:-40px;top:158px;z-index:6;opacity:0;display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:100px;background:rgba(18,16,14,0.92);border:1px solid var(--line);backdrop-filter:blur(8px);box-shadow:0 14px 30px -18px rgba(0,0,0,0.8);font-size:11px;color:var(--text);white-space:nowrap"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent)"></span>Snelle laadtijd</div>
-          <div class="hd-ptag" style="position:absolute;left:-26px;bottom:118px;z-index:6;opacity:0;display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:100px;background:rgba(18,16,14,0.92);border:1px solid var(--line);backdrop-filter:blur(8px);box-shadow:0 14px 30px -18px rgba(0,0,0,0.8);font-size:11px;color:var(--text);white-space:nowrap"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent)"></span>Mobielvriendelijk</div>
-          <div style="position:relative;width:222px;height:452px;border-radius:42px;background:linear-gradient(155deg,#2a2620,#15120e);padding:8px;box-shadow:0 40px 80px -36px rgba(0,0,0,0.9),0 0 0 1px rgba(255,255,255,0.06),inset 0 1px 0 color-mix(in srgb,var(--accent) 12%,transparent)">
-            <div style="position:absolute;top:13px;left:50%;transform:translateX(-50%);width:70px;height:17px;border-radius:100px;background:#070605;z-index:4"></div>
-            <div style="position:relative;width:100%;height:100%;border-radius:34px;overflow:hidden;background:#080706">
+          <div class="hd-ptag" style="position:absolute;left:-32px;top:52px;z-index:6;opacity:0;display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:100px;background:color-mix(in srgb,var(--glass) 92%,transparent);border:1px solid var(--line);backdrop-filter:blur(8px);box-shadow:0 14px 30px -18px color-mix(in srgb,var(--shadow-ink) 80%,transparent);font-size:11px;color:var(--text);white-space:nowrap"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent)"></span>SEO-klaar</div>
+          <div class="hd-ptag" style="position:absolute;right:-40px;top:158px;z-index:6;opacity:0;display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:100px;background:color-mix(in srgb,var(--glass) 92%,transparent);border:1px solid var(--line);backdrop-filter:blur(8px);box-shadow:0 14px 30px -18px color-mix(in srgb,var(--shadow-ink) 80%,transparent);font-size:11px;color:var(--text);white-space:nowrap"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent)"></span>Snelle laadtijd</div>
+          <div class="hd-ptag" style="position:absolute;left:-26px;bottom:118px;z-index:6;opacity:0;display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:100px;background:color-mix(in srgb,var(--glass) 92%,transparent);border:1px solid var(--line);backdrop-filter:blur(8px);box-shadow:0 14px 30px -18px color-mix(in srgb,var(--shadow-ink) 80%,transparent);font-size:11px;color:var(--text);white-space:nowrap"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent)"></span>Mobielvriendelijk</div>
+          <div style="position:relative;width:222px;height:452px;border-radius:42px;background:linear-gradient(155deg,var(--dv-1),var(--dv-3));padding:8px;box-shadow:0 40px 80px -36px color-mix(in srgb,var(--shadow-ink) 90%,transparent),0 0 0 1px var(--dv-edge),inset 0 1px 0 color-mix(in srgb,var(--accent) 12%,transparent)">
+            <div style="position:absolute;top:13px;left:50%;transform:translateX(-50%);width:70px;height:17px;border-radius:100px;background:var(--notch);z-index:4"></div>
+            <div style="position:relative;width:100%;height:100%;border-radius:34px;overflow:hidden;background:var(--sc-4)">
               <div class="hd-pwire" style="position:absolute;inset:0;opacity:0;padding:16px 14px">
-                <div style="display:flex;justify-content:space-between;margin-bottom:13px"><div style="width:42px;height:7px;border-radius:3px;background:rgba(244,241,236,0.16)"></div><div style="width:16px;height:7px;border-radius:3px;background:rgba(244,241,236,0.1)"></div></div>
-                <div style="height:118px;border:1px dashed rgba(244,241,236,0.2);border-radius:9px;margin-bottom:13px"></div>
-                <div style="height:9px;width:78%;border-radius:3px;background:rgba(244,241,236,0.18);margin-bottom:8px"></div>
-                <div style="height:9px;width:54%;border-radius:3px;background:rgba(244,241,236,0.12);margin-bottom:16px"></div>
-                <div style="display:flex;gap:9px"><div style="flex:1;height:52px;border:1px dashed rgba(244,241,236,0.2);border-radius:8px"></div><div style="flex:1;height:52px;border:1px dashed rgba(244,241,236,0.2);border-radius:8px"></div></div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:13px"><div style="width:42px;height:7px;border-radius:3px;background:color-mix(in srgb,var(--device-ink) 16%,transparent)"></div><div style="width:16px;height:7px;border-radius:3px;background:color-mix(in srgb,var(--device-ink) 10%,transparent)"></div></div>
+                <div style="height:118px;border:1px dashed color-mix(in srgb,var(--device-ink) 20%,transparent);border-radius:9px;margin-bottom:13px"></div>
+                <div style="height:9px;width:78%;border-radius:3px;background:color-mix(in srgb,var(--device-ink) 18%,transparent);margin-bottom:8px"></div>
+                <div style="height:9px;width:54%;border-radius:3px;background:color-mix(in srgb,var(--device-ink) 12%,transparent);margin-bottom:16px"></div>
+                <div style="display:flex;gap:9px"><div style="flex:1;height:52px;border:1px dashed color-mix(in srgb,var(--device-ink) 20%,transparent);border-radius:8px"></div><div style="flex:1;height:52px;border:1px dashed color-mix(in srgb,var(--device-ink) 20%,transparent);border-radius:8px"></div></div>
               </div>
               <div class="hd-psite" aria-hidden="true" role="presentation" style="position:absolute;inset:0;opacity:0">
-                <div style="position:absolute;top:0;left:0;right:0;height:152px;background:repeating-linear-gradient(135deg,#16130f 0,#16130f 9px,#100e0b 9px,#100e0b 18px)"></div>
-                <div style="position:absolute;top:0;left:0;right:0;height:152px;background:linear-gradient(180deg,rgba(7,7,6,0.25),transparent 60%,rgba(7,7,6,0.6))"></div>
-                <div style="position:absolute;top:15px;left:15px;font-family:var(--font-display);font-weight:600;font-size:11px;letter-spacing:0.05em;color:#F4F1EC">VOLMER</div>
-                <div style="position:absolute;top:14px;right:15px;display:flex;flex-direction:column;gap:3px"><span style="width:15px;height:2px;background:#a8a298"></span><span style="width:15px;height:2px;background:#a8a298"></span></div>
-                <div style="position:absolute;top:104px;left:15px;right:15px;font-family:var(--font-display);font-weight:600;font-size:17px;line-height:1.12;color:#F7F4EF">Verspaning zonder stilstand.</div>
-                <div style="position:absolute;top:170px;left:15px;padding:8px 14px;border-radius:100px;background:var(--accent);color:#07140e;font-weight:600;font-size:10px">Offerte aanvragen</div>
-                <div style="position:absolute;top:212px;left:15px;right:15px;display:flex;flex-direction:column;gap:9px"><div style="height:8px;width:72%;border-radius:3px;background:rgba(244,241,236,0.2)"></div><div style="height:8px;width:92%;border-radius:3px;background:rgba(244,241,236,0.12)"></div><div style="height:8px;width:58%;border-radius:3px;background:rgba(244,241,236,0.12)"></div></div>
+                <div style="position:absolute;top:0;left:0;right:0;height:152px;background:repeating-linear-gradient(135deg,var(--sc-1) 0,var(--sc-1) 9px,var(--sc-2) 9px,var(--sc-2) 18px)"></div>
+                <div style="position:absolute;top:0;left:0;right:0;height:152px;background:linear-gradient(180deg,color-mix(in srgb,var(--sc-4) 25%,transparent),transparent 60%,color-mix(in srgb,var(--sc-4) 60%,transparent))"></div>
+                <div style="position:absolute;top:15px;left:15px;font-family:var(--font-display);font-weight:600;font-size:11px;letter-spacing:0.05em;color:var(--device-ink)">VOLMER</div>
+                <div style="position:absolute;top:14px;right:15px;display:flex;flex-direction:column;gap:3px"><span style="width:15px;height:2px;background:var(--device-muted)"></span><span style="width:15px;height:2px;background:var(--device-muted)"></span></div>
+                <div style="position:absolute;top:104px;left:15px;right:15px;font-family:var(--font-display);font-weight:600;font-size:17px;line-height:1.12;color:var(--device-ink)">Verspaning zonder stilstand.</div>
+                <div style="position:absolute;top:170px;left:15px;padding:8px 14px;border-radius:100px;background:var(--btn);color:var(--on-accent);font-weight:600;font-size:10px">Offerte aanvragen</div>
+                <div style="position:absolute;top:212px;left:15px;right:15px;display:flex;flex-direction:column;gap:9px"><div style="height:8px;width:72%;border-radius:3px;background:color-mix(in srgb,var(--device-ink) 20%,transparent)"></div><div style="height:8px;width:92%;border-radius:3px;background:color-mix(in srgb,var(--device-ink) 12%,transparent)"></div><div style="height:8px;width:58%;border-radius:3px;background:color-mix(in srgb,var(--device-ink) 12%,transparent)"></div></div>
               </div>
               <div style="position:absolute;left:11px;right:11px;bottom:12px;display:flex;flex-direction:column;gap:6px">
-                <div class="hd-pchip" style="opacity:0.16;display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:9px;background:rgba(18,16,14,0.92);border:1px solid var(--line);backdrop-filter:blur(6px)"><span class="hd-pchk" style="width:15px;height:15px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex:none;transition:background .3s,border-color .3s"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#07140e" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="opacity:0"><path d="M5 13l4 4L19 7"></path></svg></span><span style="font-size:11px;color:var(--text)">Professionele indruk</span></div>
-                <div class="hd-pchip" style="opacity:0.16;display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:9px;background:rgba(18,16,14,0.92);border:1px solid var(--line);backdrop-filter:blur(6px)"><span class="hd-pchk" style="width:15px;height:15px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex:none;transition:background .3s,border-color .3s"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#07140e" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="opacity:0"><path d="M5 13l4 4L19 7"></path></svg></span><span style="font-size:11px;color:var(--text)">Gebruiksvriendelijk</span></div>
-                <div class="hd-pchip" style="opacity:0.16;display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:9px;background:rgba(18,16,14,0.92);border:1px solid var(--line);backdrop-filter:blur(6px)"><span class="hd-pchk" style="width:15px;height:15px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex:none;transition:background .3s,border-color .3s"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#07140e" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="opacity:0"><path d="M5 13l4 4L19 7"></path></svg></span><span style="font-size:11px;color:var(--text)">Duidelijke structuur</span></div>
+                <div class="hd-pchip" style="opacity:0.16;display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:9px;background:color-mix(in srgb,var(--glass) 92%,transparent);border:1px solid var(--line);backdrop-filter:blur(6px)"><span class="hd-pchk" style="width:15px;height:15px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex:none;transition:background .3s,border-color .3s"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--on-accent)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="opacity:0"><path d="M5 13l4 4L19 7"></path></svg></span><span style="font-size:11px;color:var(--text)">Professionele indruk</span></div>
+                <div class="hd-pchip" style="opacity:0.16;display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:9px;background:color-mix(in srgb,var(--glass) 92%,transparent);border:1px solid var(--line);backdrop-filter:blur(6px)"><span class="hd-pchk" style="width:15px;height:15px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex:none;transition:background .3s,border-color .3s"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--on-accent)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="opacity:0"><path d="M5 13l4 4L19 7"></path></svg></span><span style="font-size:11px;color:var(--text)">Gebruiksvriendelijk</span></div>
+                <div class="hd-pchip" style="opacity:0.16;display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:9px;background:color-mix(in srgb,var(--glass) 92%,transparent);border:1px solid var(--line);backdrop-filter:blur(6px)"><span class="hd-pchk" style="width:15px;height:15px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex:none;transition:background .3s,border-color .3s"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--on-accent)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="opacity:0"><path d="M5 13l4 4L19 7"></path></svg></span><span style="font-size:11px;color:var(--text)">Duidelijke structuur</span></div>
               </div>
             </div>
           </div>
@@ -260,8 +258,6 @@ function initHero(root: HTMLElement): () => void {
       if (copy) {
         Object.assign(copy.style, { position: "relative", left: "auto", right: "auto", top: "auto", transform: "none", maxWidth: "560px", margin: "0 auto", padding: "0 clamp(20px,7vw,40px)", textAlign: "center" });
         copy.querySelectorAll(".hd-kicker,.hd-cta").forEach((e: any) => { e.style.justifyContent = "center"; });
-        const trust = copy.querySelector(".hd-trust") as HTMLElement | null;
-        if (trust) trust.style.justifyContent = "center";
         const sub = copy.querySelector(".hd-sub") as HTMLElement | null;
         if (sub) sub.style.margin = "0 auto 32px";
       }
@@ -274,8 +270,6 @@ function initHero(root: HTMLElement): () => void {
       if (copy) {
         Object.assign(copy.style, { position: "absolute", left: "clamp(20px,5vw,64px)", right: "auto", top: "50%", transform: "translateY(-50%)", maxWidth: "540px", margin: "0", padding: "0", textAlign: "left" });
         copy.querySelectorAll(".hd-kicker,.hd-cta").forEach((e: any) => { e.style.justifyContent = ""; });
-        const trust = copy.querySelector(".hd-trust") as HTMLElement | null;
-        if (trust) trust.style.justifyContent = "";
         const sub = copy.querySelector(".hd-sub") as HTMLElement | null;
         if (sub) sub.style.margin = "0 0 36px";
       }

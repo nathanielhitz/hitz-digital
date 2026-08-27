@@ -17,7 +17,7 @@ export function Werkwijze() {
               <div key={s.n}>
                 <div className="mb-[18px] flex items-center gap-[14px]">
                   <span
-                    className="h-[11px] w-[11px] rounded-full bg-accent shadow-[0_0_10px_rgba(95,164,126,0.55)]"
+                    className="h-[11px] w-[11px] rounded-full bg-accent shadow-dot"
                     aria-hidden
                   />
                   <span className="font-mono text-[13px] text-faint">{s.n}</span>

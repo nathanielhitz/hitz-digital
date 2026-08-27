@@ -56,7 +56,7 @@ export default function HostingPage() {
         crumbs={[{ label: "Hosting & domeinen" }]}
         title={
           <>
-            Online blijven, <em className="not-italic text-accent">zonder gedoe</em>.
+            Online blijven, <em className="hd-accent-word not-italic text-accent">zonder gedoe</em>.
           </>
         }
         lead="Domein, hosting, e-mail en een kleine wijziging per maand in één bedrag. Maandelijks opzegbaar. En als er iets is, app je mij, geen ticketsysteem."
@@ -164,7 +164,7 @@ export default function HostingPage() {
               {overstappen.map((s) => (
                 <div key={s.n}>
                   <div className="mb-[18px] flex items-center gap-[14px]">
-                    <span className="h-[11px] w-[11px] rounded-full bg-accent shadow-[0_0_10px_rgba(95,164,126,0.55)]" aria-hidden />
+                    <span className="h-[11px] w-[11px] rounded-full bg-accent shadow-dot" aria-hidden />
                     <span className="font-mono text-[13px] text-faint">{s.n}</span>
                   </div>
                   <h3 className="mb-[10px] font-display text-[20px] font-semibold">{s.title}</h3>

@@ -8,7 +8,7 @@ import { aanvraagKeuzes, type AanvraagKeuze } from "@/lib/services";
 import { sendAanvraag } from "@/app/actions/contact";
 
 const field =
-  "w-full rounded-[10px] border border-line bg-[rgba(244,241,236,0.04)] px-[14px] py-3 text-[15px] text-ink outline-none transition-colors placeholder:text-faint focus:border-accent/60";
+  "w-full rounded-[10px] border border-line bg-field px-[14px] py-3 text-[15px] text-ink outline-none transition-colors placeholder:text-faint focus:border-accent/60";
 const label = "flex flex-col gap-[7px] text-[13px] text-muted";
 
 type Status = "idle" | "sending" | "ok" | "error";

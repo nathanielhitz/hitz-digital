@@ -49,7 +49,7 @@ export default function HulpPage() {
         crumbs={[{ label: "Hulp" }]}
         title={
           <>
-            Vastgelopen? Ik kijk <em className="not-italic text-accent">direct</em> mee.
+            Vastgelopen? Ik kijk <em className="hd-accent-word not-italic text-accent">direct</em> mee.
           </>
         }
         lead="Voor ondernemers in de Hoeksche Waard, en ook gewoon thuis. Je laptop, je mail, je domein, je netwerk of je website: ik los het op, in gewone taal. Meestal op afstand, binnen een kwartier begonnen. Moet ik langskomen? Dan kom ik langs."
@@ -62,7 +62,7 @@ export default function HulpPage() {
           </>
         }
         aside={
-          <div className="rounded-2xl border border-accent/40 bg-panel p-[clamp(22px,2.4vw,30px)] shadow-[0_30px_60px_-40px_rgba(95,164,126,0.35)]">
+          <div className="rounded-2xl border border-accent/40 bg-panel p-[clamp(22px,2.4vw,30px)] shadow-card-accent">
             <div className="flex items-baseline justify-between gap-4">
               <span className="text-[12px] uppercase tracking-[0.14em] text-faint">Tarief</span>
               <span className="text-[12.5px] text-faint">incl. btw</span>
@@ -173,7 +173,7 @@ export default function HulpPage() {
               {hulpStappen.map((s) => (
                 <div key={s.n}>
                   <div className="mb-[18px] flex items-center gap-[14px]">
-                    <span className="h-[11px] w-[11px] rounded-full bg-accent shadow-[0_0_10px_rgba(95,164,126,0.55)]" aria-hidden />
+                    <span className="h-[11px] w-[11px] rounded-full bg-accent shadow-dot" aria-hidden />
                     <span className="font-mono text-[13px] text-faint">{s.n}</span>
                   </div>
                   <h3 className="mb-[10px] font-display text-[20px] font-semibold">{s.title}</h3>
