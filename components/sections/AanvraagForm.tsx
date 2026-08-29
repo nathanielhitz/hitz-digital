@@ -139,10 +139,9 @@ export function AanvraagForm({ initial = "website", canSend = false }: { initial
       <Button type="submit" className="w-full sm:w-auto sm:self-center">
         {status === "sending" ? "Versturen…" : keuze.submit}
       </Button>
-      <p className="mt-1 text-center text-[12.5px] leading-relaxed text-muted">
-        We gebruiken je gegevens alleen om contact met je op te nemen over je aanvraag.{" "}
+      <p className="mt-1 text-center text-[12.5px] text-muted">
         <Link href="/privacy" className="underline underline-offset-2 transition-colors hover:text-ink">
-          Privacyverklaring
+          Zie privacybeleid
         </Link>
       </p>
       <div role="status" aria-live="polite" className="min-h-[18px] text-center text-[13.5px] text-faint">

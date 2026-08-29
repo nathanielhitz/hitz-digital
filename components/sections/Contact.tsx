@@ -37,10 +37,7 @@ export async function Contact() {
               Bel {telDisplay}
             </a>
             <br />
-            Bij een storing of spoed: bel. ·{" "}
-            <a href="/privacy" className="text-muted underline">
-              Privacybeleid
-            </a>
+            Bij een storing of spoed: bel.
           </div>
         </Reveal>
       </Container>
