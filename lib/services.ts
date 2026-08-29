@@ -194,6 +194,7 @@ export const hulpHelp = [
   { title: "Printers, wifi, telefoon en tablet", body: "Alles wat moet samenwerken met je mail en je site." },
   { title: "Netwerk op kantoor met TP-Link Omada", body: "Wifi-punten, gastnetwerk en beheer, netjes ingericht en uitgelegd." },
   { title: "Lichte hardware-check en schoonmaak", body: "Stof eruit, ventilatie na, schijf en geheugen gecontroleerd." },
+  { title: "Bestanden terughalen", body: "Per ongeluk gewist of een schijf die hapert? Softwarematig herstel ik wat te redden is. Fysiek defecte schijven verwijs ik door." },
 ];
 
 /** /hulp: wat ik niet doe (met doorverwijzing). */
@@ -201,7 +202,6 @@ export const hulpNiet = [
   "Een pc vanaf nul bouwen of repareren op onderdelenniveau (scherm, moederbord, voeding)",
   "Datarecovery van kapotte schijven",
   "Kassasystemen en boekhoudsoftware inrichten",
-  "Spoed buiten werktijden",
 ];
 
 /** /hulp: hoe het werkt. */
@@ -219,7 +219,7 @@ export const hulpFaq = [
   },
   {
     q: "Hoe snel kun je?",
-    a: "Op afstand vaak dezelfde dag, soms direct. Aan huis meestal binnen een paar werkdagen. Spoed buiten werktijden doe ik niet.",
+    a: "Op afstand vaak dezelfde dag, soms direct. Aan huis meestal binnen een paar werkdagen.",
   },
   {
     q: "Hoe werkt op afstand meekijken?",
