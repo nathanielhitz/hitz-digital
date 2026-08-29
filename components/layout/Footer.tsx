@@ -60,15 +60,16 @@ export function Footer() {
         </div>
 
         <div className="mt-12 flex flex-col gap-3 border-t border-line2 pt-5 text-[12.5px] text-faint min-[761px]:flex-row min-[761px]:items-center min-[761px]:gap-8">
-          <span>© 2026 HitzDigital{site.kvk ? ` · KvK ${site.kvk}` : ""} · Prijzen incl. btw</span>
+          <span>© 2026 HitzDigital{site.kvk ? ` · KvK ${site.kvk}` : ""}</span>
           <ul className="flex flex-wrap items-center">
             {legal.map((l, i) => (
               <li key={l.href} className="flex items-center">
-                {i > 0 && <span aria-hidden className="mx-3 h-3 w-px bg-line2" />}
+                {i > 0 && <span aria-hidden className="mx-3 select-none">|</span>}
                 <a href={l.href} className={linkCls}>{l.label}</a>
               </li>
             ))}
           </ul>
+          <span className="min-[761px]:ml-auto">Prijzen incl. btw</span>
         </div>
       </div>
     </footer>
