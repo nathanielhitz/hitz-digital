@@ -6,6 +6,11 @@ import { site } from "@/lib/site";
 
 const linkCls = "text-muted transition-colors hover:text-ink";
 
+const legal = [
+  { href: "/privacy", label: "Privacybeleid" },
+  { href: "/voorwaarden", label: "Voorwaarden" },
+];
+
 export function Footer() {
   return (
     <footer className="relative z-[2] border-t border-line bg-deep px-[clamp(20px,5vw,64px)] pb-8 pt-14">
@@ -41,8 +46,6 @@ export function Footer() {
               <li><a href="/werk" className={linkCls}>Werk</a></li>
               <li><a href="/contact" className={linkCls}>Contact</a></li>
               <li><a href="/support" className={linkCls}>Support</a></li>
-              <li><a href="/privacy" className={linkCls}>Privacy</a></li>
-              <li><a href="/voorwaarden" className={linkCls}>Voorwaarden</a></li>
             </ul>
           </div>
 
@@ -56,9 +59,16 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-wrap items-center justify-between gap-3 border-t border-line2 pt-6 text-[12.5px] text-faint">
-          <span>© 2026 HitzDigital{site.kvk ? ` · KvK ${site.kvk}` : ""}</span>
-          <span>Alle prijzen incl. btw</span>
+        <div className="mt-12 flex flex-col gap-3 border-t border-line2 pt-5 text-[12.5px] text-faint min-[761px]:flex-row min-[761px]:items-center min-[761px]:gap-8">
+          <span>© 2026 HitzDigital{site.kvk ? ` · KvK ${site.kvk}` : ""} · Prijzen incl. btw</span>
+          <ul className="flex flex-wrap items-center">
+            {legal.map((l, i) => (
+              <li key={l.href} className="flex items-center">
+                {i > 0 && <span aria-hidden className="mx-3 h-3 w-px bg-line2" />}
+                <a href={l.href} className={linkCls}>{l.label}</a>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </footer>
