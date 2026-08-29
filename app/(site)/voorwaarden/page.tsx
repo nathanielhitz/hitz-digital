@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/page/PageHero";
 import { Prose } from "@/components/page/Prose";
 import { Container } from "@/components/layout/Container";
-import { pricing, euro } from "@/lib/pricing";
+import { liveHosting, pricing, euro } from "@/lib/pricing";
 import { site } from "@/lib/site";
 
 const title = "Algemene voorwaarden | HitzDigital";
@@ -18,6 +18,7 @@ export const metadata: Metadata = {
 export default function VoorwaardenPage() {
   const updated = "26 augustus 2026";
   const onderhoud = pricing.hosting.find((h) => h.id === "onderhoud")!;
+  const webshop = liveHosting.find((h) => h.id === "webshop");
   return (
     <main id="main" className="relative z-[2] bg-deep">
       <PageHero
@@ -96,12 +97,18 @@ export default function VoorwaardenPage() {
               (los, {euro(pricing.domains.table[0].yearly)} per jaar voor .nl) of meenemen naar een andere partij. Ik
               werk mee aan de verhuizing en geef je een export van je website als je die wilt.
             </p>
-            <h3>Webshop</h3>
-            <p>
-              Bij het Webshop-pakket beheer ik je Shopify-webshop. Het Shopify-abonnement zelf sluit jij af en betaal je
-              rechtstreeks aan Shopify; het account staat op jouw naam. Wat Shopify aan tarieven of functies verandert,
-              valt buiten mijn invloed.
-            </p>
+            {webshop && (
+              <>
+                <h3>Webshop</h3>
+                <p>
+                  Bij het Webshop-pakket draait je winkel op Shopify. Het Shopify-abonnement zit in de maandprijs: ik
+                  sluit het af en betaal het, het account staat op jouw naam. Verhoogt Shopify zijn tarieven, dan kan de
+                  maandprijs meebewegen; dat meld ik je minimaal een maand vooraf. Wat Shopify aan functies verandert,
+                  valt buiten mijn invloed. Zeg je op, dan blijft de shop van jou: ik zet het abonnement over naar jouw
+                  eigen betaalgegevens of help je met een export.
+                </p>
+              </>
+            )}
             <h3>Beschikbaarheid en back-ups</h3>
             <p>
               Ik doe mijn best om je site altijd online te houden en maak dagelijks back-ups. Storingen bij

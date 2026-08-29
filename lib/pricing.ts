@@ -39,23 +39,30 @@ export const pricing = {
     {
       id: "webshop",
       name: "Webshop",
-      monthly: 30,
-      summary: "Beheer van je Shopify-webshop.",
+      // Tijdelijk niet op de site (29-08-2026): eerst zelf de Shopify-flow testen of eerste aanvraag afwachten.
+      // Zet `live: true` om de kaart terug te zetten. Prijs is all-in: het Shopify-abonnement (≈ €21) zit erin,
+      // HitzDigital betaalt Shopify en het account staat op naam van de klant.
+      live: false,
+      monthly: 35,
+      summary: "Je complete webshop online, beheerd en up-to-date.",
       includes: [
         "Domein op jouw naam",
+        "Shopify-abonnement inbegrepen",
+        "Betalen met iDEAL en verzendkoppelingen",
         "Thema- en app-updates",
-        "Koppelingen (iDEAL, verzending) in de gaten houden",
-        "2 kleine wijzigingen per maand (tot 30 minuten)",
+        "1 kleine wijziging per maand (tot 15 minuten)",
       ],
-      excludes: ["Shopify-abonnement (circa €21 per maand, rechtstreeks aan Shopify)"],
+      excludes: [],
       featured: false,
+      fairUse:
+        "Een kleine wijziging is bijvoorbeeld een product, prijs, foto of tekst. Geen nieuwe pagina's of ontwerpwerk. Ongebruikte tijd vervalt.",
     },
   ],
 
   addons: [{ id: "mailbox", name: "Zakelijke mailbox", monthly: 5, per: "mailbox", summary: "Op je eigen domein." }],
 
   domains: {
-    included: "Bij Onderhoud en Webshop zit je .nl-domein erbij.",
+    included: "Bij Onderhoud zit je .nl-domein erbij.",
     table: [
       { tld: ".nl", yearly: 15 },
       { tld: ".com", yearly: 20 },
@@ -87,3 +94,6 @@ export const pricing = {
 
 /** Geldnotatie zonder decimalen (alle prijzen zijn hele euro's). */
 export const euro = (amount: number) => `€${amount}`;
+
+/** Pakketten die op de site getoond worden (pakketten met `live: false` blijven in de data maar niet in beeld). */
+export const liveHosting = pricing.hosting.filter((h) => !("live" in h) || h.live !== false);

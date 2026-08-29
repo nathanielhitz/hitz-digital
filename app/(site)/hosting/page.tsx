@@ -10,13 +10,13 @@ import { Button } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Reveal } from "@/components/ui/Reveal";
-import { pricing, euro } from "@/lib/pricing";
+import { liveHosting, pricing, euro } from "@/lib/pricing";
 import { hostingAltijd, hostingFaq, overstappen } from "@/lib/services";
 import { site } from "@/lib/site";
 
 const title = "Hosting, domein en onderhoud voor je website | HitzDigital";
 const description =
-  "Hosting vanaf €5 per maand, onderhoud met domein en een kleine wijziging per maand voor €15, webshopbeheer voor €30. Maandelijks opzegbaar, alles incl. btw. Overstappen regel ik.";
+  "Hosting vanaf €5 per maand, onderhoud met domein en een kleine wijziging per maand voor €15. Maandelijks opzegbaar, alles incl. btw. Overstappen regel ik.";
 
 export const metadata: Metadata = {
   title,
@@ -35,7 +35,7 @@ export default function HostingPage() {
     provider: { "@type": "ProfessionalService", name: site.name, url: site.url },
     areaServed: "NL",
     url: `${site.url}/hosting`,
-    offers: pricing.hosting.map((h) => ({
+    offers: liveHosting.map((h) => ({
       "@type": "Offer",
       name: h.name,
       description: h.summary,
@@ -88,14 +88,14 @@ export default function HostingPage() {
         <Container>
           <Reveal>
             <Eyebrow>Pakketten</Eyebrow>
-            <SectionTitle className="mb-4 max-w-[720px]">Drie pakketten, één maandbedrag.</SectionTitle>
+            <SectionTitle className="mb-4 max-w-[720px]">Twee pakketten, één maandbedrag.</SectionTitle>
             <p className="mb-[54px] max-w-[52ch] text-[16px] leading-[1.65] text-muted">
               Alle prijzen incl. 21% btw en maandelijks opzegbaar. Betalen per maand of per jaar, wat jij prettig vindt.
               Een zakelijke mailbox op je eigen domein kan bij elk pakket voor {euro(mailbox.monthly)} per maand extra.
             </p>
           </Reveal>
-          <div className="grid grid-cols-1 gap-[18px] min-[901px]:grid-cols-3">
-            {pricing.hosting.map((h, i) => (
+          <div className="grid grid-cols-1 gap-[18px] min-[901px]:grid-cols-2">
+            {liveHosting.map((h, i) => (
               <Reveal key={h.id} delay={i * 80}>
                 <PlanCard plan={h} />
               </Reveal>
