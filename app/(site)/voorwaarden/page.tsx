@@ -25,7 +25,7 @@ export default function VoorwaardenPage() {
         title="Algemene voorwaarden"
         lead="Geen kleine lettertjes, maar wel duidelijke afspraken. Dit is wat je van mij kunt verwachten en wat ik van jou verwacht."
       />
-      <section className="px-[clamp(20px,5vw,64px)] pb-16 md:pb-20 lg:pb-24">
+      <section className="px-[clamp(20px,5vw,64px)] pb-10 md:pb-12">
         <Container>
           <Prose>
             <p className="text-[13.5px] text-faint">Laatst bijgewerkt: {updated}</p>
