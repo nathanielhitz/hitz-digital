@@ -19,12 +19,12 @@ export function Over() {
             <p className="mb-[18px] max-w-[480px] text-[16px] leading-[1.65] text-muted">{over.body}</p>
             <div className="text-[13.5px] text-faint">{over.facts.join(" · ")}</div>
           </div>
-          <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-line">
+          <div className="relative mx-auto aspect-[4/5] w-full max-w-[400px] overflow-hidden rounded-2xl border border-line min-[901px]:ml-auto min-[901px]:mr-0">
             <Image
               src="/images/nathaniel.webp"
               alt="Nathaniel, oprichter van HitzDigital"
               fill
-              sizes="(max-width: 900px) 100vw, 45vw"
+              sizes="(max-width: 900px) 100vw, 400px"
               className="object-cover object-center"
             />
             <div
