@@ -9,8 +9,8 @@ const variantClass: Record<Variant, string> = {
   base: "bg-base",
 };
 const paddingClass: Record<Padding, string> = {
-  default: "py-[clamp(80px,12vw,140px)]",
-  large: "py-[clamp(96px,14vw,170px)]",
+  default: "py-16 md:py-28 lg:py-32",
+  large: "py-20 md:py-32",
 };
 
 /** Sectie-ritme: hairline bovenaan, verticale clamp-padding, horizontale gutter. */

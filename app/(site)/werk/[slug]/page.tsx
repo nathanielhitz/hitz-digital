@@ -68,7 +68,7 @@ export default async function CasePage({ params }: { params: Promise<Params> }) 
         }
       />
 
-      <section className="px-[clamp(20px,5vw,64px)] pb-[clamp(56px,8vw,96px)]">
+      <section className="px-[clamp(20px,5vw,64px)] pb-10 md:pb-20 lg:pb-24">
         <Container>
           <Reveal>
             <div className="relative aspect-[16/10] overflow-hidden rounded-2xl border border-line shadow-photo">

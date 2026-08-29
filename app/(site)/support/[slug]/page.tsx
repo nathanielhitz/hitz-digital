@@ -46,7 +46,7 @@ export default async function SupportArticlePage({ params }: { params: Promise<P
     <main id="main" className="relative z-[2] bg-deep">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <PageHero crumbs={[{ label: "Support", href: "/support" }, { label: a.title }]} title={a.title} lead={a.summary} />
-      <section id="artikel" className="px-[clamp(20px,5vw,64px)] pb-[clamp(80px,12vw,140px)]">
+      <section id="artikel" className="px-[clamp(20px,5vw,64px)] pb-16 md:pb-28 lg:pb-32">
         <Container>
           <Prose>
             <p className="text-[13.5px] text-faint">Laatst bijgewerkt: {a.updated}</p>

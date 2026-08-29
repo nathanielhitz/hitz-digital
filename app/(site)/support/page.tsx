@@ -31,7 +31,7 @@ export default function SupportPage() {
           </Button>
         }
       />
-      <section className="px-[clamp(20px,5vw,64px)] pb-[clamp(80px,12vw,140px)]">
+      <section className="px-[clamp(20px,5vw,64px)] pb-16 md:pb-28 lg:pb-32">
         <Container>
           {categories.map((cat) => (
             <Reveal key={cat}>
