@@ -59,7 +59,20 @@ export const pricing = {
     },
   ],
 
-  addons: [{ id: "mailbox", name: "Zakelijke mailbox", monthly: 5, per: "mailbox", summary: "Op je eigen domein." }],
+  addons: [
+    {
+      id: "mailbox",
+      name: "Zakelijke mailbox",
+      summary: "Op je eigen domein.",
+      /** Staffel (besloten 29-08-2026): 1 mailbox €3, 2 t/m 5 mailboxen samen €5; meer op aanvraag. */
+      tiers: [
+        { label: "1 mailbox", monthly: 3 },
+        { label: "2 tot 5 mailboxen", monthly: 5 },
+      ],
+      quotaGb: 2,
+      more: "Meer dan 5 mailboxen op aanvraag.",
+    },
+  ],
 
   domains: {
     included: "Bij Onderhoud zit je .nl-domein erbij.",

@@ -27,6 +27,7 @@ export const metadata: Metadata = {
 
 export default function HostingPage() {
   const mailbox = pricing.addons[0];
+  const [mailOne, mailMulti] = mailbox.tiers;
   const schema = {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -91,7 +92,7 @@ export default function HostingPage() {
             <SectionTitle className="mb-4 max-w-[720px]">Twee pakketten, één maandbedrag.</SectionTitle>
             <p className="mb-[54px] max-w-[52ch] text-[16px] leading-[1.65] text-muted">
               Alle prijzen incl. 21% btw en maandelijks opzegbaar. Betalen per maand of per jaar, wat jij prettig vindt.
-              Een zakelijke mailbox op je eigen domein kan bij elk pakket voor {euro(mailbox.monthly)} per maand extra.
+              Een zakelijke mailbox op je eigen domein kan bij elk pakket, vanaf {euro(mailOne.monthly)} per maand extra.
             </p>
           </Reveal>
           <div className="grid grid-cols-1 gap-[18px] min-[901px]:grid-cols-2">
@@ -107,9 +108,14 @@ export default function HostingPage() {
                 <span className="font-display text-[17px] font-semibold">{mailbox.name}</span>
                 <span className="ml-3 text-[14px] text-muted">{mailbox.summary} Bij elk pakket.</span>
               </div>
-              <span className="font-display text-[20px] font-semibold tracking-[-0.02em]">
-                {euro(mailbox.monthly)} <span className="text-[13px] font-normal text-muted">per {mailbox.per} per maand</span>
-              </span>
+              <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1">
+                {mailbox.tiers.map((t) => (
+                  <span key={t.label} className="font-display text-[20px] font-semibold tracking-[-0.02em]">
+                    {euro(t.monthly)}{" "}
+                    <span className="text-[13px] font-normal text-muted">{t.label}, per maand</span>
+                  </span>
+                ))}
+              </div>
             </div>
           </Reveal>
         </Container>
@@ -126,8 +132,9 @@ export default function HostingPage() {
                 Ik beheer het, jij blijft de eigenaar. {pricing.domains.other}
               </p>
               <p className="mt-4 max-w-[46ch] text-[16px] leading-[1.65] text-muted">
-                Zakelijke e-mail op je eigen domein (jij@jouwbedrijf.nl) is {euro(mailbox.monthly)} per mailbox per maand,
-                met agenda en spamfilter, werkend op je telefoon en laptop.
+                Zakelijke e-mail op je eigen domein (jij@jouwbedrijf.nl) is {euro(mailOne.monthly)} per maand voor één
+                mailbox en {euro(mailMulti.monthly)} per maand voor twee tot vijf mailboxen samen, elk met{" "}
+                {mailbox.quotaGb} GB opslag, agenda en spamfilter, werkend op je telefoon en laptop. {mailbox.more}
               </p>
             </div>
             <div className="self-center rounded-2xl border border-line bg-panel p-[clamp(22px,2.4vw,30px)]">
@@ -140,11 +147,13 @@ export default function HostingPage() {
                       <td className="py-3 text-right text-ink">{euro(d.yearly)}</td>
                     </tr>
                   ))}
-                  <tr>
-                    <td className="py-3 font-mono text-[14px] text-ink">@</td>
-                    <td className="py-3 text-muted">zakelijke mailbox, per maand</td>
-                    <td className="py-3 text-right text-ink">{euro(mailbox.monthly)}</td>
-                  </tr>
+                  {mailbox.tiers.map((t) => (
+                    <tr key={t.label}>
+                      <td className="py-3 font-mono text-[14px] text-ink">@</td>
+                      <td className="py-3 text-muted">{t.label}, per maand</td>
+                      <td className="py-3 text-right text-ink">{euro(t.monthly)}</td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
               <p className="mt-4 text-[12.5px] text-faint">Incl. 21% btw. Andere extensies op aanvraag.</p>

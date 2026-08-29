@@ -19,6 +19,9 @@ export default function VoorwaardenPage() {
   const updated = "26 augustus 2026";
   const onderhoud = pricing.hosting.find((h) => h.id === "onderhoud")!;
   const webshop = liveHosting.find((h) => h.id === "webshop");
+  const [mailOne, mailMulti] = pricing.addons[0].tiers;
+  const namen = liveHosting.map((h) => h.name);
+  const pakketten = namen.length > 1 ? `${namen.slice(0, -1).join(", ")} of ${namen.at(-1)}` : namen[0];
   return (
     <main id="main" className="relative z-[2] bg-deep">
       <PageHero
@@ -72,12 +75,18 @@ export default function VoorwaardenPage() {
             <h2>3. Hosting, domein en onderhoud</h2>
             <h3>Wat je afneemt</h3>
             <p>
-              Je kiest een pakket (Online, Onderhoud of Webshop) en eventueel mailboxen. Wat er in elk pakket zit staat op
-              de hostingpagina; die omschrijving hoort bij deze voorwaarden. Prijzen zijn per maand en incl. 21% btw.
+              Je kiest een pakket ({pakketten}) en eventueel mailboxen. Wat er in elk pakket zit staat op de hostingpagina; die omschrijving hoort bij deze
+              voorwaarden. Prijzen zijn per maand en incl. 21% btw.
+            </p>
+            <h3>Mailboxen</h3>
+            <p>
+              Eén zakelijke mailbox kost {euro(mailOne.monthly)} per maand; twee tot en met vijf mailboxen samen{" "}
+              {euro(mailMulti.monthly)} per maand. Elke mailbox heeft {pricing.addons[0].quotaGb} GB opslag; loopt die
+              vol, dan overleggen we over opruimen of extra opslag. Meer dan vijf mailboxen spreken we apart af.
             </p>
             <h3>Kleine wijzigingen</h3>
             <p>
-              Bij Onderhoud zit één kleine wijziging per maand (tot 15 minuten), bij Webshop twee (samen tot 30 minuten).
+              Bij Onderhoud{webshop ? " en Webshop" : ""} zit één kleine wijziging per maand (tot 15 minuten).
               Een kleine wijziging is bijvoorbeeld een tekst, foto, prijs of openingstijd aanpassen. Nieuwe pagina&apos;s,
               ontwerpwerk of functies vallen erbuiten en doe ik op kwartiertarief ({euro(pricing.hulp.quarter)} per
               kwartier, incl. btw). Ongebruikte tijd vervalt aan het einde van de maand en spaar je niet op.
