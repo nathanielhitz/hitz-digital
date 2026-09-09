@@ -233,6 +233,7 @@ function initHero(root: HTMLElement): () => void {
   // Bereik ~0.08 (zwevender) tot ~0.18 (strakker). Zie docs/superpowers/specs/2026-09-09-hero-scroll-demping-design.md
   const HERO_DAMP = 0.12;
   const HERO_SNAP_EPS = 0.0005;
+  const FRAME_MS = 1000 / 60;
   let bScale = 0.8, bRY = -16, bRX = 8, shiftX = 150, ty = 0, parAmt = 1;
   let p = 0, mx = 0, my = 0, tmx = 0, tmy = 0, introStart = 0, mProg = 0;
   let pTarget = 0, pSnap = true, lastT = 0;
@@ -259,7 +260,7 @@ function initHero(root: HTMLElement): () => void {
     scrollDriven = !small && !reduce;
     if (exp) exp.style.height = scrollDriven ? "240vh" : "auto";
     pinLen = Math.max(1, exp ? exp.offsetHeight - window.innerHeight : 1);
-    pSnap = true;
+    pSnap = true; // pinLen veranderde: p direct meebewegen, niet dempen
     if (small) {
       if (sticky) Object.assign(sticky.style, { position: "static", height: "auto", minHeight: "100vh", overflow: "visible", paddingTop: "94px", paddingBottom: "40px", display: "flex", flexDirection: "column", justifyContent: "center", zIndex: "", opacity: "1" });
       if (copy) {
@@ -307,8 +308,8 @@ function initHero(root: HTMLElement): () => void {
         pSnap = false;
       } else {
         // framerate-onafhankelijke lerp; dt geclampt tegen sprongen na een trage frame
-        const dt = lastT ? Math.min(50, now - lastT) : 16.667;
-        const k = 1 - Math.pow(1 - HERO_DAMP, dt / 16.667);
+        const dt = Math.min(50, now - lastT);
+        const k = 1 - Math.pow(1 - HERO_DAMP, dt / FRAME_MS);
         p += (pTarget - p) * k;
         if (Math.abs(pTarget - p) < HERO_SNAP_EPS) p = pTarget;
       }
