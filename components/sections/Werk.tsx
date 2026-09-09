@@ -17,7 +17,7 @@ export function Werk({ items, teaser = false }: { items?: WorkItem[]; teaser?: b
             <div>
               <Eyebrow>Werk</Eyebrow>
               <SectionTitle className="max-w-[620px]">
-                {teaser ? "Gebouwd voor bedrijven in de regio." : "Voorbeelden van mijn werk."}
+                {teaser ? "Bedrijven die je al voorgingen." : "Voorbeelden van mijn werk."}
               </SectionTitle>
             </div>
             {teaser ? (
