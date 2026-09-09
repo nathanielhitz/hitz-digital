@@ -228,8 +228,14 @@ function initHero(root: HTMLElement): () => void {
     layerEl.__cfg = cfg[layerEl.dataset.k];
   });
 
+  // Demping van de scroll-voortgang: deel van de resterende afstand per frame bij 60 Hz.
+  // Muiswiel geeft sprongen van ~100 px; zonder demping springt de laptop zichtbaar.
+  // Bereik ~0.08 (zwevender) tot ~0.18 (strakker). Zie docs/superpowers/specs/2026-09-09-hero-scroll-demping-design.md
+  const HERO_DAMP = 0.12;
+  const HERO_SNAP_EPS = 0.0005;
   let bScale = 0.8, bRY = -16, bRX = 8, shiftX = 150, ty = 0, parAmt = 1;
   let p = 0, mx = 0, my = 0, tmx = 0, tmy = 0, introStart = 0, mProg = 0;
+  let pTarget = 0, pSnap = true, lastT = 0;
   let mobile = false, scrollDriven = false;
   let pinLen = 1;
   let raf = 0;
@@ -237,7 +243,7 @@ function initHero(root: HTMLElement): () => void {
   let running = false, expVisible = true;
   const trackers: Array<() => void> = [];
 
-  const startLoop = () => { if (running) return; running = true; raf = requestAnimationFrame(loop); };
+  const startLoop = () => { if (running) return; running = true; pSnap = true; lastT = 0; raf = requestAnimationFrame(loop); };
   const stopLoop = () => { running = false; if (raf) { cancelAnimationFrame(raf); raf = 0; } };
   const evalLoop = () => { if (expVisible && !document.hidden) startLoop(); else stopLoop(); };
   const onVis = () => evalLoop();
@@ -253,6 +259,7 @@ function initHero(root: HTMLElement): () => void {
     scrollDriven = !small && !reduce;
     if (exp) exp.style.height = scrollDriven ? "240vh" : "auto";
     pinLen = Math.max(1, exp ? exp.offsetHeight - window.innerHeight : 1);
+    pSnap = true;
     if (small) {
       if (sticky) Object.assign(sticky.style, { position: "static", height: "auto", minHeight: "100vh", overflow: "visible", paddingTop: "94px", paddingBottom: "40px", display: "flex", flexDirection: "column", justifyContent: "center", zIndex: "", opacity: "1" });
       if (copy) {
@@ -293,10 +300,22 @@ function initHero(root: HTMLElement): () => void {
     mProg = mobile ? Math.min(1, (now - introStart) / 2800) : 0;
     if (scrollDriven) {
       const top = window.scrollY || document.documentElement.scrollTop || 0;
-      p = Math.max(0, Math.min(1, top / pinLen));
+      pTarget = Math.max(0, Math.min(1, top / pinLen));
+      if (pSnap) {
+        // eerste frame na init / resize / herstart: geen inhaalslag
+        p = pTarget;
+        pSnap = false;
+      } else {
+        // framerate-onafhankelijke lerp; dt geclampt tegen sprongen na een trage frame
+        const dt = lastT ? Math.min(50, now - lastT) : 16.667;
+        const k = 1 - Math.pow(1 - HERO_DAMP, dt / 16.667);
+        p += (pTarget - p) * k;
+        if (Math.abs(pTarget - p) < HERO_SNAP_EPS) p = pTarget;
+      }
     } else {
       p = 0.58;
     }
+    lastT = now;
     if (reduce) { mx = 0; my = 0; } else { mx += (tmx - mx) * 0.06; my += (tmy - my) * 0.06; }
     render(intro);
     if (running) raf = requestAnimationFrame(loop);
