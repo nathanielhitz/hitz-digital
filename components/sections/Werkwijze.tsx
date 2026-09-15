@@ -1,6 +1,5 @@
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
-import { Eyebrow } from "@/components/ui/Eyebrow";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Reveal } from "@/components/ui/Reveal";
 import { werkwijze } from "@/lib/services";
@@ -10,7 +9,6 @@ export function Werkwijze() {
     <Section id="werkwijze">
       <Container>
         <Reveal>
-          <Eyebrow>Werkwijze</Eyebrow>
           <SectionTitle className="mb-16 max-w-[720px]">In drie stappen naar een betere website.</SectionTitle>
           <div className="grid grid-cols-1 gap-[clamp(24px,4vw,56px)] min-[901px]:grid-cols-3">
             {werkwijze.map((s) => (

@@ -70,13 +70,13 @@ export default function WebsitesPage() {
       <Section id="nieuw-of-vernieuwen">
         <Container>
           <Reveal>
-            <Eyebrow>Nieuw of vernieuwen</Eyebrow>
             <SectionTitle className="mb-[54px] max-w-[720px]">Twee vertrekpunten, één aanpak.</SectionTitle>
           </Reveal>
           <div className="grid grid-cols-1 gap-[18px] min-[901px]:grid-cols-2">
             {websiteOpties.map((o, i) => (
               <Reveal key={o.title} delay={i * 80}>
                 <div className="flex h-full flex-col rounded-2xl border border-line bg-panel p-[clamp(24px,2.6vw,34px)]">
+                  <span className="mb-[16px] block font-mono text-[12px] leading-none text-accent">0{i + 1}</span>
                   <h3 className="mb-[10px] font-display text-[clamp(22px,2.2vw,26px)] font-semibold tracking-[-0.02em]">
                     {o.title}
                   </h3>
@@ -92,17 +92,17 @@ export default function WebsitesPage() {
         <Container>
           <Reveal className="grid grid-cols-1 gap-12 min-[901px]:grid-cols-[0.9fr_1.1fr]">
             <div>
-              <Eyebrow>Wat je krijgt</Eyebrow>
               <SectionTitle className="max-w-[14ch]">Alles wat een goede site nodig heeft.</SectionTitle>
               <p className="mt-6 max-w-[42ch] text-[16px] leading-[1.65] text-muted">
                 Geen losse opties of verrassingen achteraf. Dit zit er standaard bij, ook bij een site vanaf{" "}
                 {euro(pricing.website.from)}.
               </p>
             </div>
-            <ul className="grid grid-cols-1 gap-3 self-center min-[561px]:grid-cols-2">
+            {/* Opsomming zonder kaders: een kader staat op deze site voor iets wat je kunt kopen of kiezen. */}
+            <ul className="grid grid-cols-1 gap-x-8 gap-y-4 self-center text-[15px] leading-[1.55] min-[561px]:grid-cols-2">
               {websiteInbegrepen.map((x) => (
-                <li key={x} className="flex items-start gap-3 rounded-xl border border-line bg-panel/60 px-4 py-3 text-[14.5px] leading-[1.5]">
-                  <span className="mt-[7px] h-[7px] w-[7px] flex-none rounded-full bg-accent" aria-hidden />
+                <li key={x} className="flex items-start gap-3">
+                  <span className="mt-[8px] h-[7px] w-[7px] flex-none rounded-full bg-accent" aria-hidden />
                   {x}
                 </li>
               ))}
@@ -115,7 +115,6 @@ export default function WebsitesPage() {
         <Container>
           <Reveal className="grid grid-cols-1 items-center gap-12 min-[901px]:grid-cols-[1fr_1fr]">
             <div>
-              <Eyebrow>Wat kost het</Eyebrow>
               <SectionTitle className="max-w-[16ch]">Een complete website vanaf {euro(pricing.website.from)}.</SectionTitle>
               <p className="mt-6 max-w-[46ch] text-[16px] leading-[1.65] text-muted">
                 Incl. btw. {pricing.website.note} Wil je dat ik hem ook online houd? Hosting & onderhoud is{" "}

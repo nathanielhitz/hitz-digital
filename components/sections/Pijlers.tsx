@@ -1,6 +1,5 @@
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
-import { Eyebrow } from "@/components/ui/Eyebrow";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Reveal } from "@/components/ui/Reveal";
 import { pijlers } from "@/lib/services";
@@ -11,18 +10,13 @@ export function Pijlers() {
     <Section id="pijlers">
       <Container>
         <Reveal>
-          <Eyebrow>Diensten</Eyebrow>
           <SectionTitle className="mb-[54px] max-w-[720px]">Drie dingen die ik voor je regel.</SectionTitle>
         </Reveal>
         <div className="grid grid-cols-1 gap-[18px] min-[901px]:grid-cols-3">
           {pijlers.map((p, i) => {
             const inner = (
               <>
-                {/* Vaste hoogte van twee regels: wrapt de belofte op smallere schermen, dan blijven de titels van de drie kaarten op één lijn. */}
-                <div className="mb-[14px] grid min-h-[36px] grid-cols-[auto_1fr] items-start gap-x-3 text-[12px] leading-[1.5]">
-                  <span className="font-mono text-accent">{p.n}</span>
-                  <span className="text-right uppercase tracking-[0.14em] text-faint">{p.promise}</span>
-                </div>
+                <span className="mb-[16px] block font-mono text-[12px] leading-none text-accent">{p.n}</span>
                 <h3 className="mb-[10px] font-display text-[clamp(22px,2.2vw,26px)] font-semibold tracking-[-0.02em]">
                   {p.title}
                 </h3>

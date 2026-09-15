@@ -77,8 +77,8 @@ export default async function ContactPage() {
                   <p className="text-ink">HitzDigital</p>
                   <p>
                     {site.founder} · {site.city}, Hoeksche Waard
-                    {site.kvk ? <> · KvK {site.kvk}</> : null}
                   </p>
+                  {site.kvk ? <p>KvK {site.kvk}</p> : null}
                   <p className="mt-2">Reactie binnen 1 werkdag. Op afstand of bij jou in de regio.</p>
                 </div>
                 <div>

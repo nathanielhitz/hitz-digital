@@ -89,11 +89,11 @@ export default async function CasePage({ params }: { params: Promise<Params> }) 
         <Container>
           <div className="grid grid-cols-1 gap-12 min-[901px]:grid-cols-3">
             <Reveal>
-              <Eyebrow>Situatie</Eyebrow>
+              <h3 className="mb-4 font-display text-[15px] font-semibold text-ink">Situatie</h3>
               <p className="text-[16px] leading-[1.7] text-muted">{c.situatie}</p>
             </Reveal>
             <Reveal delay={80}>
-              <Eyebrow>Aanpak</Eyebrow>
+              <h3 className="mb-4 font-display text-[15px] font-semibold text-ink">Aanpak</h3>
               <ul className="flex flex-col gap-3 text-[15px] leading-[1.6] text-muted">
                 {c.aanpak.map((a) => (
                   <li key={a} className="flex items-start gap-3">
@@ -104,7 +104,7 @@ export default async function CasePage({ params }: { params: Promise<Params> }) 
               </ul>
             </Reveal>
             <Reveal delay={160}>
-              <Eyebrow>Resultaat</Eyebrow>
+              <h3 className="mb-4 font-display text-[15px] font-semibold text-ink">Resultaat</h3>
               <ul className="flex flex-col gap-3 text-[15px] leading-[1.6] text-ink">
                 {c.resultaat.map((r) => (
                   <li key={r} className="flex items-start gap-3">
@@ -160,7 +160,6 @@ export default async function CasePage({ params }: { params: Promise<Params> }) 
         <Section>
           <Container>
             <Reveal>
-              <Eyebrow>Meer werk</Eyebrow>
               <SectionTitle className="mb-[44px]">Ook gebouwd.</SectionTitle>
               <div className="grid grid-cols-1 gap-[22px] min-[561px]:grid-cols-2 min-[901px]:grid-cols-3">
                 {others.map((item) => (

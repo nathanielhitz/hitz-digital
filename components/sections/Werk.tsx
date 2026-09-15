@@ -10,7 +10,7 @@ import { work, type WorkItem } from "@/lib/work";
 export function Werk({ items, teaser = false }: { items?: WorkItem[]; teaser?: boolean }) {
   const list = items ?? (teaser ? work.filter((w) => w.client) : work);
   return (
-    <Section id="werk">
+    <Section id="werk" padding={teaser ? "large" : "default"}>
       <Container>
         <Reveal>
           <div className="mb-[54px] flex flex-wrap items-end justify-between gap-5">

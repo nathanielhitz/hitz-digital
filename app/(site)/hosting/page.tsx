@@ -88,7 +88,6 @@ export default function HostingPage() {
       <Section id="pakketten">
         <Container>
           <Reveal>
-            <Eyebrow>Pakketten</Eyebrow>
             <SectionTitle className="mb-4 max-w-[720px]">Twee pakketten, één maandbedrag.</SectionTitle>
             <p className="mb-[54px] max-w-[52ch] text-[16px] leading-[1.65] text-muted">
               Alle prijzen incl. 21% btw en maandelijks opzegbaar. Betalen per maand of per jaar, wat jij prettig vindt.
@@ -165,7 +164,6 @@ export default function HostingPage() {
       <Section id="overstappen">
         <Container>
           <Reveal>
-            <Eyebrow>Overstappen</Eyebrow>
             <SectionTitle className="mb-4 max-w-[720px]">Weg bij je huidige hoster? Ik regel het.</SectionTitle>
             <p className="mb-14 max-w-[52ch] text-[16px] leading-[1.65] text-muted">
               Ook als je site niet door mij gebouwd is. Je hoeft zelf niets over te zetten en er ligt niets uit.

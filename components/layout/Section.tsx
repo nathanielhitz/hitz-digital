@@ -5,15 +5,15 @@ type Variant = "deep" | "base";
 type Padding = "default" | "large";
 
 const variantClass: Record<Variant, string> = {
-  deep: "", // erft de pagina-achtergrond (--color-deep)
-  base: "bg-base",
+  deep: "border-t border-line", // erft de pagina-achtergrond (--color-deep); hairline scheidt van de vorige sectie
+  base: "bg-base", // de kleurwissel scheidt al, geen extra lijn
 };
 const paddingClass: Record<Padding, string> = {
   default: "py-10 md:py-12",
   large: "py-12 md:py-16",
 };
 
-/** Sectie-ritme: hairline bovenaan, verticale clamp-padding, horizontale gutter. */
+/** Sectie-ritme: hairline bovenaan (alleen op deep), verticale padding, horizontale gutter. */
 export function Section({
   id,
   variant = "deep",
@@ -31,7 +31,7 @@ export function Section({
     <section
       id={id}
       className={cn(
-        "relative border-t border-line px-[clamp(20px,5vw,64px)]",
+        "relative px-[clamp(20px,5vw,64px)]",
         paddingClass[padding],
         variantClass[variant],
         className,

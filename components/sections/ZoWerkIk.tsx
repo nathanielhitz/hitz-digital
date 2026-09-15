@@ -1,6 +1,5 @@
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
-import { Eyebrow } from "@/components/ui/Eyebrow";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Reveal } from "@/components/ui/Reveal";
 import { zoWerkIk } from "@/lib/services";
@@ -10,7 +9,6 @@ export function ZoWerkIk() {
     <Section id="zo-werk-ik">
       <Container>
         <Reveal>
-          <Eyebrow>Zo werk ik</Eyebrow>
           <SectionTitle className="mb-[54px] max-w-[720px]">Duidelijk vooraf. Geen verrassingen achteraf.</SectionTitle>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-[clamp(24px,4vw,40px)]">
             {zoWerkIk.map((item) => (

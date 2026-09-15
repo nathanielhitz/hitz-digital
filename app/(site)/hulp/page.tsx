@@ -85,7 +85,6 @@ export default function HulpPage() {
       <Section id="apk">
         <Container>
           <Reveal>
-            <Eyebrow>Twee vaste checks</Eyebrow>
             <SectionTitle className="mb-[54px] max-w-[720px]">Eén vaste prijs, geen verrassingen.</SectionTitle>
           </Reveal>
           <div className="grid grid-cols-1 gap-[18px] min-[901px]:grid-cols-2">
@@ -133,12 +132,14 @@ export default function HulpPage() {
             <Eyebrow>Waar ik bij help</Eyebrow>
             <SectionTitle className="mb-[54px] max-w-[720px]">Van mailbox tot kantoornetwerk.</SectionTitle>
           </Reveal>
-          <div className="grid grid-cols-1 gap-[14px] min-[561px]:grid-cols-2 min-[901px]:grid-cols-3">
+          {/* Zelfde vorm als "Zo werk ik" op de homepage: punt, kop, één regel. Geen kaders voor een opsomming. */}
+          <div className="grid grid-cols-1 gap-x-[clamp(24px,4vw,48px)] gap-y-8 min-[561px]:grid-cols-2">
             {hulpHelp.map((x, i) => (
-              <Reveal key={x.title} delay={(i % 3) * 60}>
-                <div className="h-full rounded-2xl border border-line bg-panel/60 p-6">
-                  <h3 className="font-display text-[17px] font-semibold">{x.title}</h3>
-                  <p className="mt-2 text-[14.5px] leading-[1.55] text-muted">{x.body}</p>
+              <Reveal key={x.title} delay={(i % 2) * 60} className="flex items-start gap-[14px]">
+                <span className="mt-2 h-[9px] w-[9px] flex-none rounded-full bg-accent shadow-dot" aria-hidden />
+                <div>
+                  <h3 className="mb-[6px] font-display text-[17px] font-semibold">{x.title}</h3>
+                  <p className="text-[14.5px] leading-[1.55] text-muted">{x.body}</p>
                 </div>
               </Reveal>
             ))}
@@ -168,7 +169,6 @@ export default function HulpPage() {
       <Section id="hoe-het-werkt">
         <Container>
           <Reveal>
-            <Eyebrow>Hoe het werkt</Eyebrow>
             <SectionTitle className="mb-14 max-w-[720px]">Bellen, meekijken, opgelost.</SectionTitle>
             <div className="grid grid-cols-1 gap-[clamp(24px,4vw,56px)] min-[901px]:grid-cols-3">
               {hulpStappen.map((s) => (

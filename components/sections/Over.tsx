@@ -1,23 +1,26 @@
 import Image from "next/image";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
-import { Eyebrow } from "@/components/ui/Eyebrow";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Reveal } from "@/components/ui/Reveal";
 import { over } from "@/lib/services";
 
 export function Over() {
   return (
-    <Section id="over" variant="base">
+    <Section id="over" variant="base" padding="large">
       <Container>
         <Reveal className="grid grid-cols-1 items-center gap-[clamp(32px,6vw,80px)] min-[901px]:grid-cols-[1.1fr_0.9fr]">
           <div>
-            <Eyebrow>Over HitzDigital</Eyebrow>
             <SectionTitle size="sm" className="mb-6">
               {over.title}
             </SectionTitle>
             <p className="mb-[18px] max-w-[480px] text-[16px] leading-[1.65] text-muted">{over.body}</p>
-            <div className="text-[13.5px] text-faint">{over.facts.join(" · ")}</div>
+            {/* Drie losse feiten met ruimte ertussen, geen scheidingstekens (max één middelpunt per regel). */}
+            <ul className="flex flex-wrap gap-x-6 gap-y-1 text-[13.5px] text-faint">
+              {over.facts.map((f) => (
+                <li key={f}>{f}</li>
+              ))}
+            </ul>
           </div>
           <div className="relative mx-auto aspect-[4/5] w-full max-w-[400px] overflow-hidden rounded-2xl border border-line min-[901px]:ml-auto min-[901px]:mr-0">
             <Image
