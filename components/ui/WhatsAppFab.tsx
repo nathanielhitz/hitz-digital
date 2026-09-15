@@ -62,7 +62,7 @@ export function WhatsAppFab({ afterId = "pijlers", untilId = "contact", classNam
       className={cn(
         "fixed bottom-[calc(env(safe-area-inset-bottom)+20px)] right-5 z-40 inline-flex items-center gap-[10px] rounded-full bg-btn py-[13px] pl-[16px] pr-[22px] text-[15px] font-semibold leading-none text-on-accent shadow-btn",
         "transition-[transform,opacity,box-shadow,filter] duration-[350ms] ease-[cubic-bezier(.2,.7,.2,1)] will-change-transform",
-        "hover:-translate-y-0.5 hover:brightness-[1.04] hover:shadow-btn-hover active:translate-y-0",
+        "hover:-translate-y-0.5 hover:brightness-[1.04] hover:shadow-btn-hover active:translate-y-0 active:scale-[0.98] active:duration-[120ms]",
         "min-[901px]:bottom-7 min-[901px]:right-7",
         visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0",
         className,

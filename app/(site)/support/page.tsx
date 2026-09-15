@@ -5,6 +5,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
 import { supportArticles } from "@/lib/support";
 import { whatsapp } from "@/lib/content";
+import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 
 const title = "Support & handleidingen | HitzDigital";
 const description =
@@ -48,8 +49,8 @@ export default function SupportPage() {
                         >
                           <h3 className="font-display text-[18px] font-semibold tracking-[-0.02em] text-ink">{a.title}</h3>
                           <p className="mt-2 flex-1 text-[14.5px] leading-[1.55] text-muted">{a.summary}</p>
-                          <span className="mt-5 text-[13.5px] text-accent-bright">
-                            Lees verder <span aria-hidden className="inline-block transition-transform group-hover:translate-x-0.5">→</span>
+                          <span className="mt-5 inline-flex items-center gap-1 text-[13.5px] text-accent-bright">
+                            Lees verder <ArrowRight size={14} weight="bold" aria-hidden className="inline-block transition-transform duration-200 group-hover:translate-x-0.5" />
                           </span>
                         </a>
                       </li>

@@ -11,7 +11,7 @@ export function StickyCallBar() {
       <div className="mx-auto grid max-w-[560px] grid-cols-2 gap-3">
         <a
           href={tel}
-          className="inline-flex items-center justify-center gap-2 rounded-full border border-line py-3 text-[15px] font-semibold text-ink"
+          className="inline-flex items-center justify-center gap-2 rounded-full border border-line py-3 text-[15px] font-semibold text-ink transition-transform duration-[120ms] active:scale-[0.98]"
         >
           Bel
         </a>
@@ -19,7 +19,7 @@ export function StickyCallBar() {
           href={whatsapp}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center justify-center gap-2 rounded-full bg-accent py-3 text-[15px] font-semibold text-on-accent"
+          className="inline-flex items-center justify-center gap-2 rounded-full bg-accent py-3 text-[15px] font-semibold text-on-accent transition-transform duration-[120ms] active:scale-[0.98]"
         >
           WhatsApp
         </a>

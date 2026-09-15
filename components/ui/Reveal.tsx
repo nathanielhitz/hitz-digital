@@ -44,7 +44,7 @@ export function Reveal({
     <div
       ref={ref}
       className={cn(
-        "transition-[opacity,transform] duration-[700ms] ease-[cubic-bezier(.2,.7,.2,1)] motion-reduce:transition-none",
+        "transition-[opacity,transform] duration-[600ms] ease-[cubic-bezier(.16,1,.3,1)] motion-reduce:transition-none",
         shown ? "translate-y-0 opacity-100" : "translate-y-[18px] opacity-0",
         className,
       )}

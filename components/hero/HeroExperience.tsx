@@ -33,16 +33,15 @@ const HERO_HTML = `
         </h1>
         <p class="hd-sub" style="font-size:clamp(16px,1.25vw,18.5px);line-height:1.6;color:var(--muted);max-width:470px;margin-bottom:36px">Websites, hosting en computerhulp voor ondernemers in de Hoeksche Waard. Ik bouw je site, houd hem online en kijk direct mee als iets vastloopt. Eén persoon, korte lijnen.</p>
         <div class="hd-cta" style="display:flex;flex-wrap:wrap;gap:14px">
-          <a href="#pijlers" class="hd-btn-primary" style="display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:100px;background:linear-gradient(135deg,var(--btn-hi) 0%,var(--btn) 48%,var(--btn-lo) 100%);color:var(--on-accent);text-decoration:none;font-weight:600;font-size:15px;box-shadow:var(--sh-btn);transition:transform .25s,box-shadow .25s,filter .25s" style-hover="transform:translateY(-2px);box-shadow:0 16px 40px -16px color-mix(in srgb,var(--shadow-ink) 70%,transparent),0 10px 26px -12px color-mix(in srgb,var(--accent) 48%,transparent),inset 0 1px 0 color-mix(in srgb,var(--device-ink) 22%,transparent);filter:brightness(1.04)" style-active="transform:translateY(0);filter:brightness(0.98)">Bekijk wat ik doe
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          <a href="#pijlers" class="hd-btn-primary" style="display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:100px;background:linear-gradient(135deg,var(--btn-hi) 0%,var(--btn) 48%,var(--btn-lo) 100%);color:var(--on-accent);text-decoration:none;font-weight:600;font-size:15px;box-shadow:var(--sh-btn);transition:transform .25s,box-shadow .25s,filter .25s">Bekijk wat ik doe
+            <svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224.49,136.49l-72,72a12,12,0,0,1-17-17L187,140H40a12,12,0,0,1,0-24H187L135.51,64.48a12,12,0,0,1,17-17l72,72A12,12,0,0,1,224.49,136.49Z"></path></svg>
           </a>
-          <a href="/contact" class="hd-btn-ghost" style="display:inline-flex;align-items:center;gap:9px;padding:15px 24px;border-radius:100px;border:1px solid var(--line);color:var(--text);text-decoration:none;font-weight:500;font-size:15px;transition:border-color .25s,background .25s,transform .25s" style-hover="border-color:color-mix(in srgb,var(--accent) 55%,transparent);background:color-mix(in srgb,var(--accent) 9%,transparent);transform:translateY(-2px)" style-active="transform:translateY(0)">Neem contact op</a>
+          <a href="/contact" class="hd-btn-ghost" style="display:inline-flex;align-items:center;gap:9px;padding:15px 24px;border-radius:100px;border:1px solid var(--line);color:var(--text);text-decoration:none;font-weight:500;font-size:15px;transition:border-color .25s,background .25s,transform .25s">Neem contact op</a>
         </div>
       </div>
 
-      <div class="hd-cue" style="position:absolute;left:50%;bottom:26px;z-index:6;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:9px;font-size:10.5px;letter-spacing:0.22em;text-transform:uppercase;color:var(--faint);pointer-events:none">
-        Scroll
-        <span style="width:1px;height:34px;background:linear-gradient(180deg,var(--accent),transparent)"></span>
+      <div class="hd-cue" aria-hidden="true" style="position:absolute;left:50%;bottom:26px;z-index:6;transform:translateX(-50%);pointer-events:none">
+        <span style="display:block;width:1px;height:34px;background:linear-gradient(180deg,var(--accent),transparent)"></span>
       </div>
 
       <!-- 3D scene -->
@@ -64,7 +63,7 @@ const HERO_HTML = `
             <div class="hd-lid" style="position:relative;width:640px;height:404px;border-radius:16px;transform-style:preserve-3d;transform-origin:center bottom;transform:rotateX(-6deg);background:linear-gradient(155deg,var(--dv-1) 0%,var(--dv-3) 48%,var(--dv-5) 100%);box-shadow:inset 0 1px 0 color-mix(in srgb,var(--accent) 10%,transparent),0 0 0 1px var(--dv-edge),0 40px 80px -36px color-mix(in srgb,var(--shadow-ink) 90%,transparent),0 26px 90px -30px color-mix(in srgb,var(--accent) 16%,transparent);padding:13px;backface-visibility:hidden">
               <div class="hd-cam" style="position:absolute;top:6px;left:50%;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--dv-1)"></div>
               <div class="hd-display" style="position:relative;width:100%;height:100%;border-radius:7px;overflow:hidden;background:var(--sc-4);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--sc-4) 80%,transparent)">
-                <div class="hd-backlight" style="position:absolute;inset:0;opacity:0;background:linear-gradient(160deg,var(--sc-2) 0%,var(--sc-3) 100%)">
+                <div class="hd-backlight" style="position:absolute;inset:0;opacity:0;background:linear-gradient(160deg,var(--screen-hi) 0%,var(--screen-lo) 100%)">
                   <div style="position:absolute;inset:0;background-image:linear-gradient(var(--line2) 1px,transparent 1px),linear-gradient(90deg,var(--line2) 1px,transparent 1px);background-size:34px 34px;opacity:.6"></div>
                 </div>
                 <div class="hd-wire-screen" style="position:absolute;inset:0;opacity:0;padding:14px">

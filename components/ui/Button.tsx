@@ -15,7 +15,7 @@ type ButtonProps = {
 };
 
 const base =
-  "inline-flex items-center justify-center gap-[10px] rounded-full font-semibold leading-none transition-[transform,border-color,background-color,box-shadow,filter] duration-[250ms] ease-[cubic-bezier(.2,.7,.2,1)] will-change-transform";
+  "inline-flex items-center justify-center gap-[10px] rounded-full font-semibold leading-none transition-[transform,border-color,background-color,box-shadow,filter] duration-[250ms] ease-[cubic-bezier(.2,.7,.2,1)] will-change-transform active:scale-[0.98] active:duration-[120ms]";
 
 const sizes = {
   md: "px-7 py-[15px] text-[15px]",
@@ -23,6 +23,7 @@ const sizes = {
 };
 
 // Primary: merkgroene gradient (bg-btn, in beide thema's gelijk) + lit edge + zachte glow. Ghost: hairline die oplicht bij hover.
+// Indrukken: terug naar 0 en 2% kleiner in 120ms, zodat de knop de klik voelbaar "hoort".
 const variants = {
   primary:
     "bg-btn text-on-accent shadow-btn hover:-translate-y-0.5 hover:brightness-[1.04] hover:shadow-btn-hover active:translate-y-0 active:brightness-[0.98]",

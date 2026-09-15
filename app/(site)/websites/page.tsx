@@ -16,6 +16,7 @@ import { cta } from "@/lib/content";
 import { pricing, euro } from "@/lib/pricing";
 import { pijlers, websiteOpties, websiteInbegrepen, websiteFaq } from "@/lib/services";
 import { cases } from "@/lib/work";
+import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 
 const title = "Website laten maken in de Hoeksche Waard | HitzDigital";
 const description =
@@ -163,7 +164,7 @@ export default function WebsitesPage() {
                   vergelijken, precies zoals je klant ze op zijn telefoon ziet.
                 </p>
                 <a href={`/werk/${voorNa.slug}`} className="mt-6 inline-flex items-center gap-2 text-[15px] font-medium text-ink underline-offset-4 hover:underline">
-                  Lees de hele case <span aria-hidden>→</span>
+                  Lees de hele case <ArrowRight size={16} weight="bold" aria-hidden />
                 </a>
               </div>
               <div className="mx-auto w-full max-w-[420px] overflow-hidden rounded-[22px] border border-line shadow-card">

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { track } from "@vercel/analytics";
+import { ArrowRight } from "@phosphor-icons/react";
 import { workHref, type WorkItem } from "@/lib/work";
 
 export function WerkCard({ item }: { item: WorkItem }) {
@@ -15,9 +16,9 @@ export function WerkCard({ item }: { item: WorkItem }) {
           track("portfolio_click", { project: item.title, internal });
         } catch {}
       }}
-      className="group block text-inherit"
+      className="group block text-inherit transition-transform duration-300 ease-[cubic-bezier(.23,1,.32,1)] hover:-translate-y-1 active:translate-y-0 active:duration-[120ms]"
     >
-      <div className="relative aspect-[3/4] overflow-hidden rounded-[13px] border border-line transition-[border-color,transform] duration-300 group-hover:-translate-y-1 group-hover:border-accent/35">
+      <div className="relative aspect-[3/4] overflow-hidden rounded-[13px] border border-line transition-[border-color] duration-300 group-hover:border-accent/35">
         <Image
           src={item.src}
           alt={item.alt}
@@ -34,15 +35,21 @@ export function WerkCard({ item }: { item: WorkItem }) {
             {item.tag}
           </span>
         )}
-        {internal && (
-          <span className="absolute bottom-3 left-3 text-[12.5px] font-medium text-on-scrim/90 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-            Bekijk de case →
-          </span>
-        )}
       </div>
       <div className="mt-[14px] flex items-center justify-between gap-3">
         <span className="font-display text-[16px] font-semibold">{item.title}</span>
-        <span className="text-right text-[12px] text-faint">{item.meta}</span>
+        {/* Meta wisselt op hover met de uitnodiging; niets ligt over het screenshot. */}
+        <span className="relative text-right text-[12px] text-faint">
+          <span className={internal ? "transition-opacity duration-200 group-hover:opacity-0" : undefined}>{item.meta}</span>
+          {internal && (
+            <span
+              aria-hidden
+              className="absolute inset-y-0 right-0 inline-flex items-center gap-1 whitespace-nowrap font-medium text-ink opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+            >
+              Bekijk de case <ArrowRight size={13} weight="bold" />
+            </span>
+          )}
+        </span>
       </div>
     </a>
   );

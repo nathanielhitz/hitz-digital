@@ -71,7 +71,7 @@ export function Nav() {
     <>
       <header
         className={cn(
-          "fixed inset-x-0 top-0 z-50 border-b transition-[background-color,border-color,backdrop-filter] duration-[350ms]",
+          "fixed inset-x-0 top-0 z-[70] border-b transition-[background-color,border-color,backdrop-filter] duration-[250ms]",
           scrolled ? "border-line bg-glass/72 backdrop-blur-[14px]" : "border-transparent",
         )}
       >
@@ -116,7 +116,8 @@ export function Nav() {
         </nav>
       </header>
 
-      {/* Fullscreen menu (mobiel) */}
+      {/* Fullscreen menu (mobiel). De header (z-70) blijft erboven: de gemorphte hamburger is de sluitknop.
+          Openen: paneel 220ms, links met 40ms stagger (opacity + 8px). Sluiten: 160ms, alles tegelijk. */}
       <div
         ref={panelRef}
         id="mobile-menu"
@@ -126,28 +127,21 @@ export function Nav() {
         aria-hidden={!open}
         inert={!open}
         className={cn(
-          "fixed inset-0 z-[60] flex flex-col bg-glass/97 px-[clamp(20px,7vw,40px)] pb-11 pt-[22px] backdrop-blur-[12px] transition-opacity duration-[260ms] min-[901px]:hidden",
-          open ? "opacity-100" : "pointer-events-none opacity-0",
+          "fixed inset-0 z-[60] flex flex-col bg-glass/97 px-[clamp(20px,7vw,40px)] pb-11 pt-[88px] backdrop-blur-[12px] transition-opacity ease-[cubic-bezier(.23,1,.32,1)] min-[901px]:hidden",
+          open ? "opacity-100 duration-[220ms]" : "pointer-events-none opacity-0 duration-[160ms]",
         )}
       >
-        <div className="flex items-center justify-between">
-          <Wordmark />
-          <button
-            type="button"
-            aria-label="Menu sluiten"
-            onClick={close}
-            className="h-11 w-11 text-[30px] leading-none text-ink"
-          >
-            ×
-          </button>
-        </div>
         <div className="my-auto flex flex-col gap-0.5">
-          {nav.links.map((l) => (
+          {nav.links.map((l, i) => (
             <a
               key={l.href}
               href={l.href}
               onClick={close}
-              className="py-[10px] font-display text-[clamp(30px,9vw,42px)] font-semibold tracking-[-0.025em] text-ink transition-colors hover:text-accent"
+              style={{ transitionDelay: open ? `${40 + i * 40}ms` : "0ms" }}
+              className={cn(
+                "py-[10px] font-display text-[clamp(30px,9vw,42px)] font-semibold tracking-[-0.025em] text-ink transition-[opacity,transform,color] ease-[cubic-bezier(.23,1,.32,1)] hover:text-accent motion-reduce:transition-none",
+                open ? "translate-y-0 opacity-100 duration-[220ms]" : "translate-y-2 opacity-0 duration-[160ms]",
+              )}
             >
               {l.label}
             </a>

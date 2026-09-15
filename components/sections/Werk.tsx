@@ -4,6 +4,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Reveal } from "@/components/ui/Reveal";
 import { WerkCard } from "@/components/sections/WerkCard";
+import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { work, type WorkItem } from "@/lib/work";
 
 /** Homepage: teaser met de klanten + link naar /werk. Elders: volledige grid via `items`. */
@@ -25,7 +26,7 @@ export function Werk({ items, teaser = false }: { items?: WorkItem[]; teaser?: b
                 href="/werk"
                 className="inline-flex items-center gap-2 text-[15px] font-medium text-ink underline-offset-4 hover:underline"
               >
-                Al mijn werk <span aria-hidden>→</span>
+                Al mijn werk <ArrowRight size={16} weight="bold" aria-hidden />
               </a>
             ) : (
               <p className="max-w-[380px] text-[15px] leading-[1.6] text-muted">

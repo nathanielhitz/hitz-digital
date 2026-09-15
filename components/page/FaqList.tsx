@@ -12,19 +12,19 @@ export function FaqList({ items }: { items: readonly Faq[] }) {
     })),
   };
   return (
-    <div className="divide-y divide-line border-y border-line">
+    <div className="faq divide-y divide-line border-y border-line">
       {items.map((f) => (
         <details key={f.q} className="group py-5">
           <summary className="flex cursor-pointer list-none items-center justify-between gap-6 font-display text-[17px] font-semibold tracking-[-0.01em] [&::-webkit-details-marker]:hidden">
             {f.q}
             <span
-              className="grid h-7 w-7 flex-none place-items-center rounded-full border border-line text-muted transition-transform duration-300 group-open:rotate-45"
+              className="grid h-7 w-7 flex-none place-items-center rounded-full border border-line text-muted transition-transform duration-200 ease-[cubic-bezier(.23,1,.32,1)] group-open:rotate-45"
               aria-hidden
             >
               +
             </span>
           </summary>
-          <p className="mt-3 max-w-[64ch] text-[15px] leading-[1.65] text-muted">{f.a}</p>
+          <p className="faq-a mt-3 max-w-[64ch] text-[15px] leading-[1.65] text-muted">{f.a}</p>
         </details>
       ))}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />

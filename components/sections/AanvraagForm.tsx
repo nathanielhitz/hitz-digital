@@ -96,7 +96,7 @@ export function AanvraagForm({ initial = "website", canSend = false }: { initial
             return (
               <label
                 key={k.id}
-                className={`cursor-pointer select-none rounded-full border px-[15px] py-[9px] text-[14px] transition-[border-color,background-color,color] duration-200 ${
+                className={`cursor-pointer select-none rounded-full border px-[15px] py-[9px] text-[14px] transition-[border-color,background-color,color,transform] duration-200 active:scale-[0.98] active:duration-[120ms] ${
                   active ? "border-accent/60 bg-accent/12 text-ink" : "border-line text-muted hover:border-accent/40 hover:text-ink"
                 }`}
               >
