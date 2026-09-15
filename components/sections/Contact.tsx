@@ -27,13 +27,13 @@ export async function Contact() {
             Kies waarvoor je me nodig hebt en vertel kort wat er speelt. Ik reageer binnen 1 werkdag, vrijblijvend.
           </p>
           <AanvraagForm canSend={sendable} />
-          <div className="mt-6 text-center text-[13.5px] leading-[1.9] text-faint">
+          <div className="mt-6 text-center text-[13.5px] leading-[2.1] text-faint">
             Liever direct?{" "}
-            <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="text-muted underline">
+            <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="inline-block py-0.5 text-muted underline">
               WhatsApp
             </a>{" "}
             ·{" "}
-            <a href={tel} className="text-muted underline">
+            <a href={tel} className="inline-block py-0.5 text-muted underline">
               Bel {telDisplay}
             </a>
             <br />

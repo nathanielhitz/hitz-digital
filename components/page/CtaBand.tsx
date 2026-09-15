@@ -37,7 +37,7 @@ export function CtaBand({
           </div>
           <p className="mt-6 text-[13.5px] text-faint">
             Of bel{" "}
-            <a href={tel} className="text-muted underline">
+            <a href={tel} className="inline-block py-1 text-muted underline">
               {telDisplay}
             </a>
             . Reactie binnen 1 werkdag, vrijblijvend.

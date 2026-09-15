@@ -24,7 +24,7 @@ export function Werk({ items, teaser = false }: { items?: WorkItem[]; teaser?: b
             {teaser ? (
               <a
                 href="/werk"
-                className="inline-flex items-center gap-2 text-[15px] font-medium text-ink underline-offset-4 hover:underline"
+                className="inline-flex items-center gap-2 py-1 text-[15px] font-medium text-ink underline-offset-4 hover:underline"
               >
                 Al mijn werk <ArrowRight size={16} weight="bold" aria-hidden />
               </a>
@@ -36,8 +36,9 @@ export function Werk({ items, teaser = false }: { items?: WorkItem[]; teaser?: b
             )}
           </div>
           <div className="grid grid-cols-1 gap-[22px] min-[561px]:grid-cols-2 min-[901px]:grid-cols-3">
-            {list.map((item) => (
-              <WerkCard key={item.slug} item={item} />
+            {list.map((item, i) => (
+              // Teaser op één kolom: twee tegels, de derde staat achter "Al mijn werk".
+              <WerkCard key={item.slug} item={item} className={teaser && i >= 2 ? "max-[560px]:hidden" : undefined} />
             ))}
           </div>
         </Reveal>

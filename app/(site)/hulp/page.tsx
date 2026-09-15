@@ -45,7 +45,7 @@ export default function HulpPage() {
   };
 
   return (
-    <main id="main" className="relative z-[2] bg-deep pb-[76px] min-[901px]:pb-0">
+    <main id="main" className="relative z-[2] bg-deep">
       <PageHero
         crumbs={[{ label: "Hulp" }]}
         title={
@@ -208,7 +208,7 @@ export default function HulpPage() {
         label={cta.hulp.label}
         href={cta.hulp.href}
       />
-      <StickyCallBar />
+      <StickyCallBar afterId="apk" untilId="cta" />
       <WhatsAppFab afterId="apk" untilId="cta" className="max-[900px]:hidden" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
     </main>

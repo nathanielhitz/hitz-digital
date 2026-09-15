@@ -4,8 +4,9 @@ import Image from "next/image";
 import { track } from "@vercel/analytics";
 import { ArrowRight } from "@phosphor-icons/react";
 import { workHref, type WorkItem } from "@/lib/work";
+import { cn } from "@/lib/cn";
 
-export function WerkCard({ item }: { item: WorkItem }) {
+export function WerkCard({ item, className }: { item: WorkItem; className?: string }) {
   const internal = Boolean(item.client);
   return (
     <a
@@ -16,9 +17,10 @@ export function WerkCard({ item }: { item: WorkItem }) {
           track("portfolio_click", { project: item.title, internal });
         } catch {}
       }}
-      className="group block text-inherit transition-transform duration-300 ease-[cubic-bezier(.23,1,.32,1)] hover:-translate-y-1 active:translate-y-0 active:duration-[120ms]"
+      className={cn("group block text-inherit transition-transform duration-300 ease-[cubic-bezier(.23,1,.32,1)] hover:-translate-y-1 active:translate-y-0 active:duration-[120ms]", className)}
     >
-      <div className="relative aspect-[3/4] overflow-hidden rounded-[13px] border border-line transition-[border-color] duration-300 group-hover:border-accent/35">
+      {/* Op één kolom (mobiel) iets minder hoog, zodat de pagina niet drie schermhoogtes aan tegels wordt. */}
+      <div className="relative aspect-[4/5] overflow-hidden rounded-[13px] min-[561px]:aspect-[3/4] border border-line transition-[border-color] duration-300 group-hover:border-accent/35">
         <Image
           src={item.src}
           alt={item.alt}

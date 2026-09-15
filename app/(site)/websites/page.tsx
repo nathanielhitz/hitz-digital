@@ -163,7 +163,7 @@ export default function WebsitesPage() {
                   {voorNa.title}, {voorNa.branche.toLowerCase()} in {voorNa.plaats}. Sleep de greep om de oude en de nieuwe site te
                   vergelijken, precies zoals je klant ze op zijn telefoon ziet.
                 </p>
-                <a href={`/werk/${voorNa.slug}`} className="mt-6 inline-flex items-center gap-2 text-[15px] font-medium text-ink underline-offset-4 hover:underline">
+                <a href={`/werk/${voorNa.slug}`} className="mt-5 inline-flex items-center gap-2 py-1 text-[15px] font-medium text-ink underline-offset-4 hover:underline">
                   Lees de hele case <ArrowRight size={16} weight="bold" aria-hidden />
                 </a>
               </div>

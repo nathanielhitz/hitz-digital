@@ -4,7 +4,7 @@ import { contactEmail, mailto, whatsapp, tel, telDisplay } from "@/lib/content";
 import { pijlers } from "@/lib/services";
 import { site } from "@/lib/site";
 
-const linkCls = "text-muted transition-colors hover:text-ink";
+const linkCls = "inline-block py-1 text-muted transition-colors hover:text-ink"; // py-1: raakvlak ≥ 24px
 
 const legal = [
   { href: "/privacy", label: "Privacybeleid" },
@@ -28,7 +28,7 @@ export function Footer() {
 
           <div>
             <h2 className="mb-3 text-[12px] uppercase tracking-[0.14em] text-faint">Diensten</h2>
-            <ul className="flex flex-col gap-2 text-[14px]">
+            <ul className="flex flex-col gap-0.5 text-[14px]">
               {pijlers.map((p) => (
                 <li key={p.id}>
                   <a href={p.live ? p.href : "/#pijlers"} className={linkCls}>
@@ -41,7 +41,7 @@ export function Footer() {
 
           <div>
             <h2 className="mb-3 text-[12px] uppercase tracking-[0.14em] text-faint">Meer</h2>
-            <ul className="flex flex-col gap-2 text-[14px]">
+            <ul className="flex flex-col gap-0.5 text-[14px]">
               <li><a href="/websites#werkwijze" className={linkCls}>Werkwijze</a></li>
               <li><a href="/werk" className={linkCls}>Werk</a></li>
               <li><a href="/contact" className={linkCls}>Contact</a></li>
@@ -51,7 +51,7 @@ export function Footer() {
 
           <div>
             <h2 className="mb-3 text-[12px] uppercase tracking-[0.14em] text-faint">Contact</h2>
-            <ul className="flex flex-col gap-2 text-[14px]">
+            <ul className="flex flex-col gap-0.5 text-[14px]">
               <li><MailtoLink href={mailto} className={linkCls}>{contactEmail}</MailtoLink></li>
               <li><a href={tel} className={linkCls}>{telDisplay}</a></li>
               <li><a href={whatsapp} target="_blank" rel="noopener noreferrer" className={linkCls}>WhatsApp</a></li>

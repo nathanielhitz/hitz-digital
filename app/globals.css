@@ -50,6 +50,7 @@
   --focus: #29704d;
   --accent-sheen: #3f9d6c;   /* lichtste stop van het accentwoord (≥3:1 op papier, alleen voor grote koppen) */
   --accent-halo: rgba(95, 164, 126, 0.16);   /* op papier zacht; de gloed hoort bij donker */
+  --danger: #a8402e;         /* fouttekst in formulieren, ≥ 4.5:1 op papier */
 
   --glass-base: #f9f7f2;          /* nav, bars, drijvende panelen */
   --shadow-ink: rgba(28, 26, 23, 0.42); /* zachte warme schaduw */
@@ -111,6 +112,7 @@
     --dv-1: #2a2620; --dv-2: #1a1712; --dv-3: #16130f; --dv-4: #110f0c; --dv-5: #0b0a08; --dv-6: #080706; --dv-edge: rgba(255, 255, 255, 0.06);
     --sc-1: #16130f; --sc-2: #110f0c; --sc-3: #0b0a08; --sc-4: #080706; --device-ink: #f4f1ec; --device-muted: #a8a298;
     --screen-hi: #1c1914; --screen-lo: #100e0b; /* iets lichter dan de behuizing: het scherm staat ook vóór het scrollen zichtbaar aan */
+    --danger: #e0685c;
     --sh-card: 0 30px 60px -40px rgba(0, 0, 0, 0.85);
     --sh-card-accent: 0 30px 60px -40px rgba(95, 164, 126, 0.35);
     --sh-photo: 0 40px 80px -50px rgba(0, 0, 0, 0.9);
@@ -133,6 +135,7 @@
   --dv-1: #2a2620; --dv-2: #1a1712; --dv-3: #16130f; --dv-4: #110f0c; --dv-5: #0b0a08; --dv-6: #080706; --dv-edge: rgba(255, 255, 255, 0.06);
   --sc-1: #16130f; --sc-2: #110f0c; --sc-3: #0b0a08; --sc-4: #080706; --device-ink: #f4f1ec; --device-muted: #a8a298;
   --screen-hi: #1c1914; --screen-lo: #100e0b;
+  --danger: #e0685c;
   --sh-card: 0 30px 60px -40px rgba(0, 0, 0, 0.85);
   --sh-card-accent: 0 30px 60px -40px rgba(95, 164, 126, 0.35);
   --sh-photo: 0 40px 80px -50px rgba(0, 0, 0, 0.9);
@@ -159,6 +162,7 @@
   --color-accent-warm: var(--accent-warm);
   --color-on-accent: var(--on-accent);
   --color-glow: var(--glow);
+  --color-danger: var(--danger);
 
   --color-glass: var(--glass-base);
   --color-scrim: var(--scrim);

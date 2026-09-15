@@ -22,7 +22,7 @@ export function Breadcrumbs({ items }: { items: Crumb[] }) {
           <li key={i} className="flex items-center gap-2">
             {i > 0 && <span aria-hidden>/</span>}
             {c.href && i < all.length - 1 ? (
-              <a href={c.href} className="transition-colors hover:text-ink">
+              <a href={c.href} className="inline-block py-1 transition-colors hover:text-ink">
                 {c.label}
               </a>
             ) : (

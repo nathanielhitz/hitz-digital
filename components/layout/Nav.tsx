@@ -79,7 +79,7 @@ export function Nav() {
           aria-label="Hoofdnavigatie"
           className="mx-auto flex max-w-[1280px] items-center justify-between px-[clamp(20px,5vw,64px)] py-5"
         >
-          <a href="/" aria-label="HitzDigital home" className="inline-flex items-center">
+          <a href="/" aria-label="HitzDigital home" className="inline-flex items-center py-2">
             <Wordmark />
           </a>
 

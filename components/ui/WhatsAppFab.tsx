@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { WhatsappLogo } from "@phosphor-icons/react";
 import { whatsapp } from "@/lib/content";
 import { cn } from "@/lib/cn";
+import { useRangeVisible } from "@/lib/useRangeVisible";
 
 type Props = {
   /** Sectie-id waar de knop ná verschijnt (standaard: Diensten). */
@@ -16,40 +16,12 @@ type Props = {
 
 /**
  * Zwevende "Heb je een vraag?"-knop naar WhatsApp.
- * - verschijnt zodra het kopje van de sectie `afterId` in beeld komt
+ * - verschijnt zodra het kopje van de sectie `afterId` in de bovenste 60% van het scherm komt
  * - verdwijnt weer zodra `untilId` in beeld komt (daar staat WhatsApp al)
- * - rAF-throttled, passieve listeners, SSR-safe (start verborgen)
+ * - IntersectionObserver (zie useRangeVisible), geen scroll-listener; SSR-safe (start verborgen)
  */
 export function WhatsAppFab({ afterId = "pijlers", untilId = "contact", className }: Props) {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const after = document.getElementById(afterId);
-    if (!after) return;
-    const until = untilId ? document.getElementById(untilId) : null;
-    let raf = 0;
-
-    const update = () => {
-      raf = 0;
-      const vh = window.innerHeight;
-      // Zichtbaar zodra het kopje van de sectie in beeld komt (bovenkant in de bovenste 60% van het scherm).
-      const pastAfter = after.getBoundingClientRect().top < vh * 0.6;
-      const beforeUntil = until ? until.getBoundingClientRect().top > vh * 0.85 : true;
-      setVisible(pastAfter && beforeUntil);
-    };
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(update);
-    };
-
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, [afterId, untilId]);
+  const visible = useRangeVisible(afterId, untilId, 0.6);
 
   return (
     <a

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { track } from "@vercel/analytics";
 import { Button } from "@/components/ui/Button";
@@ -11,6 +11,17 @@ import { sendAanvraag } from "@/app/actions/contact";
 const field =
   "w-full rounded-[10px] border border-line bg-field px-[14px] py-3 text-[15px] text-ink outline-none transition-colors placeholder:text-faint focus:border-accent/60";
 const label = "flex flex-col gap-[7px] text-[13px] text-muted";
+const errorCls = "text-[13px] leading-[1.4] text-danger";
+
+type Errors = { naam?: string; email?: string };
+
+function validate(d: FormData): Errors {
+  const e: Errors = {};
+  if (!String(d.get("naam") || "").trim()) e.naam = "Vul je naam in, dan weet ik wie ik terugbel of mail.";
+  const email = String(d.get("email") || "").trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e.email = "Vul een e-mailadres in waarop ik je kan bereiken.";
+  return e;
+}
 
 type Status = "idle" | "sending" | "ok" | "error";
 
@@ -40,6 +51,8 @@ export function AanvraagForm({ initial = "website", canSend = false }: { initial
   const [status, setStatus] = useState<Status>("idle");
   const [fallback, setFallback] = useState<string | null>(null);
   const [opened, setOpened] = useState(0);
+  const [errors, setErrors] = useState<Errors>({});
+  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     setOpened(Date.now());
@@ -63,6 +76,15 @@ export function AanvraagForm({ initial = "website", canSend = false }: { initial
     const d = new FormData(form);
     if (d.get("_gotcha")) return;
 
+    // Inline controle vóór versturen: fout onder het veld, focus op het eerste foute veld.
+    const errs = validate(d);
+    setErrors(errs);
+    const first = (Object.keys(errs) as Array<keyof Errors>)[0];
+    if (first) {
+      form.querySelector<HTMLInputElement>(`[name="${first}"]`)?.focus();
+      return;
+    }
+
     if (!canSend) {
       window.location.href = buildMailto(d);
       return;
@@ -84,7 +106,7 @@ export function AanvraagForm({ initial = "website", canSend = false }: { initial
   }
 
   return (
-    <form id="aanvraag" onSubmit={onSubmit} noValidate className="mx-auto flex max-w-[560px] flex-col gap-[14px] text-left">
+    <form id="aanvraag" ref={formRef} onSubmit={onSubmit} noValidate className="mx-auto flex max-w-[560px] flex-col gap-[14px] text-left">
       <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 opacity-0" />
       <input type="hidden" name="_t" value={opened} />
 
@@ -110,12 +132,43 @@ export function AanvraagForm({ initial = "website", canSend = false }: { initial
 
       <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-[14px]">
         <label className={label}>
-          Naam
-          <input name="naam" required autoComplete="name" className={field} />
+          <span>
+            Naam <span className="text-faint">(verplicht)</span>
+          </span>
+          <input
+            name="naam"
+            required
+            autoComplete="name"
+            aria-invalid={errors.naam ? true : undefined}
+            aria-describedby={errors.naam ? "fout-naam" : undefined}
+            onInput={() => errors.naam && setErrors((e) => ({ ...e, naam: undefined }))}
+            className={`${field} aria-invalid:border-danger/70`}
+          />
+          {errors.naam && (
+            <span id="fout-naam" className={errorCls}>
+              {errors.naam}
+            </span>
+          )}
         </label>
         <label className={label}>
-          E-mailadres
-          <input type="email" name="email" required autoComplete="email" className={field} />
+          <span>
+            E-mailadres <span className="text-faint">(verplicht)</span>
+          </span>
+          <input
+            type="email"
+            name="email"
+            required
+            autoComplete="email"
+            aria-invalid={errors.email ? true : undefined}
+            aria-describedby={errors.email ? "fout-email" : undefined}
+            onInput={() => errors.email && setErrors((e) => ({ ...e, email: undefined }))}
+            className={`${field} aria-invalid:border-danger/70`}
+          />
+          {errors.email && (
+            <span id="fout-email" className={errorCls}>
+              {errors.email}
+            </span>
+          )}
         </label>
       </div>
       <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-[14px]">
@@ -140,7 +193,7 @@ export function AanvraagForm({ initial = "website", canSend = false }: { initial
         {status === "sending" ? "Versturen…" : keuze.submit}
       </Button>
       <p className="mt-1 text-center text-[12.5px] text-muted">
-        <Link href="/privacy" className="underline underline-offset-2 transition-colors hover:text-ink">
+        <Link href="/privacy" className="inline-block py-1 underline underline-offset-2 transition-colors hover:text-ink">
           Zie privacybeleid
         </Link>
       </p>

@@ -53,21 +53,21 @@ export default async function ContactPage() {
               <div className="flex flex-col gap-8">
                 <div>
                   <Eyebrow>Liever direct</Eyebrow>
-                  <ul className="flex flex-col gap-3 text-[16px]">
+                  <ul className="flex flex-col gap-1.5 text-[16px]">
                     <li>
-                      <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="text-ink underline-offset-4 hover:underline">
+                      <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="inline-block py-1 text-ink underline-offset-4 hover:underline">
                         WhatsApp
                       </a>
                       <span className="text-muted"> · snelste voor korte vragen</span>
                     </li>
                     <li>
-                      <a href={tel} className="text-ink underline-offset-4 hover:underline">
+                      <a href={tel} className="inline-block py-1 text-ink underline-offset-4 hover:underline">
                         {telDisplay}
                       </a>
                       <span className="text-muted"> · bel bij storing of spoed</span>
                     </li>
                     <li>
-                      <MailtoLink href={mailto} className="text-ink underline-offset-4 hover:underline">
+                      <MailtoLink href={mailto} className="inline-block py-1 text-ink underline-offset-4 hover:underline">
                         {contactEmail}
                       </MailtoLink>
                     </li>
