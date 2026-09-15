@@ -18,9 +18,10 @@ export function Pijlers() {
           {pijlers.map((p, i) => {
             const inner = (
               <>
-                <div className="mb-[18px] flex items-center justify-between">
-                  <span className="font-mono text-[12px] text-accent">{p.n}</span>
-                  <span className="text-[12px] uppercase tracking-[0.14em] text-faint">{p.promise}</span>
+                {/* Vaste hoogte van twee regels: wrapt de belofte op smallere schermen, dan blijven de titels van de drie kaarten op één lijn. */}
+                <div className="mb-[14px] grid min-h-[36px] grid-cols-[auto_1fr] items-start gap-x-3 text-[12px] leading-[1.5]">
+                  <span className="font-mono text-accent">{p.n}</span>
+                  <span className="text-right uppercase tracking-[0.14em] text-faint">{p.promise}</span>
                 </div>
                 <h3 className="mb-[10px] font-display text-[clamp(22px,2.2vw,26px)] font-semibold tracking-[-0.02em]">
                   {p.title}

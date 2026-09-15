@@ -10,14 +10,15 @@ import { track } from "@vercel/analytics";
  * bewaard (visueel identiek aan de live versie); de rest van de site is React.
  *
  * Contract met de pagina: het element dat direct ná deze hero komt krijgt
- * class `hd-after-hero` (CSS trekt het op desktop -80vh omhoog, zie globals.css).
+ * class `hd-after-hero` (CSS trekt het op desktop -100vh omhoog, zie globals.css): de content
+ * bereikt de bovenrand precies op het moment dat de hero unpint en op opacity 0 staat.
  * Kleuren: alleen CSS-variabelen (globals.css). Themavolgend: --hero-*, --glass, --text,
  * --line, --accent*, --shadow-ink, --code-*. Merk-invariant: --btn*, --dv-* (het apparaat
  * zelf blijft donker, zoals een echte laptop) en --device-ink/--device-muted (mock-site op het scherm).
  */
 const HERO_HTML = `
   <!-- scroll experience: laptop intro (pinned) -->
-  <div class="hd-exp" style="position:relative;height:240vh">
+  <div class="hd-exp" style="position:relative;height:280vh">
     <div class="hd-sticky" style="position:sticky;top:0;height:100vh;overflow:hidden;background:radial-gradient(120% 90% at 70% 24%,var(--hero-1) 0%,var(--hero-2) 48%,var(--hero-3) 100%)">
 
       <div class="hd-glow" style="position:absolute;right:6%;top:8%;width:46vw;height:46vw;max-width:760px;max-height:760px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--accent) 15%,transparent) 0%,color-mix(in srgb,var(--accent) 4%,transparent) 40%,transparent 70%);filter:blur(32px);pointer-events:none"></div>
@@ -256,9 +257,12 @@ function initHero(root: HTMLElement): () => void {
     const w = window.innerWidth;
     const small = w <= 900;
     const xs = w <= 560;
+    // 901–1440px: laptop kleiner en verder naar rechts, copy smaller (kop op drie regels), zodat lid en kop
+    // elkaar niet raken (iPad landscape, kleine laptops). Vanaf 1440px de ongewijzigde desktopwaarden.
+    const mid = small ? 1 : Math.min(1, Math.max(0, (w - 901) / 539));
     mobile = small;
     scrollDriven = !small && !reduce;
-    if (exp) exp.style.height = scrollDriven ? "240vh" : "auto";
+    if (exp) exp.style.height = scrollDriven ? "280vh" : "auto";
     pinLen = Math.max(1, exp ? exp.offsetHeight - window.innerHeight : 1);
     pSnap = true; // pinLen veranderde: p direct meebewegen, niet dempen
     if (small) {
@@ -276,7 +280,7 @@ function initHero(root: HTMLElement): () => void {
     } else {
       if (sticky) Object.assign(sticky.style, { position: "sticky", height: "100vh", minHeight: "", overflow: "hidden", paddingTop: "0", paddingBottom: "0", display: "block", zIndex: "3" });
       if (copy) {
-        Object.assign(copy.style, { position: "absolute", left: "clamp(20px,5vw,64px)", right: "auto", top: "50%", transform: "translateY(-50%)", maxWidth: "540px", margin: "0", padding: "0", textAlign: "left" });
+        Object.assign(copy.style, { position: "absolute", left: "clamp(20px,5vw,64px)", right: "auto", top: "50%", transform: "translateY(-50%)", maxWidth: `${Math.round(360 + 180 * mid)}px`, margin: "0", padding: "0", textAlign: "left" });
         copy.querySelectorAll(".hd-kicker,.hd-cta").forEach((e: any) => { e.style.justifyContent = ""; });
         const sub = copy.querySelector(".hd-sub") as HTMLElement | null;
         if (sub) sub.style.margin = "0 0 36px";
@@ -286,8 +290,8 @@ function initHero(root: HTMLElement): () => void {
       if (stage) stage.style.display = "";
       if (phone) phone.style.display = "none";
     }
-    bScale = xs ? 0.5 : small ? 0.6 : 0.8;
-    shiftX = small ? 0 : 150;
+    bScale = xs ? 0.5 : small ? 0.6 : 0.58 + 0.22 * mid;
+    shiftX = small ? 0 : 250 - 100 * mid;
     ty = small ? 8 : 0;
     bRY = small ? -8 : -16;
     bRX = small ? 6 : 8;
@@ -339,9 +343,9 @@ function initHero(root: HTMLElement): () => void {
     const lidRX = -72 + ie * 66 - outro * 70;
     if (lid) lid.style.transform = `rotateX(${lidRX}deg)`;
     if (mac) mac.style.transform = `translateY(${outro * 150}px) scale(${1 - outro * 0.32})`;
-    if (scene) scene.style.opacity = String(1 - S(p, 0.68, 0.88));
+    if (scene) scene.style.opacity = String(1 - S(p, 0.74, 0.94));
     if (scrollDriven) {
-      if (sticky) { sticky.style.opacity = String(1 - S(p, 0.68, 0.9)); sticky.style.pointerEvents = p > 0.75 ? "none" : ""; }
+      if (sticky) { sticky.style.opacity = String(1 - S(p, 0.8, 1)); sticky.style.pointerEvents = p > 0.85 ? "none" : ""; }
     } else if (sticky) {
       sticky.style.opacity = "1"; sticky.style.pointerEvents = "";
     }

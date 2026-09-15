@@ -236,10 +236,12 @@ body {
 }
 
 /* Inhoud die direct na de pinned hero komt: op desktop onder de uitfadende
-   hero schuiven (zelfde conditie als scrollDriven in HeroExperience). */
+   hero schuiven (zelfde conditie als scrollDriven in HeroExperience).
+   -100vh = exact de sticky-hoogte: de content raakt de bovenrand op het moment
+   dat de hero unpint (p = 1) en op opacity 0 staat. Geen leeg vlak ertussen. */
 @media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
   .hd-after-hero {
-    margin-top: -80vh;
+    margin-top: -100vh;
   }
 }
 
