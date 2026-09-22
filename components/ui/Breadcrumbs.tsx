@@ -1,10 +1,13 @@
+import { getDict } from "@/lib/i18n";
+import { href, type Lang } from "@/lib/i18n/paths";
 import { site } from "@/lib/site";
 
 export type Crumb = { label: string; href?: string };
 
 /** Kruimelpad + BreadcrumbList-schema. Laatste item is de huidige pagina (geen link). */
-export function Breadcrumbs({ items }: { items: Crumb[] }) {
-  const all: Crumb[] = [{ label: "Home", href: "/" }, ...items];
+export function Breadcrumbs({ lang, items }: { lang: Lang; items: Crumb[] }) {
+  const t = getDict(lang).ui.crumbs;
+  const all: Crumb[] = [{ label: t.home, href: href(lang, "home") }, ...items];
   const schema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -16,7 +19,7 @@ export function Breadcrumbs({ items }: { items: Crumb[] }) {
     })),
   };
   return (
-    <nav aria-label="Kruimelpad" className="text-[13px] text-faint">
+    <nav aria-label={t.aria} className="text-[13px] text-faint">
       <ol className="flex flex-wrap items-center gap-2">
         {all.map((c, i) => (
           <li key={i} className="flex items-center gap-2">

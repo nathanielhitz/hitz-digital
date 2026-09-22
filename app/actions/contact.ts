@@ -2,7 +2,8 @@
 
 import { Resend } from "resend";
 import { site } from "@/lib/site";
-import { aanvraagKeuzes } from "@/lib/services";
+import { getDict } from "@/lib/i18n";
+import { isAanvraagKeuze } from "@/lib/aanvraag";
 
 export type ContactResult = { ok: true } | { ok: false; error: "config" | "invalid" | "send" };
 
@@ -26,10 +27,13 @@ export async function sendAanvraag(formData: FormData): Promise<ContactResult> {
   const key = process.env.RESEND_API_KEY;
   if (!key) return { ok: false, error: "config" };
 
+  const lang = formData.get("lang") === "en" ? "en" : "nl";
   const naam = clean(formData.get("naam"), 120);
   const email = clean(formData.get("email"), 200);
   const voorId = clean(formData.get("voor"), 20);
-  const voor = aanvraagKeuzes.find((k) => k.id === voorId)?.label ?? "Iets anders";
+  // De mail aan Nathaniel is altijd Nederlands; de taal van de aanvraag staat erin.
+  const choices = getDict("nl").ui.form.choices;
+  const voor = isAanvraagKeuze(voorId) ? choices[voorId].label : choices.anders.label;
   const website = clean(formData.get("website"), 300);
   const bedrijf = clean(formData.get("bedrijf"), 200);
   const telefoon = clean(formData.get("telefoon"), 40);
@@ -40,6 +44,7 @@ export async function sendAanvraag(formData: FormData): Promise<ContactResult> {
   const to = process.env.CONTACT_TO || site.email;
   const from = process.env.RESEND_FROM || `HitzDigital <formulier@hitzdigital.nl>`;
   const text = [
+    lang === "en" ? "Taal van aanvraag: Engels" : null,
     `Waarvoor: ${voor}`,
     `Naam: ${naam}`,
     `E-mail: ${email}`,
@@ -58,7 +63,7 @@ export async function sendAanvraag(formData: FormData): Promise<ContactResult> {
       from,
       to,
       replyTo: email,
-      subject: `Aanvraag ${voor.toLowerCase()} via hitzdigital.nl: ${naam}`,
+      subject: `${lang === "en" ? "[EN] " : ""}Aanvraag ${voor.toLowerCase()} via hitzdigital.nl: ${naam}`,
       text,
     });
     if (error) return { ok: false, error: "send" };

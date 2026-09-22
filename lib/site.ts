@@ -1,3 +1,5 @@
+import { isLive, type Lang } from "@/lib/i18n/paths";
+
 /**
  * Centrale site-config. VUL DE LEGE VELDEN IN met echte gegevens vóór launch.
  * Lege velden worden automatisch weggelaten uit de structured data (geen nep-data naar Google).
@@ -22,52 +24,28 @@ export const site = {
   faq: [] as { q: string; a: string }[],
 };
 
-/** ProfessionalService / lokale-dienstverlener schema; alleen gevulde velden worden meegestuurd. */
-export function professionalServiceSchema() {
-  const area = site.serviceArea.length
-    ? site.serviceArea.map((name) => ({ "@type": "Place", name }))
-    : undefined;
+export type SchemaTexts = { description: string; offers: { name: string; description: string }[] };
+
+/**
+ * ProfessionalService / lokale-dienstverlener schema; alleen gevulde velden worden meegestuurd.
+ * `lang` wordt nu niet gebruikt (de tekst komt via `t`); blijft in de signatuur zodat `areaServed` later per taal kan verschillen.
+ */
+export function professionalServiceSchema(lang: Lang, t: SchemaTexts) {
+  const area = site.serviceArea.length ? site.serviceArea.map((name) => ({ "@type": "Place", name })) : undefined;
   const schema: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
     name: site.name,
-    description: "Websites, hosting en computerhulp voor ondernemers in de Hoeksche Waard. Eén aanspreekpunt, gevestigd in Puttershoek.",
+    description: t.description,
     url: site.url,
     email: site.email,
     image: `${site.url}/opengraph-image`,
-    knowsLanguage: "nl",
-    areaServed: site.serviceArea.length
-      ? site.serviceArea.map((name) => ({ "@type": "Place", name }))
-      : "NL",
-    makesOffer: [
-      {
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: "Website laten maken",
-          description: "Nieuwe website of vernieuwing van een bestaande site voor ondernemers zoals cafés, schilders, installateurs en hoveniers. Eerst een gratis demo, dan pas beslissen.",
-          areaServed: area,
-        },
-      },
-      {
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: "Hosting, domein en onderhoud",
-          description: "Domein, hosting, zakelijke e-mail en kleine wijzigingen in één maandbedrag. Maandelijks opzegbaar.",
-          areaServed: area,
-        },
-      },
-      {
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: "Computer- en websitehulp",
-          description: "Hulp bij computer, e-mail, domein, netwerk of website. Op afstand of aan huis in de Hoeksche Waard. Niet opgelost, dan niet betalen.",
-          areaServed: area,
-        },
-      },
-    ],
+    knowsLanguage: isLive("en") ? ["nl", "en"] : "nl",
+    areaServed: area ?? "NL",
+    makesOffer: t.offers.map((o) => ({
+      "@type": "Offer",
+      itemOffered: { "@type": "Service", name: o.name, description: o.description, areaServed: area },
+    })),
   };
   if (site.founder) schema.founder = { "@type": "Person", name: site.founder };
   if (site.phone) schema.telephone = site.phone;
@@ -99,13 +77,13 @@ export function professionalServiceSchema() {
 }
 
 /** WebSite-schema; versterkt het "dit is de officiële site van deze entiteit"-signaal. */
-export function websiteSchema() {
+export function websiteSchema(lang: Lang) {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
     url: site.url,
     name: site.name,
-    inLanguage: "nl",
+    inLanguage: lang,
     publisher: { "@type": "ProfessionalService", name: site.name },
   };
 }

@@ -3,9 +3,11 @@ import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Reveal } from "@/components/ui/Reveal";
-import { over } from "@/lib/services";
+import { getDict } from "@/lib/i18n";
+import type { Lang } from "@/lib/i18n/paths";
 
-export function Over() {
+export function Over({ lang }: { lang: Lang }) {
+  const { over } = getDict(lang).services;
   return (
     <Section id="over" variant="base" padding="large">
       <Container>
@@ -25,7 +27,7 @@ export function Over() {
           <div className="relative mx-auto aspect-[4/5] w-full max-w-[400px] overflow-hidden rounded-2xl border border-line min-[901px]:ml-auto min-[901px]:mr-0">
             <Image
               src="/images/nathaniel.webp"
-              alt="Nathaniel, oprichter van HitzDigital"
+              alt={over.portraitAlt}
               fill
               sizes="(max-width: 900px) 100vw, 400px"
               className="object-cover object-center"

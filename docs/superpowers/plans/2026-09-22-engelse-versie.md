@@ -18,12 +18,19 @@
 - Vier fasen (spec §9). Na elke fase een **checkpoint**: bouw slaagt, tests slagen, Nathaniel geeft akkoord vóór de volgende fase begint. In fase 2 leest Nathaniel elke Engelse pagina tegen vóór de volgende pagina.
 - Elke task eindigt met `npx tsc --noEmit` (typecheck) en, waar aangegeven, `npm run build`. Een task is pas klaar als beide zonder fouten zijn.
 - De dev-server draait op poort 3111 (poort 3000 is op deze machine vaak bezet): `npx next dev -p 3111`. De productie-server voor e2e-tests: `npx next start -p 3111`.
+- `tests/e2e/switch-cookie.mjs` valt buiten `npm test` (vraagt de globale Playwright); handmatig draaien met `node tests/e2e/switch-cookie.mjs` bij een server op 3111.
 - Nederlandse tekst wordt in fase 1 **letterlijk** verplaatst, niet herschreven. Elke afwijking van een bestaande string is een fout (screenshots moeten identiek blijven).
 - Afwijkingen van de spec die in dit plan bewust gemaakt zijn:
   1. Spec §4 zegt dat de layout de header-knop bepaalt. Een server-layout kent de pathname niet zonder de pagina dynamisch te maken; daarom bepaalt `Nav` (client, `usePathname()`) de knop zelf met `ctaFor()` uit de padkaart. Gedrag is identiek.
   2. Spec §3 noemt `euro(amount, lang)`. Beide talen schrijven `€250`, dus `euro(amount)` blijft ongewijzigd; "per maand" / "per month" komt uit het woordenboek.
   3. Spec §9 zet middleware-regels 3, 4 en 6 in fase 3. Ze komen in Task 18 (start fase 2), zodat Nathaniel de Engelse pagina's op hun echte URL's kan nalezen. Regel 5 (detectie) blijft fase 3.
   4. Spec §3 noemt vier woordenboekmodules per taal. De juridische teksten (privacy, voorwaarden) zijn lange JSX-prose en krijgen elk een eigen bestand (`legal-privacy.tsx`, `legal-terms.tsx`) dat vanuit `pages.tsx` wordt gerefereerd. Zelfde principe, leesbaarder.
+  5. Spec §3 en §4 gaan ervan uit dat client-componenten de publieke pathname zien. De middleware herschrijft elk verzoek, dus `usePathname()` geeft `/nl/hulp` in plaats van `/hulp`. Daarom is `publicPath()` aan de padkaart toegevoegd; `Nav` en `LangSwitch` rekenen daarmee eerst terug naar het publieke adres. Query en hash komen in `LangSwitch` na hydration uit `window.location`, niet uit `useSearchParams()` (dat zou elke pagina naar client-rendering trekken).
+  6. Spec §1 zegt dat `app/[lang]/not-found.tsx` de 404 "in de taal van het pad" rendert. Een server-side taalkeuze vraagt `headers()`, en die trekt de hele boom uit de statische prerender. Daarom kiest `NotFoundView` (client) de taal uit `usePathname()` en gaan beide woordenboeken mee in de payload. Gevolg: het 404-document is Next's `__next_error__`-schil zonder `lang`-attribuut in de bron, en zonder JavaScript blijft de pagina leeg. Statuscode 404 en `noindex` kloppen wel.
+  7. Spec §2 geeft het antwoord op `/` een `Vary: Cookie, Accept-Language`. Next overschrijft die header op de herschreven 200; alleen de 307 houdt hem. Geaccepteerd: op Vercel draait de middleware per request vóór de cache, dus de CDN kan de verkeerde taal niet serveren. Het restrisico (een gedeelde proxy die `/` op `s-maxage` cachet) is bewust genomen.
+  8. `dynamicParams = false` (spec §1) staat op `app/[lang]/layout.tsx`. Bijeffect: paden die de middleware-matcher overslaat omdat ze een punt bevatten (`/wp-login.php`) matchen geen route meer en krijgen Next's ongestylede standaard-404 in plaats van de gebrande. Er is bewust geen root-`app/not-found.tsx` teruggezet.
+  9. Next/React schrijft het alternates-attribuut als `hrefLang` in de HTML-bron. HTML-attributen zijn hoofdletterongevoelig, dus browsers en Google lezen `hreflang`; de e2e-regexes matchen daarom case-insensitive. Geen codewijziging.
+  10. Spec §3 noemt `lib/i18n/types.ts`. Die is er niet: `Lang`, `RouteKey`, `Alternates` en de params-types staan in `paths.ts`, `Dict` in `index.ts`. Nieuw t.o.v. de spec is `lib/i18n/meta.ts` met `pageMetadata()`. De OG-routes van de pagina's leven onder `app/[lang]/(site)/…`, waardoor hun publieke URL het interne pad toont (`/nl/hulp/opengraph-image-…`); de middleware laat die paden daarom ongemoeid. Spec §7 vraagt voor de EN-privacy stack-vermeldingen (Vercel fra1, Resend EU); het NL-privacybeleid is sinds augustus 2026 merknaamloos en de EN-versie volgt het NL-beleid exact.
 
 ---
 
@@ -33,8 +40,8 @@
 
 | Bestand | Verantwoordelijkheid |
 |---|---|
-| `middleware.ts` | Rewrites/redirects per spec §2; zet request-header `x-lang` |
-| `lib/i18n/paths.ts` | Padkaart NL↔EN, `Lang`, `locales`, `href()`, `parsePublic()`, `internalPath()`, `redirectForEn()`, `counterpart()`, `ctaFor()`, `alternatesFor()`, `ogLocale()`. Geen runtime-imports (draait los onder `node --test`) |
+| `middleware.ts` | Rewrites/redirects per spec §2 |
+| `lib/i18n/paths.ts` | Padkaart NL↔EN, `Lang`, `locales`, `href()`, `parsePublic()`, `internalPath()`, `publicPath()`, `redirectForEn()`, `counterpart()`, `ctaFor()`, `alternatesFor()`, `ogLocale()`. Geen runtime-imports (draait los onder `node --test`) |
 | `lib/i18n/accept-language.ts` | `prefersEnglish(header)` |
 | `lib/i18n/index.ts` | `getDict(lang)`, type `Dict` |
 | `lib/i18n/nl/ui.tsx` | Nav, footer, skip-link, thema- en taalknop-labels, formulier, FAB, sticky balk, CTA-band, kruimelpad, 404, OG-onderregel, schema-teksten, WerkCard/PlanCard-labels |
@@ -46,8 +53,9 @@
 | `lib/i18n/en/…` | Zelfde bestanden, Engels, getypt met `typeof` van de NL-tegenhanger |
 | `lib/aanvraag.ts` | De vier keuze-ids van het formulier (taalneutraal) |
 | `components/ui/LangSwitch.tsx` | Taalschakelaar, varianten `text`, `segment`, `names` |
+| `components/ui/NotFoundView.tsx` | 404-weergave (client); kiest de taal uit `usePathname()` |
 | `app/[lang]/layout.tsx` | Voormalige root-layout, met `lang` |
-| `app/[lang]/not-found.tsx` | Tweetalige 404 (leest `x-lang`) |
+| `app/[lang]/not-found.tsx` | Tweetalige 404 (rendert `NotFoundView`) |
 | `app/[lang]/[...rest]/page.tsx` | Catch-all → `notFound()` |
 | `tests/unit/paths.test.ts`, `tests/unit/accept-language.test.ts` | Unit-tests padkaart en header-parser |
 | `tests/e2e/i18n.test.mjs` | HTTP-tests tegen `next start` (redirects, rewrites, hreflang, sitemap, lek-check) |
@@ -86,6 +94,7 @@ export type Parsed = { lang: Lang; key: RouteKey; slug?: string };
 export function href(lang: Lang, key: RouteKey, slug?: string): string;   // publiek pad
 export function parsePublic(pathname: string): Parsed | null;
 export function internalPath(p: Parsed): string;                          // "/nl/hulp", "/en/hulp", "/en", "/nl"
+export function publicPath(pathname: string): string;                     // omgekeerde: "/nl/hulp" → "/hulp", "/en/hulp" → "/en/help"
 export function redirectForEn(pathname: string): string | null;           // "/en/hulp" → "/en/help"; "/en/support/x" → "/support/x"
 export function counterpart(pathname: string, target: Lang): string;
 export function ctaFor(pathname: string): CtaKind | null;
@@ -178,7 +187,7 @@ git commit -m "Test-scaffold en npm-scripts voor de Engelse versie"
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  href, parsePublic, internalPath, redirectForEn, counterpart, ctaFor, alternatesFor, ogLocale, isLang, langOf,
+  href, parsePublic, internalPath, publicPath, redirectForEn, counterpart, ctaFor, alternatesFor, ogLocale, isLang, langOf,
 } from "../../lib/i18n/paths.ts";
 
 test("href: NL zonder prefix, EN met /en en Engelse slug", () => {
@@ -220,6 +229,19 @@ test("internalPath: mapnaam blijft Nederlands", () => {
   assert.equal(internalPath({ lang: "en", key: "hulp" }), "/en/hulp");
   assert.equal(internalPath({ lang: "en", key: "werk", slug: "x" }), "/en/werk/x");
   assert.equal(internalPath({ lang: "nl", key: "voorwaarden" }), "/nl/voorwaarden");
+});
+
+test("publicPath: intern (herschreven) pad terug naar het publieke adres", () => {
+  assert.equal(publicPath("/nl"), "/");
+  assert.equal(publicPath("/en"), "/en");
+  assert.equal(publicPath("/nl/hulp"), "/hulp");
+  assert.equal(publicPath("/en/hulp"), "/en/help");
+  assert.equal(publicPath("/nl/werk/monster-zorg"), "/werk/monster-zorg");
+  assert.equal(publicPath("/nl/support/e-mail-instellingen"), "/support/e-mail-instellingen");
+  assert.equal(publicPath("/nl/contact?voor=hosting"), "/contact?voor=hosting");
+  assert.equal(publicPath("/en/does-not-exist"), "/en/does-not-exist"); // niet herschreven: onveranderd
+  assert.equal(publicPath("/hulp"), "/hulp"); // al publiek: onveranderd
+  assert.equal(publicPath("/nl/hulp/extra"), "/nl/hulp/extra"); // geen route: onveranderd
 });
 
 test("redirectForEn: interne slug en support onder /en", () => {
@@ -372,6 +394,27 @@ export function internalPath(p: Parsed): string {
 }
 
 /**
+ * Omgekeerde van `internalPath`: het publieke adres van een intern (herschreven) pad, mét query en hash.
+ * De middleware herschrijft elk verzoek, dus `usePathname()` in een client-component geeft `/nl/hulp`
+ * of `/en/hulp` terug, niet `/hulp` of `/en/help`. Paden die niet herschreven zijn (404 onder /en) en
+ * paden buiten de padkaart komen ongewijzigd terug.
+ */
+export function publicPath(pathname: string): string {
+  const path = pathname.split(/[?#]/)[0];
+  const suffix = pathname.slice(path.length);
+  const [first, second, third, ...rest] = path.split("/").filter(Boolean);
+  if (!isLang(first)) return pathname;
+  if (second === undefined) return href(first, "home") + suffix;
+  for (const key of segmentKeys) {
+    const seg = segments[key];
+    if (seg.nl !== second) continue;
+    if (third !== undefined && (!seg.dynamic || rest.length > 0)) return pathname;
+    return href(first, key, third) + suffix;
+  }
+  return pathname;
+}
+
+/**
  * Een /en-pad dat de interne (Nederlandse) slug gebruikt of naar support wijst,
  * krijgt het publieke adres terug; anders null. Alleen voor routes waar NL- en EN-slug verschillen.
  */
@@ -427,7 +470,7 @@ export type SlugParams = { params: Promise<{ lang: string; slug: string }> };
 - [ ] **Step 4: Run de tests, verwacht slagen**
 
 Run: `npm run test:unit`
-Expected: `ℹ pass 10`, `ℹ fail 0`.
+Expected: `ℹ pass 11`, `ℹ fail 0`.
 
 - [ ] **Step 5: Typecheck en commit**
 
@@ -520,7 +563,7 @@ export function prefersEnglish(header: string | null): boolean {
 - [ ] **Step 4: Run, verwacht slagen**
 
 Run: `npm run test:unit`
-Expected: `ℹ pass 15`, `ℹ fail 0`.
+Expected: `ℹ pass 16`, `ℹ fail 0`.
 
 - [ ] **Step 5: Commit**
 
@@ -574,6 +617,17 @@ const mailBody = [
   "Groet,",
 ].join("\n");
 
+/** Knoppen naar het contactformulier. `nav.cta` leidt zijn labels hiervan af, zodat ze niet uiteenlopen. */
+const cta = {
+  contact: { label: "Neem contact op", href: contact() },
+  demo: { label: "Gratis demo", href: contact("website") },
+  demoLang: { label: "Vraag je gratis demo aan", href: contact("website") },
+  hosting: { label: "Vraag hosting aan", href: contact("hosting") },
+  hulp: { label: "Vraag hulp aan", href: contact("hulp") },
+  whatsapp: "App via WhatsApp",
+  call: "Bel",
+};
+
 /** Alle tekst van de site-schil (nav, footer, formulier, 404, schema). Nederlands is de bron; en/ui.tsx krijgt `typeof ui`. */
 export const ui = {
   skipLink: "Naar inhoud",
@@ -593,7 +647,7 @@ export const ui = {
     themeRow: "Weergave",
     langRow: "Taal",
     /** Header-knop per soort (spec §4). Fase 1 gebruikt alleen `demo`. */
-    cta: { demo: "Gratis demo", hosting: "Vraag hosting aan", hulp: "Vraag hulp aan", contact: "Contact" } satisfies Record<CtaKind, string>,
+    cta: { demo: cta.demo.label, hosting: cta.hosting.label, hulp: cta.hulp.label, contact: "Contact" } satisfies Record<CtaKind, string>,
   },
   theme: {
     toLight: "Schakel naar licht thema",
@@ -627,15 +681,7 @@ export const ui = {
     vat: "Prijzen incl. btw",
   },
   crumbs: { aria: "Kruimelpad", home: "Home" },
-  cta: {
-    contact: { label: "Neem contact op", href: contact() },
-    demo: { label: "Gratis demo", href: contact("website") },
-    demoLang: { label: "Vraag je gratis demo aan", href: contact("website") },
-    hosting: { label: "Vraag hosting aan", href: contact("hosting") },
-    hulp: { label: "Vraag hulp aan", href: contact("hulp") },
-    whatsapp: "App via WhatsApp",
-    call: "Bel",
-  },
+  cta,
   ctaBand: { orCall: "Of bel", reply: "Reactie binnen 1 werkdag, vrijblijvend." },
   fab: { label: "Heb je een vraag?", aria: "Heb je een vraag? Stuur een WhatsApp" },
   stickyBar: { aria: "Direct contact", call: "Bel", whatsapp: "WhatsApp" },
@@ -669,6 +715,8 @@ export const ui = {
     },
     /** Alleen strings: dit blok gaat als prop naar een client-component. `{pakket}` en `{voor}` worden in de component vervangen. */
     packageInterest: "Ik heb interesse in het pakket {pakket}.",
+    /** Nette pakketnamen voor `{pakket}`; onbekende ids vallen terug op de id met hoofdletter. */
+    packageNames: { online: "Online", onderhoud: "Onderhoud", webshop: "Webshop", "computer-apk": "Computer APK", "website-apk": "Website APK" },
     mailtoSubject: "Aanvraag {voor} via hitzdigital.nl",
     mailtoFields: { voor: "Waarvoor", naam: "Naam", email: "E-mail", telefoon: "Telefoon", website: "Website", bedrijf: "Bedrijf en plaats" },
   },
@@ -699,6 +747,7 @@ export const ui = {
   workCard: { viewCase: "Bekijk de case", tags: { demo: "Demo", eigen: "Eigen project" } },
   plan: { mostChosen: "Meest gekozen", perMonthShort: "/mnd", choose: (name: string) => `Kies ${name}` },
   faq: { eyebrow: "Veelgestelde vragen", title: "Wat mensen me vaak vragen." },
+  voorNa: { before: "Voor", after: "Na", aria: "Vergelijk voor en na" },
 };
 
 export type UiDict = typeof ui;
@@ -747,7 +796,7 @@ git commit -m "i18n: NL-woordenboek voor de site-schil en getDict()"
 
 **Files:**
 - Move: `app/(site)` → `app/[lang]/(site)`; `app/layout.tsx` → `app/[lang]/layout.tsx`; `app/not-found.tsx` → `app/[lang]/not-found.tsx`; `app/opengraph-image.tsx` → `app/[lang]/(site)/opengraph-image.tsx`
-- Create: `middleware.ts`, `app/[lang]/[...rest]/page.tsx`
+- Create: `middleware.ts`, `app/[lang]/[...rest]/page.tsx`, `components/ui/NotFoundView.tsx`
 - Modify: `app/[lang]/layout.tsx`, `app/[lang]/not-found.tsx`
 - Test: `tests/e2e/i18n.test.mjs`
 
@@ -798,6 +847,10 @@ const display = localFont({
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
 }
+
+/** Alleen de talen uit generateStaticParams renderen; elke andere `lang` is een 404 (vangnet uit spec §1).
+    Zonder dit zou een pad dat de middleware overslaat (bijv. /wp-login.php) als `lang` binnenkomen en de homepage opleveren. */
+export const dynamicParams = false;
 
 const title = "Websites, hosting en computerhulp in de Hoeksche Waard | HitzDigital";
 const description =
@@ -871,25 +924,29 @@ export default function CatchAll() {
 
 - [ ] **Step 4: Herschrijf `app/[lang]/not-found.tsx`**
 
-`not-found.tsx` krijgt geen params; de middleware zet de taal in de request-header `x-lang` (Step 5).
+`not-found.tsx` krijgt geen params. Géén `headers()` hier: elke dynamische server-API in de 404-boundary haalt **de hele site** uit de statische prerender (alle metadata verhuist dan uit `<head>`). De taal komt daarom uit het pad, in een client-component.
+
+`components/ui/NotFoundView.tsx`:
 
 ```tsx
-import { headers } from "next/headers";
+"use client";
+
+import { usePathname } from "next/navigation";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { Button } from "@/components/ui/Button";
-import { getDict } from "@/lib/i18n";
-import { langOf } from "@/lib/i18n/paths";
+import type { Lang } from "@/lib/i18n/paths";
 
-/** 404 buiten de (site)-schil: geen nav/footer, wel dezelfde tokens (volgt licht/donker). Taal uit `x-lang` (middleware). */
-export default async function NotFound() {
-  const lang = langOf((await headers()).get("x-lang"));
-  const t = getDict(lang).ui.notFound;
+export type NotFoundTexts = { title: string; body: string; back: string; href: string };
+
+/** 404 buiten de (site)-schil: geen nav/footer, wel dezelfde tokens. Taal uit het pad (/en/… → Engels), zodat de pagina statisch blijft. */
+export function NotFoundView({ texts }: { texts: Record<Lang, NotFoundTexts> }) {
+  const pathname = usePathname() ?? "/";
+  const lang: Lang = pathname === "/en" || pathname.startsWith("/en/") ? "en" : "nl";
+  const t = texts[lang];
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-[18px] bg-deep px-6 text-center text-ink">
       <Wordmark size={22} />
-      <h1 className="m-0 font-display text-[clamp(28px,4vw,40px)] font-semibold tracking-[-0.03em] [text-wrap:balance]">
-        {t.title}
-      </h1>
+      <h1 className="m-0 font-display text-[clamp(28px,4vw,40px)] font-semibold tracking-[-0.03em] [text-wrap:balance]">{t.title}</h1>
       <p className="m-0 max-w-[420px] text-[15px] leading-[1.6] text-muted">{t.body}</p>
       <Button href={t.href} className="mt-2">
         {t.back}
@@ -899,49 +956,61 @@ export default async function NotFound() {
 }
 ```
 
+`app/[lang]/not-found.tsx`:
+
+```tsx
+import { NotFoundView } from "@/components/ui/NotFoundView";
+import { getDict } from "@/lib/i18n";
+
+/** Tweetalige 404. De teksten van beide talen gaan mee; de client kiest op basis van het pad (zie NotFoundView). */
+export default function NotFound() {
+  return <NotFoundView texts={{ nl: getDict("nl").ui.notFound, en: getDict("en").ui.notFound }} />;
+}
+```
+
+(`getDict("en")` valt terug op NL zolang het Engelse woordenboek nog niet bestaat — dat is de bedoeling.)
+
 - [ ] **Step 5: Maak `middleware.ts` (regels 1, 2 en 7 uit spec §2)**
 
 ```ts
 import { NextResponse, type NextRequest } from "next/server";
-import type { Lang } from "@/lib/i18n/paths";
 
 /**
  * Taalrouting (spec §2). Fase 1: alleen Nederlands.
- * - Regel 1 (matcher): _next, api, images, bestanden en root-metadata-routes worden overgeslagen.
+ * - Regel 1 (matcher): overgeslagen worden _next, _vercel, images, de routes /icon en /apple-icon,
+ *   en elk pad met een punt erin (bestanden, dus ook sitemap.xml en robots.txt).
  * - Regel 2: /nl(/…) → 301 naar hetzelfde pad zonder prefix.
- * - Regel 7: alles overig → interne route /nl/… (rewrite), met request-header x-lang.
+ * - Regel 7: alles overig → interne route /nl/… (rewrite).
  * Task 18 voegt regels 3, 4 en 6 toe (Engelse slugs), Task 30 regel 5 (detectie op "/").
  */
 export const config = {
-  matcher: ["/((?!_next/|api/|images/|icon|apple-icon|sitemap\\.xml|robots\\.txt|.*\\..*).*)"],
+  matcher: ["/((?!_next/|_vercel/|images/|icon$|apple-icon$|.*\\..*).*)"],
 };
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // Metadata-afbeeldingen: Next vraagt ze zelf op onder /nl/… of /en/…; een oud ongeprefixt adres krijgt /nl ervoor.
-  if (pathname.includes("/opengraph-image")) {
+  if (/\/opengraph-image(-|$)/.test(pathname)) {
     if (pathname.startsWith("/nl/") || pathname.startsWith("/en/")) return NextResponse.next();
-    return rewrite(req, `/nl${pathname}`, "nl");
+    return rewrite(req, `/nl${pathname}`);
   }
 
   // Regel 2
   if (pathname === "/nl" || pathname.startsWith("/nl/")) {
     const url = req.nextUrl.clone();
-    url.pathname = pathname.slice(3) || "/";
+    url.pathname = pathname.slice("/nl".length) || "/";
     return NextResponse.redirect(url, 301);
   }
 
   // Regel 7
-  return rewrite(req, pathname === "/" ? "/nl" : `/nl${pathname}`, "nl");
+  return rewrite(req, pathname === "/" ? "/nl" : `/nl${pathname}`);
 }
 
-function rewrite(req: NextRequest, internal: string, lang: Lang) {
+function rewrite(req: NextRequest, internal: string) {
   const url = req.nextUrl.clone();
   url.pathname = internal;
-  const headers = new Headers(req.headers);
-  headers.set("x-lang", lang);
-  return NextResponse.rewrite(url, { request: { headers } });
+  return NextResponse.rewrite(url);
 }
 ```
 
@@ -960,8 +1029,13 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const BASE = process.env.BASE_URL ?? "http://localhost:3111";
-export const get = (path, init = {}) => fetch(BASE + path, { redirect: "manual", ...init });
-const location = (res) => new URL(res.headers.get("location"), BASE).pathname;
+const get = (path, init = {}) => fetch(BASE + path, { redirect: "manual", ...init });
+const locationUrl = (res) => {
+  const loc = res.headers.get("location");
+  assert.ok(loc, "location header");
+  return new URL(loc, BASE);
+};
+const location = (res) => locationUrl(res).pathname;
 
 const NL_PAGES = [
   "/", "/websites", "/hosting", "/hulp", "/werk", "/werk/volmer-techniek", "/contact",
@@ -980,7 +1054,7 @@ test("/nl/… → 301 zonder prefix, query blijft", async () => {
   const res = await get("/nl/hosting?x=1");
   assert.equal(res.status, 301);
   assert.equal(location(res), "/hosting");
-  assert.equal(new URL(res.headers.get("location"), BASE).search, "?x=1");
+  assert.equal(locationUrl(res).search, "?x=1");
   const home = await get("/nl");
   assert.equal(home.status, 301);
   assert.equal(location(home), "/");
@@ -993,12 +1067,32 @@ test("onbekend pad: 404 in het Nederlands", async () => {
 });
 
 test("metadata-routes en OG-afbeeldingen blijven bereikbaar", async () => {
-  for (const p of ["/sitemap.xml", "/robots.txt", "/icon", "/opengraph-image", "/websites/opengraph-image"]) {
+  for (const p of ["/sitemap.xml", "/robots.txt", "/icon", "/apple-icon", "/images/cafecentrum.webp"]) {
     const res = await get(p);
     assert.equal(res.status, 200, p);
   }
-  const og = await get("/opengraph-image");
-  assert.match(og.headers.get("content-type"), /image\/png/);
+  // Next hangt zelf een hash aan het pad van een metadata-afbeelding (/nl/opengraph-image-<hash>),
+  // dus lezen we het adres uit de pagina in plaats van het hard te coderen. Hetzelfde plaatje moet
+  // ook zonder /nl-prefix bereikbaar zijn: dat is de rewrite in de middleware (oude, gedeelde links).
+  for (const page of ["/", "/websites"]) {
+    const html = await (await get(page)).text();
+    const found = html.match(/property="og:image" content="([^"]+)"/);
+    assert.ok(found, `og:image ontbreekt op ${page}`);
+    const { pathname, search } = new URL(found[1]);
+    assert.match(pathname, /^\/nl\//, found[1]);
+    for (const p of [pathname + search, pathname.slice(3) + search]) {
+      const og = await get(p);
+      assert.equal(og.status, 200, p);
+      assert.match(og.headers.get("content-type") ?? "", /image\/png/, p);
+    }
+  }
+});
+
+test("paden buiten de padkaart geven 404, ook als de middleware ze overslaat", async () => {
+  for (const p of ["/wp-login.php", "/foo.php", "/iconografie", "/icon-192.png", "/en/x", "/werk/onbekend"]) {
+    assert.equal((await get(p)).status, 404, p);
+  }
+  for (const p of ["/icon", "/apple-icon"]) assert.equal((await get(p)).status, 200, p);
 });
 ```
 
@@ -1009,7 +1103,7 @@ npm start &            # wacht op "Ready"
 npm run test:e2e
 kill %1
 ```
-Expected: `ℹ pass 4`, `ℹ fail 0`.
+Expected: `ℹ pass 5`, `ℹ fail 0`.
 
 - [ ] **Step 9: Commit**
 
@@ -1037,12 +1131,14 @@ import { href } from "../paths";
 const L = "nl" as const;
 const online = pricing.hosting.find((h) => h.id === "online")!;
 const onderhoud = pricing.hosting.find((h) => h.id === "onderhoud")!;
+const nlDomain = pricing.domains.table.find((d) => d.tld === ".nl")!;
+const guaranteeLine = "Niet opgelost? Dan betaal je niets.";
 
 /** Dienst-teksten: pijlers, lijsten, FAQ's, pakket- en tarieflabels. Getallen komen uit lib/pricing.ts. */
 export const services = {
   pijlers: [
     {
-      id: "websites",
+      id: "websites" as const,
       n: "01",
       title: "Websites",
       body: "Een moderne site die past bij je bedrijf. Je ziet eerst een echte demo van je eigen homepage, daarna beslis je pas.",
@@ -1050,7 +1146,7 @@ export const services = {
       href: href(L, "websites"),
     },
     {
-      id: "hosting",
+      id: "hosting" as const,
       n: "02",
       title: "Hosting & domeinen",
       body: "Domein, hosting, e-mail en een kleine wijziging per maand in één bedrag. Maandelijks opzegbaar.",
@@ -1058,11 +1154,11 @@ export const services = {
       href: href(L, "hosting"),
     },
     {
-      id: "hulp",
+      id: "hulp" as const,
       n: "03",
       title: "Hulp",
       body: "Computer, e-mail, domein of website: ik los het op en leg het uit. Meestal op afstand, en anders kom ik langs.",
-      price: `${euro(pricing.hulp.quarter)} per kwartier · Niet opgelost? Dan betaal je niets.`,
+      price: `${euro(pricing.hulp.quarter)} per kwartier · ${guaranteeLine}`,
       href: href(L, "hulp"),
     },
   ],
@@ -1155,7 +1251,7 @@ export const services = {
       name: "Online",
       summary: "Alleen hosting van je website.",
       includes: ["SSL-certificaat", "Dagelijkse back-ups", "Updates", "Monitoring"],
-      excludes: ["Domeinnaam (los €15 per jaar)", "Wijzigingen (op kwartiertarief)"],
+      excludes: [`Domeinnaam (los ${euro(nlDomain.yearly)} per jaar)`, "Wijzigingen (op kwartiertarief)"],
       fairUse: undefined as string | undefined,
     },
     onderhoud: {
@@ -1172,7 +1268,7 @@ export const services = {
       excludes: [] as string[],
       fairUse: "Een kleine wijziging is bijvoorbeeld een product, prijs, foto of tekst. Geen nieuwe pagina's of ontwerpwerk. Ongebruikte tijd vervalt." as string | undefined,
     },
-  },
+  } satisfies Record<(typeof pricing.hosting)[number]["id"], { name: string; summary: string; includes: string[]; excludes: string[]; fairUse: string | undefined }>,
   mailbox: {
     name: "Zakelijke mailbox",
     summary: "Op je eigen domein.",
@@ -1210,20 +1306,13 @@ export const services = {
     { q: "Hoe werkt op afstand meekijken?", a: "Je opent een link die ik je stuur, en ik zie je scherm terwijl we bellen. Jij houdt de controle en kunt altijd afsluiten. Er blijft niets achter op je computer." },
     { q: "Wat als het niet lukt?", a: "Dan betaal je niets voor die hulp. We spreken vooraf af wat het probleem is; los ik dat niet op, dan kost het je niks. Voor de APK's, uitleg en advies geldt dat niet, en ook niet als de oorzaak buiten mijn bereik ligt en ik je dat gemeld heb." },
     { q: "Help je ook met mijn telefoon of tablet?", a: "Ja. Mail instellen, foto's overzetten, een nieuwe telefoon inrichten, opruimen en beveiligen: het hoort er allemaal bij." },
-    { q: "Help je ook particulieren?", a: "Ja, in de Hoeksche Waard, tegen hetzelfde tarief: €15 per kwartier incl. btw. Ondernemers gaan voor als het druk is, maar je bent welkom." },
+    { q: "Help je ook particulieren?", a: `Ja, in de Hoeksche Waard, tegen hetzelfde tarief: ${euro(pricing.hulp.quarter)} per kwartier incl. btw. Ondernemers gaan voor als het druk is, maar je bent welkom.` },
   ],
   hulpTarief: {
     billing: "Op afstand per kwartier; aan huis per half uur, minimaal een uur.",
     travel: "Geen voorrijkosten in de Hoeksche Waard.",
     cardValidity: "12 maanden geldig",
-    guarantee: {
-      line: "Niet opgelost? Dan betaal je niets.",
-      conditions: [
-        "Geldt per probleem dat we vooraf samen benoemen.",
-        "Niet voor de APK's, uitleg en advies; die lever ik altijd.",
-        "Niet als de oorzaak buiten mijn bereik ligt (kapotte hardware, storing bij je provider) en ik je dat gemeld heb.",
-      ],
-    },
+    guarantee: { line: guaranteeLine },
   },
 
   contactFaq: [
@@ -1256,7 +1345,6 @@ export const work = {
   cases: {
     "volmer-techniek": {
       branche: "Metaalbewerking",
-      kicker: "Metaalbewerking · Puttershoek",
       intro: "Een tweetalige website voor een verspanend bedrijf dat op locatie en in de eigen werkplaats werkt, met offerteformulier, projectgalerij en servicegebied.",
       situatie: "Volmer Techniek B.V. uit Puttershoek verspaant, repareert en bouwt machines, op locatie bij de klant en in de eigen werkplaats. De oude website was een standaard WordPress-site met een kant-en-klaar thema. Voor een bedrijf dat ook buiten Nederland werkt, moest de site in twee talen kunnen en de zes disciplines helder naast elkaar zetten.",
       aanpak: [
@@ -1276,7 +1364,6 @@ export const work = {
     },
     "mourits-schilderwerken": {
       branche: "Schildersbedrijf",
-      kicker: "Schildersbedrijf · Klaaswaal",
       intro: "Een nieuwe site voor een schildersbedrijf uit Klaaswaal dat sinds 2015 in de hele Hoeksche Waard werkt: vijf diensten, projectgalerij en direct bellen vanaf je telefoon.",
       situatie: "Mourits Schilderwerken B.V. werkt sinds 2015 vanuit Klaaswaal in de hele Hoeksche Waard: schilderwerk binnen en buiten, wandafwerking, beglazing, restauratie en spuitwerk. De oude website stamde uit de begintijd van het bedrijf, met een fotoslider en een tabel met contactgegevens bovenaan, en was op een telefoon lastig te gebruiken.",
       aanpak: [
@@ -1295,7 +1382,6 @@ export const work = {
     },
     "monster-zorg": {
       branche: "Zzp-zorgverlener",
-      kicker: "Zzp-zorgverlener · Gouda",
       intro: "Een persoonlijke site vanaf nul voor een toegepast psycholoog en zorgverlener die zichzelf als zzp'er inzet: wie hij is, wat hij doet, en hoe je hem bereikt.",
       situatie: "Jarno Monster werkt als toegepast psycholoog en zorgverlener met ruim acht jaar ervaring in de woonbegeleiding, en zet zichzelf als zzp'er in bij zorgorganisaties. Er was nog geen website. Opdrachtgevers moesten snel kunnen zien wat hij doet, wat zijn achtergrond is en hoe ze hem bereiken.",
       aanpak: [
@@ -1324,24 +1410,50 @@ Functies met parameters vervangen zinnen waarin bedragen of namen staan; zo kan 
 
 ```tsx
 import type { ReactNode } from "react";
+import { pricing, euro } from "@/lib/pricing";
 
 const accent = (word: string): ReactNode => <em className="hd-accent-word not-italic text-accent">{word}</em>;
+
+const websiteFrom = euro(pricing.website.from);
+const online = pricing.hosting.find((h) => h.id === "online")!;
+const onderhoud = pricing.hosting.find((h) => h.id === "onderhoud")!;
+const quarter = euro(pricing.hulp.quarter);
+
+type Accented = { pre: string; accent: string; post: string };
+/** OG-afbeelding: accentwoord tussen sterretjes (conventie van lib/og.tsx). */
+const star = (h: Accented) => `${h.pre}*${h.accent}*${h.post}`;
+/** H1 met accentwoord. */
+const accented = (h: Accented): ReactNode => (
+  <>
+    {h.pre}
+    {accent(h.accent)}
+    {h.post}
+  </>
+);
+
+const homeH1 = { pre: "Alles rond je ", accent: "website", post: ". Eén aanspreekpunt." };
+const websitesH1 = { pre: "Een website die direct ", accent: "professioneler", post: " voelt." };
+const hostingH1 = { pre: "Online blijven, ", accent: "zonder gedoe", post: "." };
+const hulpH1 = { pre: "Vastgelopen? Ik kijk ", accent: "direct", post: " mee." };
+
+/** Lead van de juridische pagina's: staat zowel in de hero als op de OG-afbeelding. */
+const privacyLead = "Ik vind het belangrijk dat je weet wat ik met jouw gegevens doe. Op deze pagina lees je hoe ik dat doe.";
+const voorwaardenLead = "Geen kleine lettertjes, maar wel duidelijke afspraken. Dit is wat je van mij kunt verwachten en wat ik van jou verwacht.";
 
 /** Copy per pagina: metadata, OG-afbeelding, hero, secties, CTA-band. */
 export const pages = {
   home: {
     meta: {
       title: "Websites, hosting en computerhulp in de Hoeksche Waard | HitzDigital",
-      description:
-        "Ik bouw websites voor ondernemers in de Hoeksche Waard, houd ze online en help als je computer of site vastloopt. Eén persoon, korte lijnen. Website vanaf €250, hosting vanaf €5 per maand, alles incl. btw.",
+      description: `Ik bouw websites voor ondernemers in de Hoeksche Waard, houd ze online en help als je computer of site vastloopt. Eén persoon, korte lijnen. Website vanaf ${websiteFrom}, hosting vanaf ${euro(online.monthly)} per maand, alles incl. btw.`,
     },
     og: {
-      title: "Alles rond je *website*. Eén aanspreekpunt.",
+      title: star(homeH1),
       kicker: "Websites · Hosting · Hulp",
       sub: "Websites, hosting en computerhulp voor ondernemers in de Hoeksche Waard. Eén persoon, korte lijnen.",
     },
     hero: {
-      h1: { pre: "Alles rond je ", accent: "website", post: ". Eén aanspreekpunt." },
+      h1: homeH1,
       sub: "Websites, hosting en computerhulp voor ondernemers in de Hoeksche Waard. Ik bouw je site, houd hem online en kijk direct mee als iets vastloopt. Eén persoon, korte lijnen.",
       primary: "Bekijk wat ik doe",
       secondary: "Neem contact op",
@@ -1349,11 +1461,13 @@ export const pages = {
       chips: {
         mobile: "Mobielvriendelijk",
         fast: "Snelle laadtijd",
+        seo: "SEO-klaar",
         structure: "Duidelijke structuur",
         modern: "Moderne uitstraling",
         selfManaged: "Zelf te beheren",
         friendly: "Gebruiksvriendelijk",
         professional: "Professionele indruk",
+        code: { fast: "// snelle laadtijd", clean: "// schone code", perf: "// betere prestaties" },
       },
     },
     pijlers: { title: "Drie dingen die ik voor je regel." },
@@ -1361,9 +1475,7 @@ export const pages = {
     werk: {
       eyebrow: "Werk",
       teaserTitle: "Bedrijven die je al voorgingen.",
-      allTitle: "Voorbeelden van mijn werk.",
       all: "Al mijn werk",
-      intro: "Geen sjablonen, geen stockfoto's. Sites die ik gebouwd heb voor bedrijven in de regio, en voor mezelf.",
     },
     contact: {
       eyebrow: "Contact",
@@ -1377,18 +1489,17 @@ export const pages = {
   websites: {
     meta: {
       title: "Website laten maken in de Hoeksche Waard | HitzDigital",
-      description:
-        "Een moderne website voor je bedrijf, vanaf €250 incl. btw. Je ziet eerst een gratis demo van je eigen homepage, daarna beslis je. Voor vakbedrijven en horeca in de Hoeksche Waard.",
+      description: `Een moderne website voor je bedrijf, vanaf ${websiteFrom} incl. btw. Je ziet eerst een gratis demo van je eigen homepage, daarna beslis je. Voor vakbedrijven en horeca in de Hoeksche Waard.`,
     },
     og: {
-      title: "Een website die direct *professioneler* voelt.",
+      title: star(websitesH1),
       kicker: "Websites",
-      sub: "Je ziet eerst een gratis demo van je eigen homepage. Daarna beslis je. Vanaf €250 incl. btw.",
+      sub: `Je ziet eerst een gratis demo van je eigen homepage. Daarna beslis je. Vanaf ${websiteFrom} incl. btw.`,
     },
     crumb: "Websites",
     werkwijzeTitle: "In drie stappen naar een betere website.",
     hero: {
-      title: <>Een website die direct {accent("professioneler")} voelt.</>,
+      title: accented(websitesH1),
       lead: "Voor cafés, schilders, installateurs, hoveniers en andere vakbedrijven in de Hoeksche Waard. Je ziet eerst een echte demo van je eigen site. Daarna beslis je.",
       secondary: "Bekijk mijn werk",
       asideAlt: "Website van Mourits Schilderwerken op desktop",
@@ -1428,17 +1539,16 @@ export const pages = {
   hosting: {
     meta: {
       title: "Hosting, domein en onderhoud voor je website | HitzDigital",
-      description:
-        "Hosting vanaf €5 per maand, onderhoud met domein en een kleine wijziging per maand voor €15. Maandelijks opzegbaar, alles incl. btw. Overstappen regel ik.",
+      description: `Hosting vanaf ${euro(online.monthly)} per maand, onderhoud met domein en een kleine wijziging per maand voor ${euro(onderhoud.monthly)}. Maandelijks opzegbaar, alles incl. btw. Overstappen regel ik.`,
     },
     og: {
-      title: "Online blijven, *zonder gedoe*.",
+      title: star(hostingH1),
       kicker: "Hosting & domeinen",
       sub: "Domein, hosting, e-mail en een kleine wijziging per maand in één bedrag. Maandelijks opzegbaar.",
     },
     crumb: "Hosting & domeinen",
     hero: {
-      title: <>Online blijven, {accent("zonder gedoe")}.</>,
+      title: accented(hostingH1),
       lead: "Domein, hosting, e-mail en een kleine wijziging per maand in één bedrag. Maandelijks opzegbaar. En als er iets is, app je mij, geen ticketsysteem.",
       primary: "Kies je pakket",
       secondary: "Overstappen? Ik regel het",
@@ -1475,17 +1585,16 @@ export const pages = {
   hulp: {
     meta: {
       title: "Computer- en websitehulp in de Hoeksche Waard | HitzDigital",
-      description:
-        "Vastgelopen? Ik kijk direct mee. Hulp bij computer, e-mail, domein, netwerk of website, op afstand of aan huis in de Hoeksche Waard. €15 per kwartier incl. btw. Niet opgelost? Dan betaal je niets.",
+      description: `Vastgelopen? Ik kijk direct mee. Hulp bij computer, e-mail, domein, netwerk of website, op afstand of aan huis in de Hoeksche Waard. ${quarter} per kwartier incl. btw. Niet opgelost? Dan betaal je niets.`,
     },
     og: {
-      title: "Vastgelopen? Ik kijk *direct* mee.",
+      title: star(hulpH1),
       kicker: "Computer- en websitehulp",
-      sub: "€15 per kwartier incl. btw. Op afstand of aan huis in de Hoeksche Waard. Niet opgelost? Dan betaal je niets.",
+      sub: `${quarter} per kwartier incl. btw. Op afstand of aan huis in de Hoeksche Waard. Niet opgelost? Dan betaal je niets.`,
     },
     crumb: "Hulp",
     hero: {
-      title: <>Vastgelopen? Ik kijk {accent("direct")} mee.</>,
+      title: accented(hulpH1),
       lead: "Voor ondernemers in de Hoeksche Waard, en ook gewoon thuis. Je laptop, je mail, je domein, je netwerk of je website: ik los het op, in gewone taal. Meestal op afstand, binnen een kwartier begonnen. Moet ik langskomen? Dan kom ik langs.",
       aside: {
         rate: "Tarief",
@@ -1498,12 +1607,12 @@ export const pages = {
       title: "Eén vaste prijs, geen verrassingen.",
       items: [
         {
-          id: "computer-apk",
+          id: "computer-apk" as const,
           title: "Computer APK",
           body: "Updates en opschonen, virus- en malwarescan, snelheidscheck, back-up en wachtwoorden met tweestapsverificatie gecheckt. Je krijgt een kort lijstje met wat ik gedaan heb en wat je zelf nog kunt doen. Ongeveer 45 minuten, op afstand of aan huis.",
         },
         {
-          id: "website-apk",
+          id: "website-apk" as const,
           title: "Website APK",
           body: "Snelheid, mobiel, vindbaarheid, SSL, back-ups en verouderde plugins, met een kort rapport in gewone taal. Ook als ik je site niet gebouwd heb. Valt de uitslag tegen? Dan maak ik gratis een demo van hoe het wél kan.",
         },
@@ -1520,7 +1629,7 @@ export const pages = {
     how: {
       title: "Bellen, meekijken, opgelost.",
       homeLead: "Ook thuis vastgelopen?",
-      homeBody: (quarter: string) => ` Ik help ook particulieren in de Hoeksche Waard, tegen hetzelfde tarief: ${quarter} per kwartier, incl. btw.`,
+      homeBody: (quarter: string) => `Ik help ook particulieren in de Hoeksche Waard, tegen hetzelfde tarief: ${quarter} per kwartier, incl. btw.`,
     },
     ctaBand: { title: "Zit je nu vast?", body: "Bel of app, dan kijk ik direct mee. Liever eerst een bericht? Vertel kort wat er speelt." },
     schema: {
@@ -1528,8 +1637,6 @@ export const pages = {
       serviceType: "Computerhulp en websiteondersteuning",
       perQuarter: "Hulp per kwartier",
       unit: "kwartier",
-      computerApk: "Computer APK",
-      websiteApk: "Website APK",
       card: (quarters: number) => `Strippenkaart ${quarters} kwartier`,
     },
   },
@@ -1584,7 +1691,7 @@ export const pages = {
       title: "Waar kan ik je mee helpen?",
       lead: "Kies waarvoor je me nodig hebt en vertel kort wat er speelt. Ik reageer binnen 1 werkdag, vrijblijvend. Bij een storing of spoed: bel.",
     },
-    direct: { eyebrow: "Liever direct", whatsappNote: " · snelste voor korte vragen", callNote: " · bel bij storing of spoed" },
+    direct: { eyebrow: "Liever direct", whatsappNote: "snelste voor korte vragen", callNote: "bel bij storing of spoed" },
     about: {
       place: (founder: string, city: string) => `${founder} · ${city}, Hoeksche Waard`,
       kvk: (kvk: string) => `KvK ${kvk}`,
@@ -1599,9 +1706,10 @@ export const pages = {
       title: "Privacybeleid | HitzDigital",
       description: "Wat HitzDigital met je gegevens doet, in gewone taal: welke gegevens ik bewaar, waarom, hoe lang, met wie ik ze deel en welke rechten je hebt.",
     },
+    og: { title: "*Privacybeleid*", kicker: "Privacy", sub: privacyLead },
     crumb: "Privacy",
     title: "Privacybeleid",
-    lead: "Ik vind het belangrijk dat je weet wat ik met jouw gegevens doe. Op deze pagina lees je hoe ik dat doe.",
+    lead: privacyLead,
     versionLine: (version: string, updated: string) => `Versie ${version}, bijgewerkt op ${updated}`,
     version: "2.0",
     updated: "29 augustus 2026",
@@ -1612,9 +1720,10 @@ export const pages = {
       title: "Algemene voorwaarden | HitzDigital",
       description: "De afspraken van HitzDigital in gewone taal: websites, hosting en onderhoud, computer- en websitehulp, betalen, opzeggen en eigendom.",
     },
+    og: { title: "Algemene *voorwaarden*", kicker: "Voorwaarden", sub: voorwaardenLead },
     crumb: "Voorwaarden",
     title: "Algemene voorwaarden",
-    lead: "Geen kleine lettertjes, maar wel duidelijke afspraken. Dit is wat je van mij kunt verwachten en wat ik van jou verwacht.",
+    lead: voorwaardenLead,
     updatedLine: (updated: string) => `Laatst bijgewerkt: ${updated}`,
     updated: "26 augustus 2026",
   },
@@ -1681,7 +1790,7 @@ import { Button } from "@/components/ui/Button";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { ThemeSwitch, type ThemeLabels } from "@/components/ui/ThemeSwitch";
 import { cn } from "@/lib/cn";
-import type { Lang } from "@/lib/i18n/paths";
+import { href, type Lang } from "@/lib/i18n/paths";
 
 export type NavLabels = { aria: string; homeAria: string; menuOpen: string; menuClose: string; menu: string; themeRow: string };
 
@@ -1704,7 +1813,7 @@ export function Nav({ lang, links, cta, labels, theme }: Props) {
 
 Vervang in de JSX:
 - `aria-label="Hoofdnavigatie"` → `aria-label={labels.aria}`
-- `<a href="/" aria-label="HitzDigital home"` → `<a href={lang === "nl" ? "/" : \`/${lang}\`} aria-label={labels.homeAria}`
+- `<a href="/" aria-label="HitzDigital home"` → `<a href={href(lang, "home")} aria-label={labels.homeAria}` (de import van `href` uit `@/lib/i18n/paths` staat hierboven al)
 - beide `nav.links.map(` → `links.map(`
 - beide `<ThemeSwitch` → `<ThemeSwitch labels={theme}` (met behoud van `size="lg"` in het menu)
 - `href={cta.demo.href}` → `href={cta.href}` en `{cta.demo.label}` → `{cta.label}` (twee plekken: desktop-link en `<Button>` in het menu)
@@ -1945,46 +2054,58 @@ export function pageMetadata(lang: Lang, key: RouteKey, t: Texts, opts: Opts = {
 
 - [ ] **Step 2: Kort de metadata in `app/[lang]/layout.tsx` in**
 
-Verwijder de constanten `title` en `description` en vervang het `metadata`-blok door:
+Verwijder de constanten `title` en `description`, voeg `import { getDict } from "@/lib/i18n";` toe en vervang het `metadata`-blok door een `generateMetadata`:
 
 ```tsx
-export const metadata: Metadata = {
-  metadataBase: new URL(site.url),
-  openGraph: { siteName: site.name, type: "website" },
-  twitter: { card: "summary_large_image" },
-};
+/** Standaardtitel op layout-niveau: de 404 (notFound()) krijgt geen page-metadata, dus zonder deze default
+    rendert /bestaat-niet zonder <title>. Template "%s" laat de titel van elke pagina ongewijzigd door. */
+export async function generateMetadata({ params }: LangParams): Promise<Metadata> {
+  const lang = langOf((await params).lang);
+  return {
+    metadataBase: new URL(site.url),
+    title: { default: getDict(lang).pages.home.meta.title, template: "%s" },
+    openGraph: { siteName: site.name, type: "website" },
+    twitter: { card: "summary_large_image" },
+  };
+}
 ```
+
+De `title.default` hoort hier en niet in `app/[lang]/[...rest]/page.tsx`: Next voert de `generateMetadata` van een page niet uit wanneer die `notFound()` gooit (de not-found-boundary vervangt het hele segment), waardoor de 404 anders zonder `<title>` rendert. `robots: noindex` zet Next zelf al op de 404.
 
 - [ ] **Step 3: Hero-copy als parameter in `components/hero/HeroExperience.tsx`**
 
-Voeg boven `HERO_HTML` toe:
+Voeg boven `HERO_HTML` toe (het type is afgeleid van het woordenboek, zodat het niet met de hand hoeft mee te bewegen; `import type` verdwijnt bij de build, dus de client-bundle groeit er niet van):
 
 ```tsx
-export type HeroCopy = {
-  h1: { pre: string; accent: string; post: string };
-  sub: string;
-  primary: string;
-  secondary: string;
-  chips: { mobile: string; fast: string; structure: string; modern: string; selfManaged: string; friendly: string; professional: string };
-};
+import type { Dict } from "@/lib/i18n";
+
+/** Teksten in de hero; de mock-site op het laptopscherm is klantcontent en blijft ongewijzigd. */
+export type HeroCopy = Dict["pages"]["home"]["hero"];
+
+// Woordenboekteksten zijn platte tekst; `<`, `&` en `"` mogen de template niet breken.
+const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 ```
 
-Maak van `const HERO_HTML = \`…\`;` een functie: `function heroHtml(c: HeroCopy, contactHref: string): string { return \`…\`; }` en vervang in de template **precies** deze stukken:
+Maak van `const HERO_HTML = \`…\`;` een functie: `function heroHtml(c: HeroCopy, contactHref: string): string { return \`…\`; }` en vervang in de template **precies** deze stukken (elke interpolatie loopt door `esc()`; de huidige teksten bevatten geen `<`, `&` of `"`, dus de HTML blijft gelijk):
 
 | Was | Wordt |
 |---|---|
-| `<span style="font-weight:300">Alles rond je </span><em class="hd-accent-word" …>website</em><span style="font-weight:300">. Eén aanspreekpunt.</span>` | `<span style="font-weight:300">${c.h1.pre}</span><em class="hd-accent-word" …>${c.h1.accent}</em><span style="font-weight:300">${c.h1.post}</span>` |
-| `…margin-bottom:36px">Websites, hosting en computerhulp … Eén persoon, korte lijnen.</p>` | `…margin-bottom:36px">${c.sub}</p>` |
-| `…transition:transform .25s,box-shadow .25s,filter .25s">Bekijk wat ik doe` | `…transition:transform .25s,box-shadow .25s,filter .25s">${c.primary}` |
-| `<a href="/contact" class="hd-btn-ghost"` | `<a href="${contactHref}" class="hd-btn-ghost"` |
-| `…transform .25s">Neem contact op</a>` | `…transform .25s">${c.secondary}</a>` |
-| `Mobielvriendelijk` (2×) | `${c.chips.mobile}` |
-| `Snelle laadtijd` | `${c.chips.fast}` |
-| `Duidelijke structuur` (2×) | `${c.chips.structure}` |
-| `Moderne uitstraling` | `${c.chips.modern}` |
-| `Zelf te beheren` | `${c.chips.selfManaged}` |
-| `Gebruiksvriendelijk` (2×) | `${c.chips.friendly}` |
-| `Professionele indruk` | `${c.chips.professional}` |
+| `<span style="font-weight:300">Alles rond je </span><em class="hd-accent-word" …>website</em><span style="font-weight:300">. Eén aanspreekpunt.</span>` | `<span style="font-weight:300">${esc(c.h1.pre)}</span><em class="hd-accent-word" …>${esc(c.h1.accent)}</em><span style="font-weight:300">${esc(c.h1.post)}</span>` |
+| `…margin-bottom:36px">Websites, hosting en computerhulp … Eén persoon, korte lijnen.</p>` | `…margin-bottom:36px">${esc(c.sub)}</p>` |
+| `…transition:transform .25s,box-shadow .25s,filter .25s">Bekijk wat ik doe` | `…transition:transform .25s,box-shadow .25s,filter .25s">${esc(c.primary)}` |
+| `<a href="/contact" class="hd-btn-ghost"` | `<a href="${esc(contactHref)}" class="hd-btn-ghost"` |
+| `…transform .25s">Neem contact op</a>` | `…transform .25s">${esc(c.secondary)}</a>` |
+| `Mobielvriendelijk` (2×) | `${esc(c.chips.mobile)}` |
+| `Snelle laadtijd` | `${esc(c.chips.fast)}` |
+| `SEO-klaar` (2×) | `${esc(c.chips.seo)}` |
+| `Duidelijke structuur` (2×) | `${esc(c.chips.structure)}` |
+| `Moderne uitstraling` | `${esc(c.chips.modern)}` |
+| `Zelf te beheren` | `${esc(c.chips.selfManaged)}` |
+| `Gebruiksvriendelijk` (2×) | `${esc(c.chips.friendly)}` |
+| `Professionele indruk` | `${esc(c.chips.professional)}` |
+| `// snelle laadtijd` | `${esc(c.chips.code.fast)}` |
+| `// schone code` | `${esc(c.chips.code.clean)}` |
+| `// betere prestaties` | `${esc(c.chips.code.perf)}` |
 
 De mock-site op het laptopscherm (`Diensten`, `Werk`, `Contact`, `Bel direct`, `Offerte aanvragen`, `Bekijk diensten`, `Verspaning zonder stilstand.`) blijft ongewijzigd: dat is klantcontent van een Nederlandse klant en in beide talen realistisch.
 
@@ -1993,15 +2114,17 @@ Vervang de component:
 ```tsx
 export function HeroExperience({ copy, contactHref }: { copy: HeroCopy; contactHref: string }) {
   const rootRef = useRef<HTMLDivElement>(null);
+  const html = heroHtml(copy, contactHref);
+  // Opnieuw initialiseren zodra de HTML wisselt (andere taal): initHero houdt anders verwijzingen naar weggegooide nodes.
   useEffect(() => {
     if (!rootRef.current) return;
     return initHero(rootRef.current);
-  }, []);
-  return <div ref={rootRef} className="relative w-full" dangerouslySetInnerHTML={{ __html: heroHtml(copy, contactHref) }} />;
+  }, [html]);
+  return <div ref={rootRef} className="relative w-full" dangerouslySetInnerHTML={{ __html: html }} />;
 }
 ```
 
-Controle: `grep -c "Mobielvriendelijk\|Snelle laadtijd\|Neem contact op\|Bekijk wat ik doe" components/hero/HeroExperience.tsx` geeft `0`.
+Controle: `grep -c "Mobielvriendelijk\|Snelle laadtijd\|SEO-klaar\|Neem contact op\|Bekijk wat ik doe" components/hero/HeroExperience.tsx` geeft `0`, en `grep -rl "Eén aanspreekpunt" .next/static | wc -l` geeft na de build `0` (het woordenboek blijft uit de client-bundle).
 
 - [ ] **Step 4: Secties krijgen `lang`**
 
@@ -2064,34 +2187,30 @@ import { getDict } from "@/lib/i18n";
 import { href, type Lang } from "@/lib/i18n/paths";
 import { work } from "@/lib/work";
 
-/** Homepage: teaser met de klanten + link naar /werk. Elders: volledige grid. */
-export function Werk({ lang, teaser = false }: { lang: Lang; teaser?: boolean }) {
+/** Homepage-teaser: de klanten + link naar /werk. De volledige grid staat op /werk zelf. */
+export function Werk({ lang }: { lang: Lang }) {
   const t = getDict(lang).pages.home.werk;
-  const list = teaser ? work.filter((w) => w.client) : work;
+  const list = work.filter((w) => w.client);
   return (
-    <Section id="werk" padding={teaser ? "large" : "default"}>
+    <Section id="werk" padding="large">
       <Container>
         <Reveal>
           <div className="mb-[54px] flex flex-wrap items-end justify-between gap-5">
             <div>
               <Eyebrow>{t.eyebrow}</Eyebrow>
-              <SectionTitle className="max-w-[620px]">{teaser ? t.teaserTitle : t.allTitle}</SectionTitle>
+              <SectionTitle className="max-w-[620px]">{t.teaserTitle}</SectionTitle>
             </div>
-            {teaser ? (
-              <a
-                href={href(lang, "werk")}
-                className="inline-flex items-center gap-2 py-1 text-[15px] font-medium text-ink underline-offset-4 hover:underline"
-              >
-                {t.all} <ArrowRight size={16} weight="bold" aria-hidden />
-              </a>
-            ) : (
-              <p className="max-w-[380px] text-[15px] leading-[1.6] text-muted">{t.intro}</p>
-            )}
+            <a
+              href={href(lang, "werk")}
+              className="inline-flex items-center gap-2 py-1 text-[15px] font-medium text-ink underline-offset-4 hover:underline"
+            >
+              {t.all} <ArrowRight size={16} weight="bold" aria-hidden />
+            </a>
           </div>
           <div className="grid grid-cols-1 gap-[22px] min-[561px]:grid-cols-2 min-[901px]:grid-cols-3">
             {list.map((item, i) => (
               // Teaser op één kolom: twee tegels, de derde staat achter "Al mijn werk".
-              <WerkCard key={item.slug} item={item} className={teaser && i >= 2 ? "max-[560px]:hidden" : undefined} />
+              <WerkCard key={item.slug} item={item} className={i >= 2 ? "max-[560px]:hidden" : undefined} />
             ))}
           </div>
         </Reveal>
@@ -2100,7 +2219,7 @@ export function Werk({ lang, teaser = false }: { lang: Lang; teaser?: boolean })
   );
 }
 ```
-(`WerkCard` krijgt zijn `lang` in Task 12; tot dan blijft de huidige `WerkCard` werken met `item.meta`/`item.alt`.)
+(Geen `teaser`-prop: `/werk` rendert zijn eigen grid, dus de niet-teaser-tak was onbereikbaar. `WerkCard` krijgt zijn `lang` in Task 12; tot dan blijft de huidige `WerkCard` werken met `item.meta`/`item.alt`.)
 
 `components/sections/Contact.tsx`: signatuur `export async function Contact({ lang }: { lang: Lang })`, `const t = getDict(lang).pages.home.contact;`, vervang `Contact` (eyebrow) → `{t.eyebrow}`, `Waar kan ik je mee helpen?` → `{t.title}`, de lead-alinea → `{t.lead}`, `Liever direct?{" "}` → `{t.direct}{" "}`, `Bel {telDisplay}` → `{getDict(lang).ui.cta.call} {telDisplay}`, `Bij een storing of spoed: bel.` → `{t.urgent}`. `AanvraagForm` blijft tot Task 13 ongewijzigd.
 
@@ -2133,7 +2252,7 @@ export default async function Home({ params }: LangParams) {
       <main id="main" className="hd-after-hero relative z-[2] bg-deep">
         <Pijlers lang={lang} />
         <ZoWerkIk lang={lang} />
-        <Werk lang={lang} teaser />
+        <Werk lang={lang} />
         <Over lang={lang} />
         <Contact lang={lang} />
       </main>
@@ -2163,7 +2282,7 @@ git commit -m "Homepage en hero lezen uit het woordenboek; pageMetadata-helper"
 
 - [ ] **Step 1: `lib/work.ts` zonder tekstvelden**
 
-Vervang de types en verwijder `meta`, `alt`, `branche`, `kicker`, `intro`, `situatie`, `aanpak`, `resultaat`, `voorAlt`, `naAlt` en `quote` uit de data. Tags worden ids. De overige waarden blijven exact gelijk.
+Vervang de types en verwijder `meta`, `alt`, `branche`, `kicker`, `intro`, `situatie`, `aanpak`, `resultaat`, `voorAlt`, `naAlt` en `quote` uit de data (`kicker` verdwijnt helemaal: de case-pagina stelt hem samen uit `branche` en `plaats`). Tags worden ids. De overige waarden blijven exact gelijk.
 
 ```ts
 import { href, type Lang } from "@/lib/i18n/paths";
@@ -2240,7 +2359,7 @@ Voeg bovenaan toe: `import type { WorkSlug, CaseSlug } from "@/lib/work";` en ve
 ```ts
 } satisfies {
   items: Record<WorkSlug, { meta: string; alt: string }>;
-  cases: Record<CaseSlug, { branche: string; kicker: string; intro: string; situatie: string; aanpak: string[]; resultaat: string[]; voorNaAlt: { voor: string; na: string } | undefined; quote: { text: string; author: string } | undefined }>;
+  cases: Record<CaseSlug, { branche: string; intro: string; situatie: string; aanpak: string[]; resultaat: string[]; voorNaAlt: { voor: string; na: string } | undefined; quote: { text: string; author: string } | undefined }>;
 };
 ```
 
@@ -2307,10 +2426,10 @@ export function WerkCard({ item, lang, text, labels, className }: { item: WorkIt
 
 - [ ] **Step 4: `components/sections/Werk.tsx`: geef tekst en labels door**
 
-Vervang `const t = getDict(lang).pages.home.werk;` door:
+Vervang `const t = getDict(lang).pages.home.werk;` door (alias `texts`, zodat hij de `w` van de `filter`-callback niet overschaduwt):
 
 ```tsx
-  const { pages, ui, work: w } = getDict(lang);
+  const { pages, ui, work: texts } = getDict(lang);
   const t = pages.home.werk;
 ```
 en de kaart door:
@@ -2320,9 +2439,9 @@ en de kaart door:
                 key={item.slug}
                 item={item}
                 lang={lang}
-                text={w.items[item.slug]}
+                text={texts.items[item.slug]}
                 labels={ui.workCard}
-                className={teaser && i >= 2 ? "max-[560px]:hidden" : undefined}
+                className={i >= 2 ? "max-[560px]:hidden" : undefined}
               />
 ```
 
@@ -2447,7 +2566,7 @@ export default async function CasePage({ params }: SlugParams) {
             <Button href={c.url} variant="ghost" target="_blank" rel="noopener noreferrer">
               {t.viewSite}
             </Button>
-            <span className="text-[13.5px] text-faint">{copy.kicker}</span>
+            <span className="text-[13.5px] text-faint">{`${copy.branche} · ${c.plaats}`}</span>
           </>
         }
       />
@@ -2505,7 +2624,7 @@ export default async function CasePage({ params }: SlugParams) {
                 <p className="mt-6 max-w-[46ch] text-[16px] leading-[1.65] text-muted">{t.voorNa.lead}</p>
               </div>
               <div className="mx-auto w-full max-w-[420px] overflow-hidden rounded-[22px] border border-line shadow-card">
-                <BeforeAfterSlider beforeSrc={c.voorNa.voor} afterSrc={c.voorNa.na} beforeAlt={copy.voorNaAlt.voor} afterAlt={copy.voorNaAlt.na} className="aspect-[3/4]" />
+                <BeforeAfterSlider beforeSrc={c.voorNa.voor} afterSrc={c.voorNa.na} beforeAlt={copy.voorNaAlt.voor} afterAlt={copy.voorNaAlt.na} labels={ui.voorNa} className="aspect-[3/4]" />
               </div>
             </Reveal>
           </Container>
@@ -2707,7 +2826,7 @@ export default async function WebsitesPage({ params }: LangParams) {
                 </a>
               </div>
               <div className="mx-auto w-full max-w-[420px] overflow-hidden rounded-[22px] border border-line shadow-card">
-                <BeforeAfterSlider beforeSrc={voorNa.voorNa.voor} afterSrc={voorNa.voorNa.na} beforeAlt={voorNaCopy.voorNaAlt.voor} afterAlt={voorNaCopy.voorNaAlt.na} className="aspect-[3/4]" />
+                <BeforeAfterSlider beforeSrc={voorNa.voorNa.voor} afterSrc={voorNa.voorNa.na} beforeAlt={voorNaCopy.voorNaAlt.voor} afterAlt={voorNaCopy.voorNaAlt.na} labels={ui.voorNa} className="aspect-[3/4]" />
               </div>
             </Reveal>
           </Container>
@@ -2836,11 +2955,11 @@ export default async function HostingPage({ params }: LangParams) {
   const lang = langOf((await params).lang);
   const { pages, services, ui } = getDict(lang);
   const t = pages.hosting;
-  const mailbox = pricing.addons[0];
-  const [mailOne, mailMulti] = mailbox.tiers;
+  const mailbox = pricing.addons.find((a) => a.id === "mailbox")!;
+  const tierPrice = (id: "one" | "multi") => mailbox.tiers.find((t) => t.id === id)!.monthly;
   const tiers = [
-    { label: services.mailbox.tiers.one, monthly: mailOne.monthly },
-    { label: services.mailbox.tiers.multi, monthly: mailMulti.monthly },
+    { id: "one", label: services.mailbox.tiers.one, monthly: tierPrice("one") },
+    { id: "multi", label: services.mailbox.tiers.multi, monthly: tierPrice("multi") },
   ];
   const schema = {
     "@context": "https://schema.org",
@@ -2900,7 +3019,7 @@ export default async function HostingPage({ params }: LangParams) {
         <Container>
           <Reveal>
             <SectionTitle className="mb-4 max-w-[720px]">{t.packages.title}</SectionTitle>
-            <p className="mb-[54px] max-w-[52ch] text-[16px] leading-[1.65] text-muted">{t.packages.lead(euro(mailOne.monthly))}</p>
+            <p className="mb-[54px] max-w-[52ch] text-[16px] leading-[1.65] text-muted">{t.packages.lead(euro(tierPrice("one")))}</p>
           </Reveal>
           <div className="grid grid-cols-1 gap-[18px] min-[901px]:grid-cols-2">
             {liveHosting.map((h, i) => (
@@ -2919,7 +3038,7 @@ export default async function HostingPage({ params }: LangParams) {
               </div>
               <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1">
                 {tiers.map((tier) => (
-                  <span key={tier.label} className="font-display text-[20px] font-semibold tracking-[-0.02em]">
+                  <span key={tier.id} className="font-display text-[20px] font-semibold tracking-[-0.02em]">
                     {euro(tier.monthly)} <span className="text-[13px] font-normal text-muted">{t.packages.tierPerMonth(tier.label)}</span>
                   </span>
                 ))}
@@ -2937,7 +3056,7 @@ export default async function HostingPage({ params }: LangParams) {
               <SectionTitle className="max-w-[16ch]">{t.domain.title}</SectionTitle>
               <p className="mt-6 max-w-[46ch] text-[16px] leading-[1.65] text-muted">{t.domain.p1(services.domains.included, services.domains.other)}</p>
               <p className="mt-4 max-w-[46ch] text-[16px] leading-[1.65] text-muted">
-                {t.domain.p2(euro(mailOne.monthly), euro(mailMulti.monthly), mailbox.quotaGb, services.mailbox.more)}
+                {t.domain.p2(euro(tierPrice("one")), euro(tierPrice("multi")), mailbox.quotaGb, services.mailbox.more)}
               </p>
             </div>
             <div className="self-center rounded-2xl border border-line bg-panel p-[clamp(22px,2.4vw,30px)]">
@@ -2951,7 +3070,7 @@ export default async function HostingPage({ params }: LangParams) {
                     </tr>
                   ))}
                   {tiers.map((tier) => (
-                    <tr key={tier.label}>
+                    <tr key={tier.id}>
                       <td className="py-3 font-mono text-[14px] text-ink">@</td>
                       <td className="py-3 text-muted">{t.packages.tierPerMonth(tier.label)}</td>
                       <td className="py-3 text-right text-ink">{euro(tier.monthly)}</td>
@@ -3055,7 +3174,8 @@ export default async function HulpPage({ params }: LangParams) {
   const t = pages.hulp;
   const h = pricing.hulp;
   const tarief = services.hulpTarief;
-  const apkPrijs = { "computer-apk": h.apk.computer, "website-apk": h.apk.website } as const;
+  const apkPrijs = { "computer-apk": h.apk.computer, "website-apk": h.apk.website };
+  const apk = (id: "computer-apk" | "website-apk") => t.apk.items.find((a) => a.id === id)!;
   const schema = {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -3066,8 +3186,8 @@ export default async function HulpPage({ params }: LangParams) {
     url: `${site.url}${href(lang, "hulp")}`,
     offers: [
       { "@type": "Offer", name: t.schema.perQuarter, price: h.quarter.toFixed(2), priceCurrency: "EUR", priceSpecification: { "@type": "UnitPriceSpecification", price: h.quarter.toFixed(2), priceCurrency: "EUR", unitText: t.schema.unit, valueAddedTaxIncluded: true } },
-      { "@type": "Offer", name: t.schema.computerApk, price: h.apk.computer.toFixed(2), priceCurrency: "EUR" },
-      { "@type": "Offer", name: t.schema.websiteApk, price: h.apk.website.toFixed(2), priceCurrency: "EUR" },
+      { "@type": "Offer", name: apk("computer-apk").title, price: h.apk.computer.toFixed(2), priceCurrency: "EUR" },
+      { "@type": "Offer", name: apk("website-apk").title, price: h.apk.website.toFixed(2), priceCurrency: "EUR" },
       { "@type": "Offer", name: t.schema.card(h.card.quarters), price: h.card.price.toFixed(2), priceCurrency: "EUR" },
     ],
   };
@@ -3120,7 +3240,7 @@ export default async function HulpPage({ params }: LangParams) {
                 <div className="flex h-full flex-col rounded-2xl border border-line bg-panel p-[clamp(24px,2.6vw,34px)]">
                   <div className="flex items-baseline justify-between gap-4">
                     <h3 className="font-display text-[clamp(22px,2.2vw,26px)] font-semibold tracking-[-0.02em]">{a.title}</h3>
-                    <span className="font-display text-[clamp(24px,2.4vw,30px)] font-semibold tracking-[-0.02em]">{euro(apkPrijs[a.id as keyof typeof apkPrijs])}</span>
+                    <span className="font-display text-[clamp(24px,2.4vw,30px)] font-semibold tracking-[-0.02em]">{euro(apkPrijs[a.id])}</span>
                   </div>
                   <p className="mt-3 text-[15px] leading-[1.6] text-muted">{a.body}</p>
                   <div className="mt-auto pt-6">
@@ -3193,6 +3313,7 @@ export default async function HulpPage({ params }: LangParams) {
             </div>
             <p className="mt-14 max-w-[60ch] text-[15px] leading-[1.65] text-muted">
               <span className="text-ink">{t.how.homeLead}</span>
+              {" "}
               {t.how.homeBody(euro(h.quarter))}
             </p>
           </Reveal>
@@ -3222,7 +3343,7 @@ export default async function HulpPage({ params }: LangParams) {
 
 - [ ] **Step 2: Typecheck, bouw, vergelijk, commit**
 
-Run: `npx tsc --noEmit && npm run build`. In `npm run dev` op `/hulp`: let op de regel "Ook thuis vastgelopen? Ik help ook particulieren…" (spatie na het vraagteken komt uit `homeBody`) en de strippenkaart-regel.
+Run: `npx tsc --noEmit && npm run build`. In `npm run dev` op `/hulp`: let op de regel "Ook thuis vastgelopen? Ik help ook particulieren…" (de spatie na het vraagteken staat als `{" "}` in de JSX, niet in `homeBody`) en de strippenkaart-regel.
 
 ```bash
 git add -A
@@ -3303,6 +3424,9 @@ export function AanvraagForm({ lang, t, initial = "website", canSend = false }: 
   const [errors, setErrors] = useState<Errors>({});
   const formRef = useRef<HTMLFormElement>(null);
   const packageInterest = t.packageInterest;
+  // Pakketnamen via een ref: het object is elke render nieuw en hoort niet in de deps.
+  const namesRef = useRef(t.packageNames);
+  namesRef.current = t.packageNames;
 
   useEffect(() => {
     setOpened(Date.now());
@@ -3311,7 +3435,13 @@ export function AanvraagForm({ lang, t, initial = "website", canSend = false }: 
       const v = raw.match(/[?&]voor=([a-z]+)/)?.[1];
       if (isAanvraagKeuze(v)) setVoor(v);
       const pk = raw.match(/[?&]pakket=([a-z-]+)/)?.[1];
-      if (pk) setBericht((cur) => cur || packageInterest.replace("{pakket}", `${pk.charAt(0).toUpperCase()}${pk.slice(1)}`));
+      if (pk) {
+        const names = namesRef.current;
+        const naam = Object.hasOwn(names, pk)
+          ? names[pk as keyof typeof names]
+          : `${pk.charAt(0).toUpperCase()}${pk.slice(1)}`;
+        setBericht((cur) => cur || packageInterest.replace("{pakket}", naam));
+      }
     };
     apply();
     window.addEventListener("hashchange", apply);
@@ -3583,13 +3713,13 @@ export default async function ContactPage({ params }: LangParams) {
                       <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="inline-block py-1 text-ink underline-offset-4 hover:underline">
                         {ui.footer.whatsapp}
                       </a>
-                      <span className="text-muted">{t.direct.whatsappNote}</span>
+                      <span className="text-muted"> · {t.direct.whatsappNote}</span>
                     </li>
                     <li>
                       <a href={tel} className="inline-block py-1 text-ink underline-offset-4 hover:underline">
                         {telDisplay}
                       </a>
-                      <span className="text-muted">{t.direct.callNote}</span>
+                      <span className="text-muted"> · {t.direct.callNote}</span>
                     </li>
                     <li>
                       <MailtoLink href={ui.mailto} className="inline-block py-1 text-ink underline-offset-4 hover:underline">
@@ -3623,7 +3753,7 @@ export default async function ContactPage({ params }: LangParams) {
 
 - [ ] **Step 5: Typecheck, bouw, test het formulier, commit**
 
-Run: `npx tsc --noEmit && npm run build`. In `npm run dev`: open `/contact?voor=hosting&pakket=onderhoud` → keuze "Hosting & domein" staat aan en het bericht bevat "Ik heb interesse in het pakket Onderhoud."; open `/hulp`, klik "Plan een Computer APK" → bericht "Ik heb interesse in het pakket Computer-apk.". Verstuur één testaanvraag (met `RESEND_API_KEY` in `.env.local`) en controleer dat de mail binnenkomt met onderwerp `Aanvraag nieuwe website via hitzdigital.nl: <naam>` en zonder `[EN]`.
+Run: `npx tsc --noEmit && npm run build`. In `npm run dev`: open `/contact?voor=hosting&pakket=onderhoud` → keuze "Hosting & domein" staat aan en het bericht bevat "Ik heb interesse in het pakket Onderhoud."; open `/hulp`, klik "Plan een Computer APK" → bericht "Ik heb interesse in het pakket Computer APK.". Verstuur één testaanvraag (met `RESEND_API_KEY` in `.env.local`) en controleer dat de mail binnenkomt met onderwerp `Aanvraag nieuwe website via hitzdigital.nl: <naam>` en zonder `[EN]`.
 
 ```bash
 git add -A
@@ -3648,7 +3778,7 @@ import { href } from "../paths";
 
 const L = "nl" as const;
 
-/** Body van het privacybeleid (versie 2.0, 29-08-2026). Verplaatst uit de pagina; tekst ongewijzigd. */
+/** Body van het privacybeleid. Versie en datum staan in `pages.privacy`. */
 export function PrivacyBody() {
   return (
     <>
@@ -3667,13 +3797,16 @@ Zelfde procedure met `app/[lang]/(site)/voorwaarden/page.tsx`: alles tussen `<Pr
 ```tsx
 import { liveHosting, pricing, euro } from "@/lib/pricing";
 import { site } from "@/lib/site";
+import { href } from "../paths";
 import { services } from "./services";
 
-/** Body van de algemene voorwaarden (26-08-2026). Verplaatst uit de pagina; tekst ongewijzigd. */
+const L = "nl" as const;
+
+/** Body van de algemene voorwaarden. Datum en losse regels staan in `pages.voorwaarden`. */
 export function TermsBody() {
-  const onderhoud = pricing.hosting.find((h) => h.id === "onderhoud")!;
   const webshop = liveHosting.find((h) => h.id === "webshop");
-  const [mailOne, mailMulti] = pricing.addons[0].tiers;
+  const mailbox = pricing.addons.find((a) => a.id === "mailbox")!;
+  const tierPrice = (id: "one" | "multi") => mailbox.tiers.find((t) => t.id === id)!.monthly;
   const namen = liveHosting.map((h) => services.plans[h.id].name);
   const pakketten = namen.length > 1 ? `${namen.slice(0, -1).join(", ")} of ${namen.at(-1)}` : namen[0];
   return (
@@ -3684,17 +3817,18 @@ export function TermsBody() {
 }
 ```
 
-Twee vervangingen in de verplaatste JSX: `{pricing.hulp.card.validity}` → `{services.hulpTarief.cardValidity}`; verder niets. (`onderhoud`, `webshop`, `mailOne`, `mailMulti`, `pakketten`, `euro`, `pricing`, `site` worden precies zo gebruikt als voorheen.)
+Vervangingen in de verplaatste JSX: `{pricing.hulp.card.validity}` → `{services.hulpTarief.cardValidity}`; `{euro(mailOne.monthly)}` / `{euro(mailMulti.monthly)}` → `{euro(tierPrice("one"))}` / `{euro(tierPrice("multi"))}`; `{pricing.addons[0].quotaGb}` → `{mailbox.quotaGb}`; `<a href="/privacy">privacybeleid</a>` → `<a href={href(L, "privacy")}>privacybeleid</a>`. Verder niets. (`webshop`, `pakketten`, `euro`, `pricing`, `site` worden precies zo gebruikt als voorheen. De naam "Onderhoud" staat als losse tekst in de JSX, dus een `onderhoud`-const is hier niet nodig.)
 
 - [ ] **Step 3: Registreer de bodies in `lib/i18n/nl/index.ts`**
 
 ```ts
+import { PrivacyBody } from "./legal-privacy";
+import { TermsBody } from "./legal-terms";
+
 export { ui } from "./ui";
 export { pages } from "./pages";
 export { services } from "./services";
 export { work } from "./work";
-import { PrivacyBody } from "./legal-privacy";
-import { TermsBody } from "./legal-terms";
 export const legal = { PrivacyBody, TermsBody };
 ```
 
@@ -3755,6 +3889,7 @@ git commit -m "Privacy en voorwaarden: body-componenten in het woordenboek"
 ### Task 15: Support (alleen NL), OG-afbeeldingen per taal
 
 **Files:**
+- Create: `app/[lang]/(site)/privacy/opengraph-image.tsx`, `app/[lang]/(site)/voorwaarden/opengraph-image.tsx`
 - Modify: `app/[lang]/(site)/support/page.tsx`, `app/[lang]/(site)/support/[slug]/page.tsx`, `lib/og.tsx`, alle `opengraph-image.tsx` onder `app/[lang]/(site)/`
 
 - [ ] **Step 1: Support-pagina's alleen voor `nl`**
@@ -3792,10 +3927,15 @@ Signatuur: `export function renderOg({ title, kicker, sub, footer }: { title: st
 ```tsx
 import { renderOg, ogSize } from "@/lib/og";
 import { getDict } from "@/lib/i18n";
-import { langOf, type LangParams } from "@/lib/i18n/paths";
+import { locales, langOf, type LangParams } from "@/lib/i18n/paths";
 
 export const size = ogSize;
 export const contentType = "image/png";
+
+/** Zonder deze params blijft de route dynamisch: de OG-afbeelding wordt dan bij elke request opnieuw gerenderd. */
+export function generateStaticParams() {
+  return locales.map((lang) => ({ lang }));
+}
 
 export default async function OpengraphImage({ params }: LangParams) {
   const lang = langOf((await params).lang);
@@ -3804,9 +3944,11 @@ export default async function OpengraphImage({ params }: LangParams) {
 }
 ```
 
-Zelfde bestand voor `websites/`, `hosting/`, `hulp/`, `werk/`, `contact/` met respectievelijk `pages.websites.og`, `pages.hosting.og`, `pages.hulp.og`, `pages.werk.og`, `pages.contact.og`.
+Zelfde bestand voor `websites/`, `hosting/`, `hulp/`, `werk/`, `contact/`, `privacy/` en `voorwaarden/` met respectievelijk `pages.websites.og`, `pages.hosting.og`, `pages.hulp.og`, `pages.werk.og`, `pages.contact.og`, `pages.privacy.og` en `pages.voorwaarden.og`. Laat in elk bestand `generateStaticParams` staan, anders wordt de route weer dynamisch.
 
-`support/opengraph-image.tsx`: behoud de drie strings, voeg `footer: getDict("nl").ui.og.footer` toe.
+`privacy/opengraph-image.tsx` en `voorwaarden/opengraph-image.tsx` zijn **nieuw**: `pageMetadata` geeft die twee pagina's sinds Task 14 een eigen `openGraph`-blok, waardoor ze de OG-afbeelding van de `(site)`-laag niet meer erven. Zonder eigen route zouden `/privacy` en `/voorwaarden` helemaal geen `og:image` meer sturen.
+
+`support/opengraph-image.tsx`: behoud de drie strings, voeg `footer: getDict("nl").ui.og.footer` toe en laat `generateStaticParams` `[{ lang: "nl" }]` teruggeven — support bestaat alleen in het Nederlands (spec §1), dus `locales` zou vanaf Task 18 een overbodige EN-variant prerenderen. De import van `locales` vervalt daarmee.
 
 `werk/[slug]/opengraph-image.tsx`:
 
@@ -3819,6 +3961,7 @@ import { cases, getCase } from "@/lib/work";
 export const size = ogSize;
 export const contentType = "image/png";
 
+/** Alleen de slugs; de `lang` komt uit generateStaticParams van de layout. */
 export function generateStaticParams() {
   return cases.map((c) => ({ slug: c.slug }));
 }
@@ -3957,7 +4100,7 @@ In `app/[lang]/layout.tsx`: `const { ui } = getDict(lang);` (import `getDict` ui
 ```ts
 /**
  * Alle verkoopprijzen op de site komen hieruit (besloten 26-08-2026, zie docs 11 §7 en 12).
- * Regel: alle bedragen INCL. 21% btw. Kostprijzen staan niet in de code. Labels: lib/i18n/*/services.ts (plans, mailbox, hulpTarief).
+ * Regel: alle bedragen INCL. 21% btw. Kostprijzen staan niet in de code. Labels: lib/i18n/{nl,en}/services.ts (plans, mailbox, hulpTarief).
  */
 export const pricing = {
   website: { from: 250 },
@@ -4062,7 +4205,15 @@ Playwright is globaal geïnstalleerd. Node lost een ESM-import van `playwright` 
 ```bash
 mkdir -p ../node_modules && ln -sfn "$(npm root -g)/playwright" ../node_modules/playwright
 ```
-De globale Playwright (1.63) verwacht Chromium-build 1243; die staat al in `~/Library/Caches/ms-playwright/`, dus `chromium.launch()` werkt zonder download.
+De globale Playwright (1.63) vraagt zelf om Chromium-build **1148**, en die staat níet in de cache; wel aanwezig zijn 1234 en 1243.
+Een kale `chromium.launch()` faalt daardoor met "Executable doesn't exist". Geef daarom altijd het gecachete 1243-binary mee:
+
+```js
+const CHROME = "/Users/nathaniel/Library/Caches/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-mac-arm64/chrome-headless-shell";
+const browser = await chromium.launch({ executablePath: CHROME });
+```
+
+Dat werkt zonder download en zonder netwerk. Zelfde regel voor `tests/e2e/switch-cookie.mjs` (Task 30) en voor `../screenshots/tools/shots.mjs`.
 
 - [ ] **Step 2: Maak `tests/visual/diff.py`**
 
@@ -4135,6 +4286,8 @@ Meld Nathaniel: build groen, unit + e2e groen, screenshots identiek aan `main`, 
 
 # Fase 2 — Engelse woordenboeken en copy
 
+Vormafspraken uit de review van Task 6/7: bedragen altijd via `pricing`/`euro`, accentkoppen één keer als `{ pre, accent, post }` met `star()`/`accented()`, technische ids met `as const`, geen scheidingstekens of voorloopspaties in strings, `nav.cta` afgeleid van `cta`, geen `kicker`, `guaranteeLine` één keer per taal.
+
 Doel: na Task 27 bestaat de complete Engelse site onder `/en/…`, door Nathaniel per pagina nagelezen. Nog zonder taalschakelaar en zonder automatische detectie (fase 3).
 
 Schrijfregels voor alle Engelse copy (spec §7): Brits-Engels (colour, organise, favourite), ik-vorm, korte zinnen, geen jargon en geen superlatieven. De Hoeksche Waard is thuisbasis, niet doelgroep. Websites en hosting: op afstand, wereldwijd. Hulp aan huis: alleen in de regio. Prijzen ongewijzigd met "incl. 21% VAT". De Engelse copy hieronder is de eerste versie; Nathaniel leest per task tegen en wijzigingen worden direct in het EN-woordenboek doorgevoerd.
@@ -4169,7 +4322,7 @@ Run: `npm run test:unit` — Expected: deze test faalt (`languages` is nog `unde
 export const locales: readonly Lang[] = ["nl", "en"];
 ```
 
-Run: `npm run test:unit` — Expected: alles slaagt (`ℹ pass 16`).
+Run: `npm run test:unit` — Expected: alles slaagt (`ℹ pass 18`, inclusief het `publicPath`-blok uit Task 2).
 
 - [ ] **Step 3: EN-skelet als kopie van NL**
 
@@ -4193,17 +4346,18 @@ Pas per bestand de kop aan zodat EN het NL-type krijgt (de inhoud blijft in deze
 `lib/i18n/index.ts` (volledig):
 
 ```ts
-import { defaultLang, type Lang } from "./paths";
+import type { Lang } from "./paths";
 import * as nl from "./nl";
 import * as en from "./en";
 
 /** Vorm van een compleet woordenboek: afgeleid van het Nederlands (de bron). */
 export type Dict = typeof nl;
 
-const dicts: Partial<Record<Lang, Dict>> = { nl, en };
+/** Beschikbare woordenboeken. Het Nederlands is er altijd en dient als terugval. */
+const dicts: Partial<Record<Lang, Dict>> & { nl: Dict } = { nl, en };
 
 export function getDict(lang: Lang): Dict {
-  return dicts[lang] ?? (dicts[defaultLang] as Dict);
+  return dicts[lang] ?? dicts.nl;
 }
 ```
 
@@ -4215,7 +4369,7 @@ Vervang in `middleware.ts` de import en voeg het EN-blok toe vóór "Regel 7":
 
 ```ts
 import { NextResponse, type NextRequest } from "next/server";
-import { isLive, parsePublic, internalPath, redirectForEn, type Lang } from "@/lib/i18n/paths";
+import { isLive, parsePublic, internalPath, redirectForEn } from "@/lib/i18n/paths";
 ```
 
 ```ts
@@ -4228,9 +4382,9 @@ import { isLive, parsePublic, internalPath, redirectForEn, type Lang } from "@/l
       url.pathname = target;
       return NextResponse.redirect(url, 301);
     }
-    // Regel 6: publieke EN-slug → interne route. Onbekend pad blijft staan; de catch-all geeft een Engelse 404.
+    // Regel 6: publieke EN-slug → interne route. Onbekend pad blijft staan; de catch-all geeft een 404; NotFoundView kiest client-side Engels.
     const parsed = parsePublic(pathname);
-    return rewrite(req, parsed ? internalPath(parsed) : pathname, "en");
+    return parsed ? rewrite(req, internalPath(parsed)) : NextResponse.next();
   }
 ```
 
@@ -4260,14 +4414,18 @@ test("interne slug onder /en → 301 naar de Engelse slug", async () => {
 });
 
 test("support bestaat alleen in NL: /en/support → 301 /support", async () => {
-  assert.equal(location(await get("/en/support")), "/support");
-  assert.equal(location(await get("/en/support/e-mail-instellingen")), "/support/e-mail-instellingen");
+  const root = await get("/en/support");
+  assert.equal(root.status, 301);
+  assert.equal(location(root), "/support");
+  const deep = await get("/en/support/e-mail-instellingen");
+  assert.equal(deep.status, 301);
+  assert.equal(location(deep), "/support/e-mail-instellingen");
 });
 
-test("onbekend EN-pad: 404 met lang=en; /fr: 404", async () => {
-  const res = await get("/en/does-not-exist");
-  assert.equal(res.status, 404);
-  assert.match(await res.text(), /<html[^>]*\blang="en"/);
+test("onbekend EN-pad en onbekende taal geven 404", async () => {
+  // De 404 rendert in Next's foutdocument zonder <html lang>; NotFoundView kiest de taal client-side.
+  assert.equal((await get("/en/does-not-exist")).status, 404);
+  assert.equal((await get("/en/help/extra")).status, 404);
   assert.equal((await get("/fr")).status, 404);
 });
 
@@ -4289,7 +4447,7 @@ npm start &
 npm run test:e2e
 kill %1
 ```
-Expected: build toont routes voor `/nl/...` én `/en/...`; e2e `ℹ pass 9`, `ℹ fail 0`. De sitemap bevat nu voor elke route beide talen met `xhtml:link`-alternates (Engelse tekst is nog Nederlands, dat is de bedoeling van dit skelet).
+Expected: build toont routes voor `/nl/...` én `/en/...`; e2e `ℹ pass 10`, `ℹ fail 0`. De sitemap bevat nu voor elke route beide talen met `xhtml:link`-alternates (Engelse tekst is nog Nederlands, dat is de bedoeling van dit skelet).
 
 ```bash
 git add -A
@@ -4318,12 +4476,23 @@ const contact = (voor?: AanvraagKeuze) => `${href(L, "contact")}${voor ? `?voor=
 const mailBody = [
   "Hi Nathaniel,",
   "",
-  "- What I need you for (website / hosting / help): ",
+  "- What I need help with (website / hosting / tech help): ",
   "- My current website (or: I don't have one yet): ",
   "- What kind of business I run, and where: ",
   "",
   "Kind regards,",
 ].join("\n");
+
+/** Knoppen naar het contactformulier. `nav.cta` leidt zijn labels hiervan af, zodat ze niet uiteenlopen. */
+const cta = {
+  contact: { label: "Get in touch", href: contact() },
+  demo: { label: "Free demo", href: contact("website") },
+  demoLang: { label: "Request your free demo", href: contact("website") },
+  hosting: { label: "Request hosting", href: contact("hosting") },
+  hulp: { label: "Request help", href: contact("hulp") },
+  whatsapp: "WhatsApp me",
+  call: "Call",
+};
 
 export const ui: UiDict = {
   skipLink: "Skip to content",
@@ -4342,12 +4511,12 @@ export const ui: UiDict = {
     menu: "Menu",
     themeRow: "Appearance",
     langRow: "Language",
-    cta: { demo: "Free demo", hosting: "Request hosting", hulp: "Request help", contact: "Contact" },
+    cta: { demo: cta.demo.label, hosting: cta.hosting.label, hulp: cta.hulp.label, contact: "Contact" },
   },
   theme: { toLight: "Switch to light theme", toDark: "Switch to dark theme", light: "Light theme", dark: "Dark theme" },
   lang: { nl: "Nederlands", en: "English", switchTo: { nl: "Schakel naar Nederlands", en: "Switch to English" } },
   footer: {
-    tagline: "Everything around your website. One point of contact.",
+    tagline: "Everything to do with your website. One point of contact.",
     place: `${site.city}, the Netherlands`,
     services: "Services",
     more: "More",
@@ -4366,25 +4535,17 @@ export const ui: UiDict = {
     vat: "Prices incl. VAT",
   },
   crumbs: { aria: "Breadcrumb", home: "Home" },
-  cta: {
-    contact: { label: "Get in touch", href: contact() },
-    demo: { label: "Free demo", href: contact("website") },
-    demoLang: { label: "Request your free demo", href: contact("website") },
-    hosting: { label: "Request hosting", href: contact("hosting") },
-    hulp: { label: "Request help", href: contact("hulp") },
-    whatsapp: "Message me on WhatsApp",
-    call: "Call",
-  },
-  ctaBand: { orCall: "Or call", reply: "Reply within one working day, no obligation." },
+  cta,
+  ctaBand: { orCall: "Or call", reply: "I reply within one working day, no obligation." },
   fab: { label: "Got a question?", aria: "Got a question? Send me a WhatsApp message" },
-  stickyBar: { aria: "Direct contact", call: "Call", whatsapp: "WhatsApp" },
+  stickyBar: { aria: "Quick contact", call: "Call", whatsapp: "WhatsApp" },
   mailto: `mailto:${site.email}?subject=${encodeURIComponent("Enquiry via hitzdigital.nl")}&body=${encodeURIComponent(mailBody)}`,
   form: {
     legend: "What can I help you with?",
     choices: {
       website: { label: "New website", submit: "Request your free demo" },
       hosting: { label: "Hosting & domain", submit: "Request hosting" },
-      hulp: { label: "I'm stuck", submit: "Request help" },
+      hulp: { label: "Stuck on something", submit: "Request help" },
       anders: { label: "Something else", submit: "Send" },
     },
     name: "Name",
@@ -4394,20 +4555,22 @@ export const ui: UiDict = {
     website: "Your website, if you have one",
     websitePlaceholder: "https://… or: no site yet",
     company: "What kind of business do you run, and where?",
-    companyPlaceholder: "e.g. a painting company in Rotterdam",
-    message: "What's going on?",
+    companyPlaceholder: "e.g. a painter and decorator in Rotterdam",
+    message: "What's the situation?",
     messagePlaceholder: "Short is fine.",
     sending: "Sending…",
-    privacy: "See privacy policy",
+    privacy: "Read the privacy policy",
     privacyHref: href(L, "privacy"),
     ok: "Done! Your enquiry has been sent. I'll reply within one working day.",
-    failed: "Sending didn't work. Feel free to email me directly at",
+    failed: "That didn't send. Email me directly at",
     errors: {
-      name: "Please enter your name, so I know who to call or email back.",
+      name: "Please enter your name, so I know who I'm calling or emailing back.",
       email: "Please enter an email address I can reach you on.",
     },
-    packageInterest: "I'm interested in the {pakket} plan.",
-    mailtoSubject: "Enquiry: {voor} via hitzdigital.nl",
+    packageInterest: "I'm interested in the {pakket} option.",
+    /** Nette pakketnamen voor `{pakket}`; onbekende ids vallen terug op de id met hoofdletter. */
+    packageNames: { online: "Online", onderhoud: "Maintenance", webshop: "Webshop", "computer-apk": "Computer check-up", "website-apk": "Website check-up" },
+    mailtoSubject: "Enquiry via hitzdigital.nl: {voor}",
     mailtoFields: { voor: "Regarding", naam: "Name", email: "Email", telefoon: "Phone", website: "Website", bedrijf: "Business and location" },
   },
   notFound: {
@@ -4428,7 +4591,7 @@ export const ui: UiDict = {
       },
       {
         name: "Hosting, domain and maintenance",
-        description: "Domain, hosting, business email and small changes in one monthly fee. Cancel monthly.",
+        description: "Domain, hosting, business email and small changes in one monthly fee. Cancel any time.",
       },
       {
         name: "Computer and website help",
@@ -4437,15 +4600,16 @@ export const ui: UiDict = {
       },
     ],
   },
-  workCard: { viewCase: "View the case", tags: { demo: "Demo", eigen: "Own project" } },
-  plan: { mostChosen: "Most popular", perMonthShort: "/mo", choose: (name: string) => `Choose ${name}` },
+  workCard: { viewCase: "View the project", tags: { demo: "Demo", eigen: "Own project" } },
+  plan: { mostChosen: "Most popular", perMonthShort: "/month", choose: (name: string) => `Choose ${name}` },
   faq: { eyebrow: "Frequently asked", title: "Questions I often get." },
+  voorNa: { before: "Before", after: "After", aria: "Compare before and after" },
 };
 ```
 
 - [ ] **Step 2: e2e: Engelse 404-tekst**
 
-In de test `onbekend EN-pad: 404 met lang=en; /fr: 404` voeg toe: `assert.match(html, /This page doesn't exist/);` (lees eerst `const html = await res.text();` en gebruik die voor beide asserts).
+In de 404-test geen tekstcontrole toevoegen: het foutdocument bevat de teksten van beide talen in de RSC-payload, dus tekst onderscheidt de taal niet.
 
 - [ ] **Step 3: Typecheck, bouw, nalezen, commit**
 
@@ -4468,40 +4632,42 @@ git commit -m "EN: site-schil (nav, footer, formulier, 404, schema)"
 - [ ] **Step 1: Blok `home` in `lib/i18n/en/pages.tsx`**
 
 ```tsx
+// Bovenin het bestand, bij de andere accentkoppen (de helpers `star`/`accented` staan er al, uit de NL-kopie):
+const homeH1 = { pre: "Everything to do with your ", accent: "website", post: ". One point of contact." };
+
   home: {
     meta: {
       title: "Websites, hosting and tech help for small businesses | HitzDigital",
-      description:
-        "I build websites for small businesses, keep them online and help when your computer or site lets you down. One person, short lines, based in the Netherlands and working with clients here and abroad. Websites from €250, hosting from €5 a month, all incl. VAT.",
+      description: `Websites and hosting for small businesses, kept online and looked after. Based in the Netherlands, working with clients here and abroad. Websites from ${websiteFrom}, hosting from ${euro(online.monthly)} a month, all incl. VAT.`,
     },
     og: {
-      title: "Everything around your *website*. One point of contact.",
+      title: star(homeH1),
       kicker: "Websites · Hosting · Help",
       sub: "Websites, hosting and tech help for small businesses. One person, based in the Netherlands, working with clients here and abroad.",
     },
     hero: {
-      h1: { pre: "Everything around your ", accent: "website", post: ". One point of contact." },
-      sub: "Websites, hosting and tech help for small businesses. One person, based in the Netherlands, working with clients here and abroad. I build your site, keep it online and step in the moment something breaks.",
+      h1: homeH1,
+      sub: "Websites, hosting and tech help for small businesses. Based in the Netherlands, working with clients here and abroad. I build your site, keep it online and step in the moment something breaks.",
       primary: "See what I do",
       secondary: "Get in touch",
       chips: {
         mobile: "Mobile-friendly",
         fast: "Fast loading",
+        seo: "SEO-ready",
         structure: "Clear structure",
         modern: "Modern look",
-        selfManaged: "Easy to manage yourself",
+        selfManaged: "Manage it yourself",
         friendly: "User-friendly",
         professional: "Professional impression",
+        code: { fast: "// fast loading", clean: "// clean code", perf: "// better performance" },
       },
     },
     pijlers: { title: "Three things I take care of for you." },
-    zoWerkIk: { title: "Clear upfront. No surprises afterwards." },
+    zoWerkIk: { title: "Clear up front. No surprises afterwards." },
     werk: {
       eyebrow: "Work",
-      teaserTitle: "Businesses that went before you.",
-      allTitle: "Examples of my work.",
+      teaserTitle: "Businesses I've already built for.",
       all: "All my work",
-      intro: "No templates, no stock photos. Sites I built for real businesses, and for myself.",
     },
     contact: {
       eyebrow: "Contact",
@@ -4529,7 +4695,7 @@ git commit -m "EN: site-schil (nav, footer, formulier, 404, schema)"
       id: "hosting",
       n: "02",
       title: "Hosting & domains",
-      body: "Domain, hosting, email and one small change per month in one fee. Cancel monthly.",
+      body: "Domain, hosting, email and one small change per month in one monthly fee. Cancel any time.",
       price: `From ${euro(online.monthly)} a month`,
       href: href(L, "hosting"),
     },
@@ -4538,7 +4704,7 @@ git commit -m "EN: site-schil (nav, footer, formulier, 404, schema)"
       n: "03",
       title: "Help",
       body: "Computer, email, domain or website: I fix it and explain it. Usually remote, via screen sharing, wherever you are.",
-      price: `${euro(pricing.hulp.quarter)} per quarter hour · No fix, no fee.`,
+      price: `${euro(pricing.hulp.quarter)} per 15 minutes · ${guaranteeLine}`,
       href: href(L, "hulp"),
     },
   ],
@@ -4546,19 +4712,19 @@ git commit -m "EN: site-schil (nav, footer, formulier, 404, schema)"
 
 ```ts
   zoWerkIk: [
-    { title: "Yours, and it stays that way", body: "Your website and domain are registered in your name. No lock-in, no being stuck with me." },
+    { title: "Yours, and it stays that way", body: "Your website and domain are registered in your name. No lock-in. You're never stuck with me." },
     {
-      title: "Clear pricing upfront",
-      body: `Websites from ${euro(pricing.website.from)}, hosting from ${euro(online.monthly)} a month, maintenance ${euro(onderhoud.monthly)} a month, help ${euro(pricing.hulp.quarter)} per quarter hour. All incl. VAT, no small print.`,
+      title: "Clear pricing up front",
+      body: `Websites from ${euro(pricing.website.from)}, hosting from ${euro(online.monthly)} a month, maintenance ${euro(onderhoud.monthly)} a month, help ${euro(pricing.hulp.quarter)} per 15 minutes. All incl. VAT, no small print.`,
     },
-    { title: "Cancel monthly", body: "Hosting included. Your domain simply runs until the end of the year it's registered for." },
+    { title: "Cancel any time", body: "That includes the hosting. Your domain just runs to the end of the year it's registered for." },
     { title: "One message is enough", body: "No account manager, no ticket system. You message or call me, and I reply myself." },
   ],
 
   over: {
-    title: "One person. Short lines. No hassle.",
-    body: "I'm Nathaniel, from Puttershoek in the Netherlands. I run HitzDigital on my own, for small businesses here and abroad. I build your website, keep it online and step in the moment your computer or email lets you down. No big agency with templates, but one person you can simply message.",
-    facts: ["One point of contact", "Clear agreements", "Based in the Netherlands"],
+    title: "One person. Straight answers. No hassle.",
+    body: "I'm Nathaniel, from Puttershoek in the Netherlands. I run HitzDigital on my own, for small businesses here and abroad. I build your website, keep it online and step in the moment your computer or email lets you down. Not a big agency working from templates. Just one person you can message directly.",
+    facts: ["One point of contact", "Everything agreed up front", "Based in the Netherlands"],
     portraitAlt: "Nathaniel, founder of HitzDigital",
   },
 ```
@@ -4584,42 +4750,44 @@ git commit -m "EN: homepage"
 - [ ] **Step 1: Blok `websites` in `lib/i18n/en/pages.tsx`**
 
 ```tsx
+// Bovenin het bestand, bij de andere accentkoppen (de helpers `star`/`accented` staan er al, uit de NL-kopie):
+const websitesH1 = { pre: "A website that instantly feels more ", accent: "professional", post: "." };
+
   websites: {
     meta: {
       title: "Website design for small businesses | HitzDigital",
-      description:
-        "A modern website for your business, from €250 incl. VAT. You see a free demo of your own homepage first, then you decide. For trades, hospitality and independent professionals, in the Netherlands and abroad.",
+      description: `A modern website for your business, from ${websiteFrom} incl. VAT. You see a free demo of your own homepage first, then you decide. For trades, hospitality and independent professionals, in the Netherlands and abroad.`,
     },
     og: {
-      title: "A website that instantly feels more *professional*.",
+      title: star(websitesH1),
       kicker: "Websites",
-      sub: "You see a free demo of your own homepage first. Then you decide. From €250 incl. VAT.",
+      sub: `You see a free demo of your own homepage first. Then you decide. From ${websiteFrom} incl. VAT.`,
     },
     crumb: "Websites",
     werkwijzeTitle: "A better website in three steps.",
     hero: {
-      title: <>A website that instantly feels more {accent("professional")}.</>,
-      lead: "For cafés, painters, installers, landscapers and other hands-on businesses, wherever you're based. You see a real demo of your own site first. Then you decide.",
+      title: accented(websitesH1),
+      lead: "For cafés, painters and decorators, plumbers and heating engineers, landscape gardeners and other hands-on businesses, wherever you're based. You see a real demo of your own site first. Then you decide.",
       secondary: "See my work",
-      asideAlt: "Website of Mourits Schilderwerken on desktop",
+      asideAlt: "The Mourits Schilderwerken website on desktop",
     },
     options: { title: "Two starting points, one approach." },
     included: {
       title: "Everything a good site needs.",
-      lead: (from: string) => `No loose extras or surprises afterwards. This comes as standard, even with a site from ${from}.`,
+      lead: (from: string) => `No optional extras or surprises later. This comes as standard, even with a site from ${from}.`,
     },
     price: {
       title: (from: string) => `A complete website from ${from}.`,
       lead: (note: string, monthly: string) =>
-        `Incl. VAT. ${note} Want me to keep it online too? Hosting & maintenance is ${monthly} a month, including your domain and one small change per month. Cancel monthly.`,
+        `Incl. VAT. ${note} Want me to keep it online too? Hosting & maintenance is ${monthly} a month, including your .nl domain and one small change per month. Cancel any time.`,
       moreHosting: "More about hosting",
       card: {
         name: "Website",
         from: (from: string) => `from ${from}`,
-        bullets: ["Free demo of your homepage upfront", "Complete site, on your own domain", "Copy and photos taken care of", "Easy to edit yourself"],
+        bullets: ["Free demo of your homepage up front", "Complete site, on your own domain", "Copy and photos taken care of", "Easy to edit yourself"],
         hostingRow: "Hosting & maintenance",
         perMonth: (amount: string) => `${amount} a month`,
-        vat: "All prices incl. 21% VAT. VAT may differ for businesses outside the Netherlands.",
+        vat: "All prices incl. 21% VAT. VAT may differ outside the Netherlands.",
       },
     },
     voorNa: {
@@ -4627,7 +4795,7 @@ git commit -m "EN: homepage"
       title: "From dated to polished.",
       lead: (title: string, branche: string, plaats: string) =>
         `${title}, a ${branche.toLowerCase()} in ${plaats}. Drag the handle to compare the old and the new site, exactly as your customer sees them on their phone.`,
-      link: "Read the full case",
+      link: "Read the full story",
     },
     ctaBand: {
       title: "Curious what your website could look like?",
@@ -4668,7 +4836,7 @@ git commit -m "EN: homepage"
   websiteInbegrepen: [
     "Designed for your phone, because that's where your customers look",
     "Fast, even on a slow connection",
-    "Findable in Google for your service and your area",
+    "Easy to find on Google for your service and your area",
     "Edit copy, photos and prices yourself",
     "Copy and photos taken care of, or you supply them",
     "Domain in your name",
@@ -4708,21 +4876,23 @@ Openstaande zakelijke keuze voor Nathaniel (niet in de spec): het Onderhoud-pakk
 - [ ] **Step 1: Blok `hosting` in `lib/i18n/en/pages.tsx`**
 
 ```tsx
+// Bovenin het bestand, bij de andere accentkoppen (de helpers `star`/`accented` staan er al, uit de NL-kopie):
+const hostingH1 = { pre: "Stay online, ", accent: "without the hassle", post: "." };
+
   hosting: {
     meta: {
       title: "Website hosting, domain and maintenance | HitzDigital",
-      description:
-        "Hosting from €5 a month, or maintenance with domain and one small change per month for €15. Cancel monthly, all incl. VAT. I handle the switch from your current host.",
+      description: `Hosting from ${euro(online.monthly)} a month, or maintenance with domain and one small change per month for ${euro(onderhoud.monthly)}. Cancel any time, all incl. VAT. I handle the switch from your current host.`,
     },
     og: {
-      title: "Stay online, *without the hassle*.",
+      title: star(hostingH1),
       kicker: "Hosting & domains",
-      sub: "Domain, hosting, email and one small change per month in one fee. Cancel monthly.",
+      sub: "Domain, hosting, email and one small change per month in one monthly fee. Cancel any time.",
     },
     crumb: "Hosting & domains",
     hero: {
-      title: <>Stay online, {accent("without the hassle")}.</>,
-      lead: "Domain, hosting, email and one small change per month in one fee. Cancel monthly. And if anything comes up, you message me. No ticket system.",
+      title: accented(hostingH1),
+      lead: "Domain, hosting, email and one small change per month in one monthly fee. Cancel any time. And if anything comes up, you message me. No ticket system.",
       primary: "Choose your plan",
       secondary: "Switching? I'll handle it",
       asideLabel: "Always included",
@@ -4730,7 +4900,7 @@ Openstaande zakelijke keuze voor Nathaniel (niet in de spec): het Onderhoud-pakk
     packages: {
       title: "Two plans, one monthly fee.",
       lead: (mailOne: string) =>
-        `All prices incl. 21% VAT, cancel monthly. Pay monthly or yearly, whichever you prefer. A business mailbox on your own domain can be added to either plan, from ${mailOne} a month extra.`,
+        `All prices incl. 21% VAT, cancel any time. Pay monthly or yearly, whichever you prefer. A business mailbox on your own domain can be added to either plan, from ${mailOne} a month extra. VAT may differ outside the Netherlands.`,
       everyPlan: "With either plan.",
       tierPerMonth: (label: string) => `${label}, per month`,
     },
@@ -4742,7 +4912,7 @@ Openstaande zakelijke keuze voor Nathaniel (niet in de spec): het Onderhoud-pakk
       p2: (one: string, multi: string, gb: number, more: string) =>
         `Business email on your own domain (you@yourbusiness.com) is ${one} a month for one mailbox and ${multi} a month for two to five mailboxes together, each with ${gb} GB of storage, calendar and spam filter, working on your phone and laptop. ${more}`,
       rowDomain: "domain, per year",
-      note: "Incl. 21% VAT. Other extensions on request. VAT may differ for businesses outside the Netherlands.",
+      note: "Incl. 21% VAT. Other extensions on request. VAT may differ outside the Netherlands.",
     },
     switch: {
       title: "Leaving your current host? I'll handle it.",
@@ -4766,7 +4936,7 @@ Openstaande zakelijke keuze voor Nathaniel (niet in de spec): het Onderhoud-pakk
     "Updates and security",
     "Monitoring: I notice when your site goes down",
     "Domain in your name",
-    "Cancel monthly",
+    "Cancel any time",
   ],
   overstappen: [
     { n: "01", title: "You give me access", body: "To your current hosting or domain. Not sure where that is? We'll figure it out together." },
@@ -4774,25 +4944,25 @@ Openstaande zakelijke keuze voor Nathaniel (niet in de spec): het Onderhoud-pakk
     { n: "03", title: "Nothing goes offline", body: "Only once everything runs and works with me does the domain switch over. Your email keeps arriving as usual." },
   ],
   hostingFaq: [
-    { q: "What counts as a small change?", a: "Changing a text, photo, price or opening time. Something that's done within a quarter of an hour. A new page or design work falls outside it; I'm happy to do that, but at my quarter-hour rate. Unused time expires at the end of the month." },
+    { q: "What counts as a small change?", a: `Changing a text, photo, price or opening time. Something that's done within 15 minutes. A new page or design work falls outside it; I'm happy to do that, but at ${euro(pricing.hulp.quarter)} per 15 minutes. Unused time expires at the end of the month.` },
     { q: "What if I want to stop?", a: "You cancel per month, with no notice period of months. Your domain runs until the end of the year it's registered for; after that you can renew it or take it to another provider. Your site and your domain are and remain yours." },
     { q: "Does my domain stay mine?", a: "Yes. I register it in your name and with your details. I manage it for you, but you're the owner. If you ever want to leave, you simply take the domain with you." },
     { q: "How fast do you respond to an outage?", a: "I get an alert myself when your site goes down and usually get straight on it. If you notice something odd, message or call me; you don't need to open a ticket." },
     { q: "Can I host my old WordPress site with you?", a: "Yes. Even if I didn't build the site, I can take over hosting, domain and email. I'll first take a quick look at whether the site is technically healthy." },
-    { q: "Do I pay monthly or yearly?", a: "Whichever you prefer. Yearly is my preference: one invoice, done. If you cancel partway through, you get the remaining full months back. You pay by bank transfer, direct debit or iDEAL and always receive a proper invoice with VAT. All prices are incl. 21% VAT; VAT may differ for businesses outside the Netherlands." },
+    { q: "Do I pay monthly or yearly?", a: "Whichever you prefer. Yearly is my preference: one invoice, done. If you cancel partway through, you get the remaining full months back. You pay by direct debit or iDEAL and always receive a proper invoice with VAT. All prices are incl. 21% VAT; VAT may differ for businesses outside the Netherlands." },
   ],
   plans: {
     online: {
       name: "Online",
       summary: "Hosting of your website only.",
       includes: ["SSL certificate", "Daily backups", "Updates", "Monitoring"],
-      excludes: ["Domain name (separately, from €15 a year)", "Changes (at quarter-hour rate)"],
+      excludes: ["Domain name (separately, from €15 a year)", `Changes (${euro(pricing.hulp.quarter)} per 15 minutes)`],
       fairUse: undefined,
     },
     onderhoud: {
       name: "Maintenance",
-      summary: "Hosting, your domain and one small change per month.",
-      includes: ["Everything in Online", "Domain in your name", "1 small change per month (up to 15 minutes)", "Yearly check on speed and copy"],
+      summary: "Hosting, your .nl domain and one small change per month.",
+      includes: ["Everything in Online", ".nl domain in your name (other extensions on request)", "1 small change per month (up to 15 minutes)", "Yearly check on speed and copy"],
       excludes: [],
       fairUse: "A small change is, for example, a text, photo, price or opening time. No new pages or design work. Unused time expires.",
     },
@@ -4839,44 +5009,46 @@ De Nederlandse "APK" (autokeuring) heet in het Engels "check-up". De ids `comput
 - [ ] **Step 1: Blok `hulp` in `lib/i18n/en/pages.tsx`**
 
 ```tsx
+// Bovenin het bestand, bij de andere accentkoppen (de helpers `star`/`accented` staan er al, uit de NL-kopie):
+const hulpH1 = { pre: "Stuck? I'll take a look ", accent: "right away", post: "." };
+
   hulp: {
     meta: {
       title: "Computer and website help, remote or on-site | HitzDigital",
-      description:
-        "Stuck? I'll take a look right away. Help with your computer, email, domain, network or website: remote via screen sharing wherever you are, on-site in the Hoeksche Waard area. €15 per quarter hour incl. VAT. No fix, no fee.",
+      description: `Stuck? I'll take a look right away. Help with your computer, email, domain, network or website: remote via screen sharing wherever you are, on-site in the Hoeksche Waard area. ${quarter} per 15 minutes incl. VAT. No fix? No fee.`,
     },
     og: {
-      title: "Stuck? I'll take a look *right away*.",
+      title: star(hulpH1),
       kicker: "Computer and website help",
-      sub: "€15 per quarter hour incl. VAT. Remote wherever you are, on-site in the Hoeksche Waard. No fix, no fee.",
+      sub: `${quarter} per 15 minutes incl. VAT. Remote wherever you are, on-site in the Hoeksche Waard. No fix? No fee.`,
     },
     crumb: "Help",
     hero: {
-      title: <>Stuck? I'll take a look {accent("right away")}.</>,
-      lead: "For small businesses, and for home users too. Your laptop, email, domain, network or website: I fix it and explain it in plain language. Usually remote via screen sharing, started within fifteen minutes. Need me on-site? In the Hoeksche Waard area, I'll come to you.",
+      title: accented(hulpH1),
+      lead: "For small businesses, and for home users too. Your laptop, email, domain, network or website: I fix it and explain it in plain language. Mostly remote via screen sharing, usually within 15 minutes. Need me on-site? In the Hoeksche Waard area, I'll come to you.",
       aside: {
         rate: "Rate",
         vat: "incl. VAT",
-        perQuarter: "per quarter hour",
-        guaranteeBody: "We agree upfront what the problem is. If I don't fix it, it costs you nothing.",
+        perQuarter: "per 15 minutes",
+        guaranteeBody: "We agree up front what the problem is. If I don't fix it, it costs you nothing.",
       },
     },
     apk: {
       title: "One fixed price, no surprises.",
       items: [
         {
-          id: "computer-apk",
+          id: "computer-apk" as const,
           title: "Computer check-up",
           body: "Updates and clean-up, virus and malware scan, speed check, backup and passwords with two-step verification checked. You get a short list of what I did and what you can still do yourself. About 45 minutes, remote or on-site.",
         },
         {
-          id: "website-apk",
+          id: "website-apk" as const,
           title: "Website check-up",
           body: "Speed, mobile, findability, SSL, backups and outdated plugins, with a short report in plain language. Even if I didn't build your site. Disappointing result? Then I'll build a free demo of how it could be.",
         },
       ],
       plan: (title: string) => `Book a ${title}`,
-      card: (quarters: number, price: string, validity: string) => `Need help more often? Prepaid card: ${quarters} quarter hours for ${price}, ${validity}.`,
+      card: (quarters: number, price: string, validity: string) => `Need help more often? Prepaid card: ${quarters} blocks of 15 minutes for ${price}, ${validity}.`,
     },
     help: {
       eyebrow: "What I help with",
@@ -4887,29 +5059,29 @@ De Nederlandse "APK" (autokeuring) heet in het Engels "check-up". De ids `comput
     how: {
       title: "Call, share your screen, sorted.",
       homeLead: "Stuck at home?",
-      homeBody: (quarter: string) => ` I also help private individuals in the Hoeksche Waard area, at the same rate: ${quarter} per quarter hour, incl. VAT.`,
+      homeBody: (quarter: string) => `I also help private individuals in the Hoeksche Waard area, at the same rate: ${quarter} per 15 minutes, incl. VAT.`,
     },
     ctaBand: { title: "Stuck right now?", body: "Call or message me and I'll take a look straight away. Prefer to send a message first? Tell me briefly what's going on." },
     schema: {
       name: "Computer and website help",
       serviceType: "Computer support and website support",
-      perQuarter: "Help per quarter hour",
-      unit: "quarter hour",
-      computerApk: "Computer check-up",
-      websiteApk: "Website check-up",
-      card: (quarters: number) => `Prepaid card, ${quarters} quarter hours`,
+      perQuarter: "Help per 15 minutes",
+      unit: "15 minutes",
+      card: (quarters: number) => `Prepaid card, ${quarters} blocks of 15 minutes`,
     },
   },
 ```
 
 - [ ] **Step 2: Hulp-blokken in `lib/i18n/en/services.ts`**
 
+Vertaal bovenin ook de const: `const guaranteeLine = "No fix? No fee.";`. Die staat al in `pijlers[2].price` (`${euro(pricing.hulp.quarter)} per 15 minutes · ${guaranteeLine}`), zodat de zin één keer per taal bestaat.
+
 ```ts
   hulpHelp: [
     { title: "Email, domain and hosting", body: "Setting up business email, switching providers, DNS, an expired domain." },
     { title: "Your website, even if I didn't build it", body: "WordPress fixes, updates, a form that doesn't work, a slow site." },
     { title: "Google Business Profile, Maps and reviews", body: "Easy to find, with correct opening hours, photos and a link to your site." },
-    { title: "Your workplace", body: "Setting up, cleaning up and speeding up your laptop or PC, backup and security." },
+    { title: "Your computer setup", body: "Setting up, cleaning up and speeding up your laptop or PC, backup and security." },
     { title: "Printers, wifi, phone and tablet", body: "Everything that needs to work together with your email and your site." },
     { title: "Office network with TP-Link Omada", body: "Wifi access points, guest network and management, neatly set up and explained." },
     { title: "Light hardware check and cleaning", body: "Dust out, ventilation checked, disk and memory tested. On-site only." },
@@ -4922,30 +5094,23 @@ De Nederlandse "APK" (autokeuring) heet in het Engels "check-up". De ids `comput
   ],
   hulpStappen: [
     { n: "01", title: "You call or message", body: "Tell me briefly what's going wrong. A photo of the screen already helps." },
-    { n: "02", title: "I take a look right away", body: "Via screen sharing, usually started within fifteen minutes. Need me on-site in my region? Then I'll come by." },
-    { n: "03", title: "You only pay for the time it takes", body: "Per quarter hour, incl. VAT. And nothing if it doesn't work out." },
+    { n: "02", title: "I take a look right away", body: "Via screen sharing, usually within 15 minutes. Need me on-site in the Hoeksche Waard area? Then I'll come to you." },
+    { n: "03", title: "You only pay for the time it takes", body: "Per 15 minutes, incl. VAT. And nothing if it doesn't work out." },
   ],
   hulpFaq: [
     { q: "Do you come on-site?", a: "Yes, in the Hoeksche Waard area (near Rotterdam), without call-out charges. Most problems are solved faster remotely, so I try that first. On-site I charge per half hour, with a minimum of one hour." },
     { q: "Do you help clients outside the Netherlands?", a: "Yes, remotely. Screen sharing works the same from London or Dublin as from Rotterdam. We agree a time that suits your time zone, and you pay the same rate." },
     { q: "How fast can you help?", a: "Remotely often the same day, sometimes straight away. On-site usually within a few working days." },
     { q: "How does remote help work?", a: "You open a link I send you, and I see your screen while we talk. You stay in control and can end it at any time. Nothing is left behind on your computer." },
-    { q: "What if it doesn't work out?", a: "Then you pay nothing for that help. We agree upfront what the problem is; if I don't fix it, it costs you nothing. That doesn't apply to the check-ups, explanations and advice, or when the cause is beyond my reach and I've told you so." },
+    { q: "What if it doesn't work out?", a: "Then you pay nothing for that help. We agree up front what the problem is; if I don't fix it, it costs you nothing. That doesn't apply to the check-ups, explanations and advice, or when the cause is beyond my reach and I've told you so." },
     { q: "Do you also help with my phone or tablet?", a: "Yes. Setting up email, transferring photos, setting up a new phone, tidying up and securing it: it's all part of it." },
-    { q: "Do you help private individuals too?", a: "Yes, in the Hoeksche Waard area, at the same rate: €15 per quarter hour incl. VAT. Businesses come first when it's busy, but you're welcome." },
+    { q: "Do you help private individuals too?", a: `Yes, in the Hoeksche Waard area, at the same rate: ${euro(pricing.hulp.quarter)} per 15 minutes incl. VAT. Businesses come first when it's busy, but you're welcome.` },
   ],
   hulpTarief: {
-    billing: "Remote per quarter hour; on-site per half hour, minimum one hour.",
+    billing: "Remote per 15 minutes; on-site per half hour, minimum one hour.",
     travel: "No call-out charges in the Hoeksche Waard area.",
     cardValidity: "valid for 12 months",
-    guarantee: {
-      line: "No fix? No fee.",
-      conditions: [
-        "Applies per problem we name together upfront.",
-        "Not for the check-ups, explanations and advice; I always deliver those.",
-        "Not when the cause is beyond my reach (broken hardware, an outage at your provider) and I've told you so.",
-      ],
-    },
+    guarantee: { line: "No fix? No fee." },
   },
 ```
 
@@ -4973,7 +5138,7 @@ git commit -m "EN: help"
   werk: {
     meta: {
       title: "Work: websites for small businesses | HitzDigital",
-      description: "Examples of websites I've built: for a metalworking company, a painting company, a care professional and more. Click through to the cases.",
+      description: "Examples of websites I've built: for a metalworking company, a painting company, a care professional and more. Click through to the projects.",
     },
     og: {
       title: "Examples of my *work*.",
@@ -4992,11 +5157,11 @@ git commit -m "EN: help"
   },
 
   case: {
-    metaTitle: (title: string, branche: string, plaats: string) => `Website for ${title}, ${branche.toLowerCase()} in ${plaats} | HitzDigital`,
+    metaTitle: (title: string, branche: string, plaats: string) => `Website for ${title}, a ${branche.toLowerCase()} in ${plaats} | HitzDigital`,
     ogTitle: (title: string) => `Website for *${title}*`,
     ogFallback: { title: "Work by HitzDigital", kicker: "Work" },
     viewSite: "Visit the site",
-    desktopAlt: (title: string) => `Website of ${title} on desktop`,
+    desktopAlt: (title: string) => `The ${title} website on desktop`,
     situation: "Situation",
     approach: "Approach",
     result: "Result",
@@ -5017,26 +5182,25 @@ import type { WorkDict } from "../nl/work";
 
 export const work: WorkDict = {
   items: {
-    "volmer-techniek": { meta: "Metalworking · Puttershoek", alt: "Website of Volmer Techniek on mobile" },
-    "mourits-schilderwerken": { meta: "Painting company · Klaaswaal", alt: "Website of Mourits Schilderwerken on mobile" },
-    "monster-zorg": { meta: "Freelance care professional · Gouda", alt: "Website of Monster Zorg on mobile" },
-    "youniek-art": { meta: "Photography portfolio", alt: "Website of Youniek Art on mobile" },
-    lesbosreizen: { meta: "Travel guide to Lesbos", alt: "Website of LesbosReizen on mobile" },
+    "volmer-techniek": { meta: "Metalworking · Puttershoek", alt: "The Volmer Techniek website on mobile" },
+    "mourits-schilderwerken": { meta: "Painting company · Klaaswaal", alt: "The Mourits Schilderwerken website on mobile" },
+    "monster-zorg": { meta: "Freelance care professional · Gouda", alt: "The Monster Zorg website on mobile" },
+    "youniek-art": { meta: "Photography portfolio", alt: "The Youniek Art website on mobile" },
+    lesbosreizen: { meta: "Travel guide to Lesbos", alt: "The LesbosReizen website on mobile" },
     "cafe-centrum": { meta: "Local café · Hoeksche Waard", alt: "Demo website for Café 't Centrum on mobile" },
-    opgietingen: { meta: "Calendar of sauna aufguss events", alt: "Opgietingen.nl on mobile" },
+    opgietingen: { meta: "Calendar of sauna aufguss (steam-infusion) events", alt: "Opgietingen.nl on mobile" },
     festivaldiscounter: { meta: "Comparing festival tickets", alt: "Festivaldiscounter on mobile" },
   },
   cases: {
     "volmer-techniek": {
-      branche: "Metalworking",
-      kicker: "Metalworking · Puttershoek",
+      branche: "Metalworking company",
       intro: "A bilingual website for a machining company that works on-site and in its own workshop, with a quote form, project gallery and service area.",
       situatie:
-        "Volmer Techniek B.V. from Puttershoek machines, repairs and builds machinery, on-site at the customer and in its own workshop. The old website was a standard WordPress site with an off-the-shelf theme. For a company that also works outside the Netherlands, the site had to work in two languages and present the six disciplines clearly side by side.",
+        "Volmer Techniek B.V. from Puttershoek carries out machining and repairs and builds machinery, on-site at the customer's premises and in its own workshop. The old website was a standard WordPress site with an off-the-shelf theme. For a company that also works outside the Netherlands, the site had to work in two languages and present the six disciplines clearly side by side.",
       aanpak: [
         "Six services, each with its own block: on-site machining, workshop machining, industrial repairs, machine building and custom work, retrofit, preventive maintenance.",
         "Dutch and English with a language switch, so international customers get the same site.",
-        "A five-step way of working and a quote form with request type, next to a button to call directly.",
+        "A five-step process and a quote form with request type, next to a button to call directly.",
         "Project gallery with real photos of the work and a map of the service area.",
         "Certifications (VCA, Koninklijke Metaalunie) and 24/7 availability clearly in view.",
       ],
@@ -5050,7 +5214,6 @@ export const work: WorkDict = {
     },
     "mourits-schilderwerken": {
       branche: "Painting company",
-      kicker: "Painting company · Klaaswaal",
       intro: "A new site for a painting company from Klaaswaal that has worked across the Hoeksche Waard since 2015: five services, a project gallery and one-tap calling from your phone.",
       situatie:
         "Mourits Schilderwerken B.V. has worked from Klaaswaal across the whole Hoeksche Waard since 2015: interior and exterior painting, wall finishing, glazing, restoration and spray work. The old website dated from the company's early days, with a photo slider and a table of contact details at the top, and was awkward to use on a phone.",
@@ -5063,19 +5226,18 @@ export const work: WorkDict = {
       resultaat: [
         "Site on its own domain mouritsschilderwerken.nl, with contact form, landline and mobile number in one place.",
         "On mobile you call with one tap; on desktop the advice request is always in view.",
-        "Findable by service and by place: every service has its own page, and the service area is written out.",
+        "Easy to find by service and by place: every service has its own page, and the service area is written out.",
       ],
       voorNaAlt: { voor: "The old website of Mourits Schilderwerken on mobile", na: "The new website of Mourits Schilderwerken on mobile" },
       quote: undefined,
     },
     "monster-zorg": {
       branche: "Freelance care professional",
-      kicker: "Freelance care professional · Gouda",
       intro: "A personal site from scratch for an applied psychologist and care professional who works freelance: who he is, what he does, and how to reach him.",
       situatie:
         "Jarno Monster works as an applied psychologist and care professional with over eight years of experience in supported living, and takes on freelance assignments with care organisations. There was no website yet. Clients needed to see quickly what he does, what his background is and how to reach him.",
       aanpak: [
-        "One page with a clear order: who is Jarno, what he offers, what experience he has, why Monster Zorg, and contact.",
+        "One page with a clear running order: who is Jarno, what he offers, what experience he has, why Monster Zorg, and contact.",
         "A timeline from 2016 to now that shows his career at a glance.",
         "Calling and LinkedIn directly from the navigation; no detours.",
         "Warm, light design with a real portrait instead of stock imagery.",
@@ -5124,11 +5286,11 @@ git commit -m "EN: work en cases"
       title: "What can I help you with?",
       lead: "Pick what you need me for and tell me briefly what's going on. I reply within one working day, no obligation. Site down or urgent? Call.",
     },
-    direct: { eyebrow: "Prefer to skip the form", whatsappNote: " · quickest for short questions", callNote: " · call if your site is down or it's urgent" },
+    direct: { eyebrow: "Prefer to skip the form", whatsappNote: "quickest for short questions", callNote: "call if your site is down or it's urgent" },
     about: {
       place: (founder: string, city: string) => `${founder} · ${city}, the Netherlands`,
       kvk: (kvk: string) => `Chamber of Commerce (KvK) ${kvk}`,
-      reply: "Reply within one working day. Remote, or on-site in my region.",
+      reply: "I reply within one working day. Remote, or on-site in my region.",
     },
     faqTitle: "Quick questions",
     schemaName: "Contact HitzDigital",
@@ -5171,13 +5333,20 @@ git commit -m "EN: contact"
       title: "Privacy policy | HitzDigital",
       description: "What HitzDigital does with your data, in plain language: what I keep, why, for how long, who I share it with and what your rights are.",
     },
+    og: { title: "*Privacy policy*", kicker: "Privacy", sub: privacyLead },
     crumb: "Privacy",
     title: "Privacy policy",
-    lead: "I think it matters that you know what I do with your data. This page explains how I handle it.",
+    lead: privacyLead,
     versionLine: (version: string, updated: string) => `Version ${version}, updated ${updated}`,
     version: "2.0",
     updated: "29 August 2026",
   },
+```
+
+Met, bij de consts bovenin `lib/i18n/en/pages.tsx` (net als in de NL-versie, zodat de lead niet dubbel staat):
+
+```tsx
+const privacyLead = "I think it matters that you know what I do with your data. This page explains how I handle it.";
 ```
 
 - [ ] **Step 2: Vertaal `lib/i18n/en/legal-privacy.tsx`**
@@ -5185,6 +5354,7 @@ git commit -m "EN: contact"
 Vertaal de body van `lib/i18n/nl/legal-privacy.tsx` alinea voor alinea, met deze harde regels:
 
 - Structuur identiek: dezelfde volgorde van `<h2>`, `<p>`, `<ul>`/`<li>` en `<strong>`. Geen alinea weglaten of toevoegen.
+- Bovenaan de body dezelfde vertaal-disclaimer als bij de voorwaarden: `<p><strong>This is a translation for convenience.</strong> The Dutch version, <a href={href("nl", "privacy")}>Privacybeleid</a>, is the binding one.</p>`.
 - Alle interpolaties (`{site.founder}`, `{site.city}`, `{site.kvk …}`, `{site.email}`) en alle `<a href=…>` blijven staan; de link naar de voorwaarden is `href(L, "voorwaarden")` met `L = "en"`.
 - Koppen, in deze volgorde: "Who is responsible for your data?", "What data do I keep about you?", "Why do I use your data?", "Who do I share your data with?", "How long do I keep your data?", "Websites I host for you", "Where is your data stored?", "How do I protect your data?", "Are decisions about you made by computers alone?", "Cookies", "Your privacy rights", "Questions or complaints?", "Changes to this policy", "Who am I?".
 - Termen: AVG → "the GDPR (the EU General Data Protection Regulation)" bij de eerste vermelding, daarna "the GDPR"; "Autoriteit Persoonsgegevens" blijft staan met de toevoeging "(the Dutch data protection authority)"; "verwerkersovereenkomst" → "data processing agreement"; "eenmanszaak" → "sole proprietorship"; "KvK-nummer" → "Chamber of Commerce (KvK) number".
@@ -5217,12 +5387,19 @@ git commit -m "EN: privacy policy"
       title: "Terms and conditions | HitzDigital",
       description: "HitzDigital's terms in plain language: websites, hosting and maintenance, computer and website help, payment, cancellation and ownership.",
     },
+    og: { title: "Terms and *conditions*", kicker: "Terms", sub: voorwaardenLead },
     crumb: "Terms",
     title: "Terms and conditions",
-    lead: "No small print, but clear agreements. This is what you can expect from me, and what I expect from you.",
+    lead: voorwaardenLead,
     updatedLine: (updated: string) => `Last updated: ${updated}`,
     updated: "26 August 2026",
   },
+```
+
+Met, bij de consts bovenin `lib/i18n/en/pages.tsx`:
+
+```tsx
+const voorwaardenLead = "No small print, but clear agreements. This is what you can expect from me, and what I expect from you.";
 ```
 
 - [ ] **Step 2: Vertaal `lib/i18n/en/legal-terms.tsx`**
@@ -5270,9 +5447,9 @@ git commit -m "EN: terms and conditions"
 ```tsx
 "use client";
 
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { counterpart, type Lang } from "@/lib/i18n/paths";
+import { counterpart, publicPath, type Lang } from "@/lib/i18n/paths";
 import { cn } from "@/lib/cn";
 
 export type LangSwitchLabels = { nl: string; en: string; switchTo: { nl: string; en: string } };
@@ -5294,22 +5471,52 @@ function remember(target: Lang) {
  * - names:   footer-onderbalk, "Nederlands | English"
  */
 export function LangSwitch({ lang, labels, variant, className }: { lang: Lang; labels: LangSwitchLabels; variant: LangSwitchVariant; className?: string }) {
-  const pathname = usePathname() ?? "/";
+  // publicPath: de middleware herschrijft, dus usePathname() geeft /nl/hulp in plaats van /hulp.
+  const route = publicPath(usePathname() ?? "/");
+  // Query en hash staan niet in usePathname(); ze komen na hydration uit de URL, net als in AanvraagForm.
+  // (useSearchParams zou elke statische pagina naar client-rendering trekken.)
+  // De suffix wordt bewaard mét de route waar hij bij hoort. Na een clientnavigatie (next/link) rendert
+  // deze component de nieuwe route al terwijl de state nog van de vorige pagina is; dan hoort de query
+  // van die vorige pagina er niet meer bij en is de suffix meteen leeg — geen flits met een oude ?voor=.
+  const [applied, setApplied] = useState({ route: "", suffix: "" });
+  const suffix = applied.route === route ? applied.suffix : "";
+  useEffect(() => {
+    const apply = () => {
+      // Loopt de adresbalk nog achter op de route, dan is deze URL nog die van de vorige pagina: niets opslaan.
+      if (publicPath(window.location.pathname) !== route) return;
+      setApplied({ route, suffix: `${window.location.search}${window.location.hash}` });
+    };
+    apply();
+    const raf = requestAnimationFrame(apply);
+    window.addEventListener("hashchange", apply);
+    window.addEventListener("popstate", apply);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("hashchange", apply);
+      window.removeEventListener("popstate", apply);
+    };
+    // route in de deps: elke navigatie leest de query en hash opnieuw.
+  }, [route]);
+  const pathname = route + suffix;
   const target = other(lang);
   const link = {
     href: counterpart(pathname, target),
     hrefLang: target,
     lang: target,
-    "aria-label": labels.switchTo[target],
     onClick: () => remember(target),
   };
+  // Toegankelijke naam per variant: de naam moet zeggen waar je staat (segment) of het zichtbare
+  // woord bevatten (text, voor spraakbediening). De names-variant toont de bestemming al voluit.
+  const segmentLabel = `${labels[lang]} – ${labels.switchTo[target]}`;
+  const textLabel = `${target.toUpperCase()} – ${labels.switchTo[target]}`;
 
   if (variant === "segment") {
     return (
       <a
         {...link}
+        aria-label={segmentLabel}
         className={cn(
-          "group relative inline-flex h-10 w-[76px] flex-none items-center rounded-full border border-line bg-field p-[3px] transition-[border-color,background-color] duration-200 hover:border-accent/55",
+          "relative inline-flex h-10 w-[76px] flex-none items-center rounded-full border border-line bg-field p-[3px] transition-[border-color,background-color] duration-200 hover:border-accent/55",
           className,
         )}
       >
@@ -5340,11 +5547,15 @@ export function LangSwitch({ lang, labels, variant, className }: { lang: Lang; l
         <Fragment key={l}>
           {i > 0 && (names ? <span aria-hidden className="select-none">|</span> : <span aria-hidden className="h-3 w-px bg-line" />)}
           {l === lang ? (
-            <span aria-current="true" className={cn("inline-block py-1", names ? "text-faint" : "text-ink")}>
+            <span aria-current="true" lang={names ? l : undefined} className={cn("inline-block py-1", names ? "text-faint" : "text-ink")}>
               {label(l)}
             </span>
           ) : (
-            <a {...link} className={cn("inline-block py-1 transition-colors hover:text-ink", names ? "text-muted" : "text-faint")}>
+            <a
+              {...link}
+              aria-label={names ? labels.switchTo[target] : textLabel}
+              className={cn("inline-block py-1 transition-colors hover:text-ink", names ? "text-muted" : "text-faint")}
+            >
               {label(l)}
             </a>
           )}
@@ -5416,6 +5627,8 @@ git commit -m "Taalschakelaar in nav, mobiel menu en footer; cookie bij klik"
 ```js
 test("header-knop volgt de pagina (spec §4)", async () => {
   const header = (html) => html.slice(html.indexOf("<header"), html.indexOf("</header>"));
+  // Het mobiele menu staat naast de header, tussen </header> en de <main> van de pagina.
+  const mobile = (html) => html.slice(html.indexOf('id="mobile-menu"'), html.indexOf("<main"));
   const expect = [
     ["/", "/contact?voor=website", "Gratis demo"],
     ["/websites", "/contact?voor=website", "Gratis demo"],
@@ -5430,13 +5643,19 @@ test("header-knop volgt de pagina (spec §4)", async () => {
     ["/en/terms", "/en/contact", "Contact"],
   ];
   for (const [path, href, label] of expect) {
-    const h = header(await (await get(path)).text());
+    const html = await (await get(path)).text();
     const re = new RegExp(`href="${href.replace("?", "\\?")}"[^>]*>\\s*${label}`);
-    assert.match(h, re, path);
+    assert.match(header(html), re, path);
+    // Eén positieve steekproef: het mobiele menu toont dezelfde knop als de desktop-nav.
+    if (path === "/hosting") assert.match(mobile(html), re, `${path}: mobiel menu`);
   }
+  // De taalschakelaar (Task 28) linkt op de contactpagina zelf ook naar /contact resp. /en/contact;
+  // die valt buiten de vraag "staat er een knop?" en wordt er eerst uitgeknipt.
+  const withoutLangSwitch = (h) => h.replace(/<a [^>]*hrefLang="[a-z]{2}"[^>]*>.*?<\/a>/g, "");
   for (const path of ["/contact", "/en/contact"]) {
-    const h = header(await (await get(path)).text());
-    assert.doesNotMatch(h, /href="\/(en\/)?contact/, `${path}: geen knop`);
+    const html = await (await get(path)).text();
+    assert.doesNotMatch(withoutLangSwitch(header(html)), /href="\/(en\/)?contact/, `${path}: geen knop`);
+    assert.doesNotMatch(withoutLangSwitch(mobile(html)), /href="\/(en\/)?contact/, `${path}: geen knop in het mobiele menu`);
   }
 });
 ```
@@ -5450,7 +5669,7 @@ Imports:
 ```tsx
 import { usePathname } from "next/navigation";
 import { track } from "@vercel/analytics";
-import { ctaFor, type CtaKind, type Lang } from "@/lib/i18n/paths";
+import { ctaFor, publicPath, type CtaKind, type Lang } from "@/lib/i18n/paths";
 ```
 
 Vervang in `Props` de regel `cta: { label: string; href: string };` door:
@@ -5465,14 +5684,16 @@ Vervang in `Props` de regel `cta: { label: string; href: string };` door:
 Bovenin de component (na de `useState`-regels):
 
 ```tsx
-  const pathname = usePathname() ?? "/";
+  // publicPath: de middleware herschrijft, dus usePathname() geeft /nl/hosting in plaats van /hosting.
+  const pathname = publicPath(usePathname() ?? "/");
   const kind = ctaFor(pathname);
   const cta = kind
-    ? { kind, label: ctaLabels[kind], href: kind === "contact" ? contactHref : `${contactHref}?voor=${kind === "demo" ? "website" : kind}` }
+    ? { label: ctaLabels[kind], href: kind === "contact" ? contactHref : `${contactHref}?voor=${kind === "demo" ? "website" : kind}` }
     : null;
   const onCta = () => {
+    if (!kind) return;
     try {
-      track("nav_cta", { cta: kind ?? "", lang, path: pathname });
+      track("nav_cta", { cta: kind, lang, path: pathname });
     } catch {}
   };
 ```
@@ -5555,7 +5776,8 @@ test("homepage kiest taal: cookie eerst, dan Accept-Language (spec §2 regel 5)"
     assert.equal(res.status, status, JSON.stringify(headers));
     if (status === 307) assert.equal(location(res), "/en", JSON.stringify(headers));
     else assert.match(await res.text(), /<html[^>]*\blang="nl"/, JSON.stringify(headers));
-    assert.match(res.headers.get("vary") ?? "", /Accept-Language/i, JSON.stringify(headers));
+    // Vary alleen op de redirect controleren: op de 200 overschrijft Next (app-page template) de Vary-header van de middleware met zijn eigen waarde; op Vercel draait de middleware vóór de CDN-cache, dus de taalkeuze klopt ook zonder.
+    if (status === 307) assert.match(res.headers.get("vary") ?? "", /Accept-Language/i, JSON.stringify(headers));
   }
 });
 
@@ -5588,7 +5810,7 @@ Import: `import { prefersEnglish } from "@/lib/i18n/accept-language";`. Vervang 
   }
 
   // Regel 7: Nederlands zonder prefix → interne route /nl/…
-  const res = rewrite(req, pathname === "/" ? "/nl" : `/nl${pathname}`, "nl");
+  const res = rewrite(req, pathname === "/" ? "/nl" : `/nl${pathname}`);
   if (pathname === "/") res.headers.set("Vary", "Cookie, Accept-Language");
   return res;
 ```
@@ -5604,7 +5826,9 @@ import { chromium } from "playwright";
 import assert from "node:assert/strict";
 
 const BASE = process.env.BASE_URL ?? "http://localhost:3111";
-const browser = await chromium.launch();
+// De globale Playwright vindt zijn eigen Chromium niet; wijs naar de gecachete build 1243 (Task 17 Step 1).
+const CHROME = process.env.CHROME_PATH ?? "/Users/nathaniel/Library/Caches/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-mac-arm64/chrome-headless-shell";
+const browser = await chromium.launch({ executablePath: CHROME });
 try {
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
   const page = await ctx.newPage();
@@ -5806,7 +6030,7 @@ Vercel bouwt automatisch (~1 min). Volg de deploy in het Vercel-dashboard; de bu
 ```bash
 BASE_URL=https://www.hitzdigital.nl npm run test:e2e
 ```
-Expected: alle e2e-tests slagen tegen productie (de matrix, redirects, hreflang, sitemap, lek-check). Controleer daarnaast handmatig in een browser met Engelse taalinstelling dat `https://www.hitzdigital.nl/` naar `/en` gaat en dat een klik op "NL" dat een jaar onthoudt.
+Expected: alle e2e-tests slagen tegen productie (de matrix, redirects, hreflang, sitemap, lek-check). Controleer daarnaast handmatig in een browser met Engelse taalinstelling dat `https://www.hitzdigital.nl/` naar `/en` gaat en dat een klik op "NL" dat een jaar onthoudt. Controleer op productie ook `curl -sI https://www.hitzdigital.nl/` op een `Vary`-header met `Accept-Language`; ontbreekt die, dan is dat de Next-beperking uit Task 30 en geen fout.
 
 - [ ] **Step 5: Search Console en nazorg (Nathaniel)**
 

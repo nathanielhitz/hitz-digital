@@ -4,9 +4,9 @@ export const ogSize = { width: 1200, height: 630 };
 
 /**
  * Gedeelde OG-afbeelding: wordmark, paginatitel (met accentwoord tussen sterretjes), kicker, domein.
- * Gebruik: `renderOg({ title: "Online blijven, *zonder gedoe*.", kicker: "Hosting & domeinen" })`.
+ * Gebruik: `renderOg({ title: "Online blijven, *zonder gedoe*.", kicker: "Hosting & domeinen", footer: "Puttershoek, Hoeksche Waard" })`.
  */
-export function renderOg({ title, kicker, sub }: { title: string; kicker?: string; sub?: string }) {
+export function renderOg({ title, kicker, sub, footer }: { title: string; kicker?: string; sub?: string; footer: string }) {
   // Woorden met kleurvlag: tekst tussen sterretjes krijgt het accent. Per woord een flex-item zodat Satori netjes afbreekt.
   const words: { t: string; accent: boolean }[] = [];
   title.split("*").forEach((seg, i) => {
@@ -60,7 +60,7 @@ export function renderOg({ title, kicker, sub }: { title: string; kicker?: strin
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", fontSize: 22, color: "#6B665E" }}>
           <span>hitzdigital.nl</span>
-          <span>Puttershoek, Hoeksche Waard</span>
+          <span>{footer}</span>
         </div>
       </div>
     ),

@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Container } from "@/components/layout/Container";
 import { Breadcrumbs, type Crumb } from "@/components/ui/Breadcrumbs";
 import { Reveal } from "@/components/ui/Reveal";
+import type { Lang } from "@/lib/i18n/paths";
 
 /**
  * Rustige kop voor subpagina's: kruimelpad, H1, subkop, knoppen. Geen label-decoratie.
@@ -9,12 +10,14 @@ import { Reveal } from "@/components/ui/Reveal";
  * geen gloed (decoratie zonder iets om achter te staan leest als een losse vlek).
  */
 export function PageHero({
+  lang,
   crumbs,
   title,
   lead,
   actions,
   aside,
 }: {
+  lang: Lang;
   crumbs: Crumb[];
   title: ReactNode;
   lead?: string;
@@ -31,7 +34,7 @@ export function PageHero({
       )}
       <Container className="relative">
         <Reveal>
-          <Breadcrumbs items={crumbs} />
+          <Breadcrumbs lang={lang} items={crumbs} />
           <div className={aside ? "mt-8 grid grid-cols-1 items-end gap-10 min-[901px]:grid-cols-[1.1fr_0.9fr]" : "mt-8"}>
             <div>
               <h1 className="max-w-[16ch] font-display text-[clamp(36px,5vw,64px)] font-semibold leading-[1.04] tracking-[-0.035em] [text-wrap:balance]">
