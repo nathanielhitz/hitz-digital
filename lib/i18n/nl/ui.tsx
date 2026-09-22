@@ -1,6 +1,7 @@
 import { site } from "@/lib/site";
 import { href, type CtaKind } from "../paths";
 import type { AanvraagKeuze } from "@/lib/aanvraag";
+import type { WorkTag } from "@/lib/work";
 
 const L = "nl" as const;
 const contact = (voor?: AanvraagKeuze) => `${href(L, "contact")}${voor ? `?voor=${voor}` : ""}`;
@@ -141,7 +142,7 @@ export const ui = {
       },
     ],
   },
-  workCard: { viewCase: "Bekijk de case", tags: { demo: "Demo", eigen: "Eigen project" } },
+  workCard: { viewCase: "Bekijk de case", tags: { demo: "Demo", eigen: "Eigen project" } satisfies Record<WorkTag, string> },
   plan: { mostChosen: "Meest gekozen", perMonthShort: "/mnd", choose: (name: string) => `Kies ${name}` },
   faq: { eyebrow: "Veelgestelde vragen", title: "Wat mensen me vaak vragen." },
 };

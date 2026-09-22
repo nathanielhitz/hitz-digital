@@ -3,12 +3,12 @@
 import Image from "next/image";
 import { track } from "@vercel/analytics";
 import { ArrowRight } from "@phosphor-icons/react";
-import { workHref, type WorkItem } from "@/lib/work";
+import { workHref, type WorkItem, type WorkTag } from "@/lib/work";
 import type { Lang } from "@/lib/i18n/paths";
 import { cn } from "@/lib/cn";
 
 export type WerkCardText = { meta: string; alt: string };
-export type WerkCardLabels = { viewCase: string; tags: { demo: string; eigen: string } };
+export type WerkCardLabels = { viewCase: string; tags: Record<WorkTag, string> };
 
 export function WerkCard({ item, lang, text, labels, className }: { item: WorkItem; lang: Lang; text: WerkCardText; labels: WerkCardLabels; className?: string }) {
   const internal = Boolean(item.client);

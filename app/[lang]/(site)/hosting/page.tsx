@@ -10,43 +10,46 @@ import { Button } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Reveal } from "@/components/ui/Reveal";
+import { getDict } from "@/lib/i18n";
+import { pageMetadata } from "@/lib/i18n/meta";
+import { href, langOf, type LangParams } from "@/lib/i18n/paths";
 import { liveHosting, pricing, euro } from "@/lib/pricing";
-import { hostingAltijd, hostingFaq, overstappen } from "@/lib/services";
 import { site } from "@/lib/site";
 
-const title = "Hosting, domein en onderhoud voor je website | HitzDigital";
-const description =
-  "Hosting vanaf €5 per maand, onderhoud met domein en een kleine wijziging per maand voor €15. Maandelijks opzegbaar, alles incl. btw. Overstappen regel ik.";
+export async function generateMetadata({ params }: LangParams): Promise<Metadata> {
+  const lang = langOf((await params).lang);
+  return pageMetadata(lang, "hosting", getDict(lang).pages.hosting.meta);
+}
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: "/hosting" },
-  openGraph: { title, description, url: "/hosting", type: "website" },
-};
-
-export default function HostingPage() {
+export default async function HostingPage({ params }: LangParams) {
+  const lang = langOf((await params).lang);
+  const { pages, services, ui } = getDict(lang);
+  const t = pages.hosting;
   const mailbox = pricing.addons[0];
   const [mailOne, mailMulti] = mailbox.tiers;
+  const tiers = [
+    { label: services.mailbox.tiers.one, monthly: mailOne.monthly },
+    { label: services.mailbox.tiers.multi, monthly: mailMulti.monthly },
+  ];
   const schema = {
     "@context": "https://schema.org",
     "@type": "Service",
-    name: "Hosting, domein en onderhoud",
-    serviceType: "Webhosting en websiteonderhoud",
+    name: t.schema.name,
+    serviceType: t.schema.serviceType,
     provider: { "@type": "ProfessionalService", name: site.name, url: site.url },
     areaServed: "NL",
-    url: `${site.url}/hosting`,
+    url: `${site.url}${href(lang, "hosting")}`,
     offers: liveHosting.map((h) => ({
       "@type": "Offer",
-      name: h.name,
-      description: h.summary,
+      name: services.plans[h.id].name,
+      description: services.plans[h.id].summary,
       price: h.monthly.toFixed(2),
       priceCurrency: "EUR",
       priceSpecification: {
         "@type": "UnitPriceSpecification",
         price: h.monthly.toFixed(2),
         priceCurrency: "EUR",
-        unitText: "maand",
+        unitText: t.schema.unit,
         valueAddedTaxIncluded: true,
       },
     })),
@@ -55,27 +58,23 @@ export default function HostingPage() {
   return (
     <main id="main" className="relative z-[2] bg-deep">
       <PageHero
-        lang="nl"
-        crumbs={[{ label: "Hosting & domeinen" }]}
-        title={
-          <>
-            Online blijven, <em className="hd-accent-word not-italic text-accent">zonder gedoe</em>.
-          </>
-        }
-        lead="Domein, hosting, e-mail en een kleine wijziging per maand in één bedrag. Maandelijks opzegbaar. En als er iets is, app je mij, geen ticketsysteem."
+        lang={lang}
+        crumbs={[{ label: t.crumb }]}
+        title={t.hero.title}
+        lead={t.hero.lead}
         actions={
           <>
-            <Button href="#pakketten">Kies je pakket</Button>
+            <Button href="#pakketten">{t.hero.primary}</Button>
             <Button href="#overstappen" variant="ghost">
-              Overstappen? Ik regel het
+              {t.hero.secondary}
             </Button>
           </>
         }
         aside={
           <div className="rounded-2xl border border-line bg-panel p-[clamp(22px,2.4vw,30px)]">
-            <p className="text-[12px] uppercase tracking-[0.14em] text-faint">Zit er altijd bij</p>
+            <p className="text-[12px] uppercase tracking-[0.14em] text-faint">{t.hero.asideLabel}</p>
             <ul className="mt-4 grid grid-cols-1 gap-2.5 text-[14.5px] min-[561px]:grid-cols-2">
-              {hostingAltijd.map((x) => (
+              {services.hostingAltijd.map((x) => (
                 <li key={x} className="flex items-start gap-3">
                   <span className="mt-[8px] h-[6px] w-[6px] flex-none rounded-full bg-accent" aria-hidden />
                   {x}
@@ -89,30 +88,28 @@ export default function HostingPage() {
       <Section id="pakketten">
         <Container>
           <Reveal>
-            <SectionTitle className="mb-4 max-w-[720px]">Twee pakketten, één maandbedrag.</SectionTitle>
-            <p className="mb-[54px] max-w-[52ch] text-[16px] leading-[1.65] text-muted">
-              Alle prijzen incl. 21% btw en maandelijks opzegbaar. Betalen per maand of per jaar, wat jij prettig vindt.
-              Een zakelijke mailbox op je eigen domein kan bij elk pakket, vanaf {euro(mailOne.monthly)} per maand extra.
-            </p>
+            <SectionTitle className="mb-4 max-w-[720px]">{t.packages.title}</SectionTitle>
+            <p className="mb-[54px] max-w-[52ch] text-[16px] leading-[1.65] text-muted">{t.packages.lead(euro(mailOne.monthly))}</p>
           </Reveal>
           <div className="grid grid-cols-1 gap-[18px] min-[901px]:grid-cols-2">
             {liveHosting.map((h, i) => (
               <Reveal key={h.id} delay={i * 80}>
-                <PlanCard plan={h} />
+                <PlanCard plan={h} copy={services.plans[h.id]} labels={ui.plan} href={`${ui.cta.hosting.href}&pakket=${h.id}`} />
               </Reveal>
             ))}
           </div>
           <Reveal>
             <div className="mt-[18px] flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-line bg-panel/60 px-[clamp(20px,2.4vw,30px)] py-5">
               <div>
-                <span className="font-display text-[17px] font-semibold">{mailbox.name}</span>
-                <span className="ml-3 text-[14px] text-muted">{mailbox.summary} Bij elk pakket.</span>
+                <span className="font-display text-[17px] font-semibold">{services.mailbox.name}</span>
+                <span className="ml-3 text-[14px] text-muted">
+                  {services.mailbox.summary} {t.packages.everyPlan}
+                </span>
               </div>
               <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1">
-                {mailbox.tiers.map((t) => (
-                  <span key={t.label} className="font-display text-[20px] font-semibold tracking-[-0.02em]">
-                    {euro(t.monthly)}{" "}
-                    <span className="text-[13px] font-normal text-muted">{t.label}, per maand</span>
+                {tiers.map((tier) => (
+                  <span key={tier.label} className="font-display text-[20px] font-semibold tracking-[-0.02em]">
+                    {euro(tier.monthly)} <span className="text-[13px] font-normal text-muted">{t.packages.tierPerMonth(tier.label)}</span>
                   </span>
                 ))}
               </div>
@@ -125,16 +122,11 @@ export default function HostingPage() {
         <Container>
           <Reveal className="grid grid-cols-1 gap-12 min-[901px]:grid-cols-[1fr_1fr]">
             <div>
-              <Eyebrow>Domeinnaam & e-mail</Eyebrow>
-              <SectionTitle className="max-w-[16ch]">Je domein op jouw naam.</SectionTitle>
-              <p className="mt-6 max-w-[46ch] text-[16px] leading-[1.65] text-muted">
-                {pricing.domains.included} Kies je alleen hosting, dan registreer of verleng ik je .nl-domein los.
-                Ik beheer het, jij blijft de eigenaar. {pricing.domains.other}
-              </p>
+              <Eyebrow>{t.domain.eyebrow}</Eyebrow>
+              <SectionTitle className="max-w-[16ch]">{t.domain.title}</SectionTitle>
+              <p className="mt-6 max-w-[46ch] text-[16px] leading-[1.65] text-muted">{t.domain.p1(services.domains.included, services.domains.other)}</p>
               <p className="mt-4 max-w-[46ch] text-[16px] leading-[1.65] text-muted">
-                Zakelijke e-mail op je eigen domein (jij@jouwbedrijf.nl) is {euro(mailOne.monthly)} per maand voor één
-                mailbox en {euro(mailMulti.monthly)} per maand voor twee tot vijf mailboxen samen, elk met{" "}
-                {mailbox.quotaGb} GB opslag, agenda en spamfilter, werkend op je telefoon en laptop. {mailbox.more}
+                {t.domain.p2(euro(mailOne.monthly), euro(mailMulti.monthly), mailbox.quotaGb, services.mailbox.more)}
               </p>
             </div>
             <div className="self-center rounded-2xl border border-line bg-panel p-[clamp(22px,2.4vw,30px)]">
@@ -143,20 +135,20 @@ export default function HostingPage() {
                   {pricing.domains.table.map((d) => (
                     <tr key={d.tld}>
                       <td className="py-3 font-mono text-[14px] text-ink">{d.tld}</td>
-                      <td className="py-3 text-muted">domein, per jaar</td>
+                      <td className="py-3 text-muted">{t.domain.rowDomain}</td>
                       <td className="py-3 text-right text-ink">{euro(d.yearly)}</td>
                     </tr>
                   ))}
-                  {mailbox.tiers.map((t) => (
-                    <tr key={t.label}>
+                  {tiers.map((tier) => (
+                    <tr key={tier.label}>
                       <td className="py-3 font-mono text-[14px] text-ink">@</td>
-                      <td className="py-3 text-muted">{t.label}, per maand</td>
-                      <td className="py-3 text-right text-ink">{euro(t.monthly)}</td>
+                      <td className="py-3 text-muted">{t.packages.tierPerMonth(tier.label)}</td>
+                      <td className="py-3 text-right text-ink">{euro(tier.monthly)}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-              <p className="mt-4 text-[12.5px] text-faint">Incl. 21% btw. Andere extensies op aanvraag.</p>
+              <p className="mt-4 text-[12.5px] text-faint">{t.domain.note}</p>
             </div>
           </Reveal>
         </Container>
@@ -165,12 +157,10 @@ export default function HostingPage() {
       <Section id="overstappen">
         <Container>
           <Reveal>
-            <SectionTitle className="mb-4 max-w-[720px]">Weg bij je huidige hoster? Ik regel het.</SectionTitle>
-            <p className="mb-14 max-w-[52ch] text-[16px] leading-[1.65] text-muted">
-              Ook als je site niet door mij gebouwd is. Je hoeft zelf niets over te zetten en er ligt niets uit.
-            </p>
+            <SectionTitle className="mb-4 max-w-[720px]">{t.switch.title}</SectionTitle>
+            <p className="mb-14 max-w-[52ch] text-[16px] leading-[1.65] text-muted">{t.switch.lead}</p>
             <div className="grid grid-cols-1 gap-[clamp(24px,4vw,56px)] min-[901px]:grid-cols-3">
-              {overstappen.map((s) => (
+              {services.overstappen.map((s) => (
                 <div key={s.n}>
                   <div className="mb-[18px] flex items-center gap-[14px]">
                     <span className="h-[11px] w-[11px] rounded-full bg-accent shadow-dot" aria-hidden />
@@ -189,23 +179,17 @@ export default function HostingPage() {
         <Container>
           <Reveal className="grid grid-cols-1 gap-12 min-[901px]:grid-cols-[0.8fr_1.2fr]">
             <div>
-              <Eyebrow>Veelgestelde vragen</Eyebrow>
-              <SectionTitle className="max-w-[12ch]">Wat mensen me vaak vragen.</SectionTitle>
+              <Eyebrow>{ui.faq.eyebrow}</Eyebrow>
+              <SectionTitle className="max-w-[12ch]">{ui.faq.title}</SectionTitle>
             </div>
-            <FaqList items={hostingFaq} />
+            <FaqList items={services.hostingFaq} />
           </Reveal>
         </Container>
       </Section>
 
-      <CtaBand
-        lang="nl"
-        title="Zeker weten dat je site gewoon werkt?"
-        body="Vertel kort waar je site en domein nu staan. Ik laat je weten wat het wordt en regel de overstap."
-        label="Vraag hosting aan"
-        href="/contact?voor=hosting"
-      />
+      <CtaBand lang={lang} title={t.ctaBand.title} body={t.ctaBand.body} label={ui.cta.hosting.label} href={ui.cta.hosting.href} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
-      <WhatsAppFab afterId="pakketten" untilId="cta" label="Heb je een vraag?" aria="Heb je een vraag? Stuur een WhatsApp" />
+      <WhatsAppFab afterId="pakketten" untilId="cta" label={ui.fab.label} aria={ui.fab.aria} />
     </main>
   );
 }
