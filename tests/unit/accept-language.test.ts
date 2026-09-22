@@ -28,3 +28,9 @@ test("rare q-waarden worden als 0 gelezen", () => {
   assert.equal(prefersEnglish("en;q=abc,nl;q=0.1"), false);
   assert.equal(prefersEnglish("en;q=0.2,nl;q=abc"), true);
 });
+
+test("q-parameter is hoofdletterongevoelig, lege q telt als 0", () => {
+  assert.equal(prefersEnglish("en;Q=0.5,nl;q=0.9"), false);
+  assert.equal(prefersEnglish("en;q=,nl;q=0.5"), false);
+  assert.equal(prefersEnglish("*;q=1,en;q=0.9"), true);
+});

@@ -65,6 +65,9 @@ test("counterpart: tegenhanger van de huidige pagina", () => {
   assert.equal(counterpart("/werk/monster-zorg", "en"), "/en/work/monster-zorg");
   assert.equal(counterpart("/support/e-mail-instellingen", "en"), "/en"); // geen tegenhanger → EN home
   assert.equal(counterpart("/bestaat-niet", "en"), "/en");
+  assert.equal(counterpart("/contact?voor=hosting&pakket=onderhoud", "en"), "/en/contact?voor=hosting&pakket=onderhoud");
+  assert.equal(counterpart("/en/websites#faq", "nl"), "/websites#faq");
+  assert.equal(counterpart("/support/x?y=1", "en"), "/en");
 });
 
 test("ctaFor: header-knop per route", () => {

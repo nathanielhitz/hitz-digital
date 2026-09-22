@@ -78,7 +78,7 @@ export function parsePublic(pathname: string): Parsed | null {
   return null;
 }
 
-/** Interne route (Nederlandse mapnaam) onder de taalprefix. */
+/** Interne route (Nederlandse mapnaam) onder de taalprefix. Voorwaarde: de route bestaat in deze taal (parsePublic garandeert dat). */
 export function internalPath(p: Parsed): string {
   if (p.key === "home") return `/${p.lang}`;
   return `/${p.lang}/${segments[p.key].nl}${p.slug ? `/${p.slug}` : ""}`;
@@ -87,6 +87,7 @@ export function internalPath(p: Parsed): string {
 /**
  * Een /en-pad dat de interne (Nederlandse) slug gebruikt of naar support wijst,
  * krijgt het publieke adres terug; anders null. Alleen voor routes waar NL- en EN-slug verschillen.
+ * Geeft alleen het pad terug; de middleware zet dat op een clone van req.nextUrl, zodat de query behouden blijft.
  */
 export function redirectForEn(pathname: string): string | null {
   const parts = pathname.split(/[?#]/)[0].split("/").filter(Boolean);
@@ -102,11 +103,13 @@ export function redirectForEn(pathname: string): string | null {
   return null;
 }
 
-/** Tegenhanger van de huidige pagina in de andere taal; zonder tegenhanger de homepage. */
+/** Tegenhanger van de huidige pagina in de andere taal, mét query en hash; zonder tegenhanger de homepage (zonder query). */
 export function counterpart(pathname: string, target: Lang): string {
-  const p = parsePublic(pathname);
+  const path = pathname.split(/[?#]/)[0];
+  const suffix = pathname.slice(path.length);
+  const p = parsePublic(path);
   if (!p || (p.key !== "home" && segments[p.key][target] === null)) return href(target, "home");
-  return href(target, p.key, p.slug);
+  return href(target, p.key, p.slug) + suffix;
 }
 
 /** Header-knop voor een pad. Onbekende paden (404) tonen "Contact". */
