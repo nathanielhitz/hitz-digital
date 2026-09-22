@@ -21,7 +21,7 @@ const accented = (h: Accented): ReactNode => (
   </>
 );
 
-const homeH1 = { pre: "Alles rond je ", accent: "website", post: ". Eén aanspreekpunt." };
+const homeH1 = { pre: "Everything around your ", accent: "website", post: ". One point of contact." };
 const websitesH1 = { pre: "Een website die direct ", accent: "professioneler", post: " voelt." };
 const hostingH1 = { pre: "Online blijven, ", accent: "zonder gedoe", post: "." };
 const hulpH1 = { pre: "Vastgelopen? Ik kijk ", accent: "direct", post: " mee." };
@@ -34,44 +34,44 @@ const voorwaardenLead = "Geen kleine lettertjes, maar wel duidelijke afspraken. 
 export const pages: PagesDict = {
   home: {
     meta: {
-      title: "Websites, hosting en computerhulp in de Hoeksche Waard | HitzDigital",
-      description: `Ik bouw websites voor ondernemers in de Hoeksche Waard, houd ze online en help als je computer of site vastloopt. Eén persoon, korte lijnen. Website vanaf ${websiteFrom}, hosting vanaf ${euro(online.monthly)} per maand, alles incl. btw.`,
+      title: "Websites, hosting and tech help for small businesses | HitzDigital",
+      description: `I build websites for small businesses, keep them online and help when your computer or site lets you down. One person, short lines, based in the Netherlands and working with clients here and abroad. Websites from ${websiteFrom}, hosting from ${euro(online.monthly)} a month, all incl. VAT.`,
     },
     og: {
       title: star(homeH1),
-      kicker: "Websites · Hosting · Hulp",
-      sub: "Websites, hosting en computerhulp voor ondernemers in de Hoeksche Waard. Eén persoon, korte lijnen.",
+      kicker: "Websites · Hosting · Help",
+      sub: "Websites, hosting and tech help for small businesses. One person, based in the Netherlands, working with clients here and abroad.",
     },
     hero: {
       h1: homeH1,
-      sub: "Websites, hosting en computerhulp voor ondernemers in de Hoeksche Waard. Ik bouw je site, houd hem online en kijk direct mee als iets vastloopt. Eén persoon, korte lijnen.",
-      primary: "Bekijk wat ik doe",
-      secondary: "Neem contact op",
+      sub: "Websites, hosting and tech help for small businesses. One person, based in the Netherlands, working with clients here and abroad. I build your site, keep it online and step in the moment something breaks.",
+      primary: "See what I do",
+      secondary: "Get in touch",
       /** Labels in de mock-apparaten. De mock-site zelf (klantcontent) blijft in beide talen gelijk. */
       chips: {
-        mobile: "Mobielvriendelijk",
-        fast: "Snelle laadtijd",
-        seo: "SEO-klaar",
-        structure: "Duidelijke structuur",
-        modern: "Moderne uitstraling",
-        selfManaged: "Zelf te beheren",
-        friendly: "Gebruiksvriendelijk",
-        professional: "Professionele indruk",
+        mobile: "Mobile-friendly",
+        fast: "Fast loading",
+        seo: "SEO-ready",
+        structure: "Clear structure",
+        modern: "Modern look",
+        selfManaged: "Easy to manage yourself",
+        friendly: "User-friendly",
+        professional: "Professional impression",
       },
     },
-    pijlers: { title: "Drie dingen die ik voor je regel." },
-    zoWerkIk: { title: "Duidelijk vooraf. Geen verrassingen achteraf." },
+    pijlers: { title: "Three things I take care of for you." },
+    zoWerkIk: { title: "Clear upfront. No surprises afterwards." },
     werk: {
-      eyebrow: "Werk",
-      teaserTitle: "Bedrijven die je al voorgingen.",
-      all: "Al mijn werk",
+      eyebrow: "Work",
+      teaserTitle: "Businesses that went before you.",
+      all: "All my work",
     },
     contact: {
       eyebrow: "Contact",
-      title: "Waar kan ik je mee helpen?",
-      lead: "Kies waarvoor je me nodig hebt en vertel kort wat er speelt. Ik reageer binnen 1 werkdag, vrijblijvend.",
-      direct: "Liever direct?",
-      urgent: "Bij een storing of spoed: bel.",
+      title: "What can I help you with?",
+      lead: "Pick what you need me for and tell me briefly what's going on. I reply within one working day, no obligation.",
+      direct: "Prefer to skip the form?",
+      urgent: "Site down or urgent? Call.",
     },
   },
 
