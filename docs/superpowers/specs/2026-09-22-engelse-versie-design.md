@@ -114,7 +114,7 @@ Component `components/ui/LangSwitch.tsx` (client, klein) met prop `variant`:
 | Variant | Plek | Weergave |
 |---|---|---|
 | `text` | Desktop-nav, links van `ThemeSwitch` | "NL · EN", actieve taal in `text-ink`, andere in `text-faint`, hairline-scheiding; hover zoals de nav-links |
-| `segment` | Mobiel fullscreen-menu, rij "Taal" / "Language" direct onder de rij "Weergave" | pil in dezelfde maat en stijl als `ThemeSwitch size="lg"`: track `bg-field`, schuivende knop `bg-panel`, labels "NL" en "EN"; zelfde easing en `motion-reduce` als de themaknop |
+| `segment` | Mobiel fullscreen-menu, rij "Taal" / "Language" direct onder de rij "Weergave" | exacte tweeling van `ThemeSwitch size="lg"`: zelfde 76×40-track (`bg-field`, `border-line`), zelfde 32px schuivende knop (`bg-panel`), zelfde easing en `motion-reduce`. In plaats van zon en maan staan de labels "NL" (links) en "EN" (rechts), 11px semibold; de knop staat onder de actieve taal, het actieve label in `text-ink`, het andere in `text-faint`. Niet breder dan de themaknop, zodat de twee rijen exact uitlijnen |
 | `names` | Footer-onderbalk, tussen de juridische links en "Prijzen incl. btw" | "Nederlands | English", actieve in `text-muted`, andere als link |
 
 Gedrag:
