@@ -4,7 +4,6 @@ import { services } from "./services";
 
 /** Body van de algemene voorwaarden (26-08-2026). Verplaatst uit de pagina; tekst ongewijzigd. */
 export function TermsBody() {
-  const onderhoud = pricing.hosting.find((h) => h.id === "onderhoud")!;
   const webshop = liveHosting.find((h) => h.id === "webshop");
   const [mailOne, mailMulti] = pricing.addons[0].tiers;
   const namen = liveHosting.map((h) => services.plans[h.id].name);

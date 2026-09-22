@@ -25,11 +25,11 @@ export default async function HostingPage({ params }: LangParams) {
   const lang = langOf((await params).lang);
   const { pages, services, ui } = getDict(lang);
   const t = pages.hosting;
-  const mailbox = pricing.addons[0];
-  const [mailOne, mailMulti] = mailbox.tiers;
+  const mailbox = pricing.addons.find((a) => a.id === "mailbox")!;
+  const tierPrice = (id: "one" | "multi") => mailbox.tiers.find((t) => t.id === id)!.monthly;
   const tiers = [
-    { label: services.mailbox.tiers.one, monthly: mailOne.monthly },
-    { label: services.mailbox.tiers.multi, monthly: mailMulti.monthly },
+    { id: "one", label: services.mailbox.tiers.one, monthly: tierPrice("one") },
+    { id: "multi", label: services.mailbox.tiers.multi, monthly: tierPrice("multi") },
   ];
   const schema = {
     "@context": "https://schema.org",
@@ -89,7 +89,7 @@ export default async function HostingPage({ params }: LangParams) {
         <Container>
           <Reveal>
             <SectionTitle className="mb-4 max-w-[720px]">{t.packages.title}</SectionTitle>
-            <p className="mb-[54px] max-w-[52ch] text-[16px] leading-[1.65] text-muted">{t.packages.lead(euro(mailOne.monthly))}</p>
+            <p className="mb-[54px] max-w-[52ch] text-[16px] leading-[1.65] text-muted">{t.packages.lead(euro(tierPrice("one")))}</p>
           </Reveal>
           <div className="grid grid-cols-1 gap-[18px] min-[901px]:grid-cols-2">
             {liveHosting.map((h, i) => (
@@ -108,7 +108,7 @@ export default async function HostingPage({ params }: LangParams) {
               </div>
               <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1">
                 {tiers.map((tier) => (
-                  <span key={tier.label} className="font-display text-[20px] font-semibold tracking-[-0.02em]">
+                  <span key={tier.id} className="font-display text-[20px] font-semibold tracking-[-0.02em]">
                     {euro(tier.monthly)} <span className="text-[13px] font-normal text-muted">{t.packages.tierPerMonth(tier.label)}</span>
                   </span>
                 ))}
@@ -126,7 +126,7 @@ export default async function HostingPage({ params }: LangParams) {
               <SectionTitle className="max-w-[16ch]">{t.domain.title}</SectionTitle>
               <p className="mt-6 max-w-[46ch] text-[16px] leading-[1.65] text-muted">{t.domain.p1(services.domains.included, services.domains.other)}</p>
               <p className="mt-4 max-w-[46ch] text-[16px] leading-[1.65] text-muted">
-                {t.domain.p2(euro(mailOne.monthly), euro(mailMulti.monthly), mailbox.quotaGb, services.mailbox.more)}
+                {t.domain.p2(euro(tierPrice("one")), euro(tierPrice("multi")), mailbox.quotaGb, services.mailbox.more)}
               </p>
             </div>
             <div className="self-center rounded-2xl border border-line bg-panel p-[clamp(22px,2.4vw,30px)]">
@@ -140,7 +140,7 @@ export default async function HostingPage({ params }: LangParams) {
                     </tr>
                   ))}
                   {tiers.map((tier) => (
-                    <tr key={tier.label}>
+                    <tr key={tier.id}>
                       <td className="py-3 font-mono text-[14px] text-ink">@</td>
                       <td className="py-3 text-muted">{t.packages.tierPerMonth(tier.label)}</td>
                       <td className="py-3 text-right text-ink">{euro(tier.monthly)}</td>

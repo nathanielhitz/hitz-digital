@@ -50,6 +50,7 @@ export async function generateMetadata({ params }: LangParams): Promise<Metadata
 
 export default async function LangLayout({ children, params }: Readonly<{ children: React.ReactNode }> & LangParams) {
   const lang = langOf((await params).lang);
+  const { ui } = getDict(lang);
   const faqSchema = faqPageSchema();
   return (
     <html lang={lang} className={`${body.variable} ${display.variable}`} suppressHydrationWarning>
@@ -61,11 +62,11 @@ export default async function LangLayout({ children, params }: Readonly<{ childr
         </ThemeProvider>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(professionalServiceSchema()) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(professionalServiceSchema(lang, ui.schema)) }}
         />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema()) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema(lang)) }}
         />
         {faqSchema && (
           <script

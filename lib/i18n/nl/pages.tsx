@@ -25,6 +25,10 @@ const websitesH1 = { pre: "Een website die direct ", accent: "professioneler", p
 const hostingH1 = { pre: "Online blijven, ", accent: "zonder gedoe", post: "." };
 const hulpH1 = { pre: "Vastgelopen? Ik kijk ", accent: "direct", post: " mee." };
 
+/** Lead van de juridische pagina's: staat zowel in de hero als op de OG-afbeelding. */
+const privacyLead = "Ik vind het belangrijk dat je weet wat ik met jouw gegevens doe. Op deze pagina lees je hoe ik dat doe.";
+const voorwaardenLead = "Geen kleine lettertjes, maar wel duidelijke afspraken. Dit is wat je van mij kunt verwachten en wat ik van jou verwacht.";
+
 /** Copy per pagina: metadata, OG-afbeelding, hero, secties, CTA-band. */
 export const pages = {
   home: {
@@ -290,9 +294,10 @@ export const pages = {
       title: "Privacybeleid | HitzDigital",
       description: "Wat HitzDigital met je gegevens doet, in gewone taal: welke gegevens ik bewaar, waarom, hoe lang, met wie ik ze deel en welke rechten je hebt.",
     },
+    og: { title: "Privacybeleid", kicker: "Privacy", sub: privacyLead },
     crumb: "Privacy",
     title: "Privacybeleid",
-    lead: "Ik vind het belangrijk dat je weet wat ik met jouw gegevens doe. Op deze pagina lees je hoe ik dat doe.",
+    lead: privacyLead,
     versionLine: (version: string, updated: string) => `Versie ${version}, bijgewerkt op ${updated}`,
     version: "2.0",
     updated: "29 augustus 2026",
@@ -303,9 +308,10 @@ export const pages = {
       title: "Algemene voorwaarden | HitzDigital",
       description: "De afspraken van HitzDigital in gewone taal: websites, hosting en onderhoud, computer- en websitehulp, betalen, opzeggen en eigendom.",
     },
+    og: { title: "Algemene voorwaarden", kicker: "Voorwaarden", sub: voorwaardenLead },
     crumb: "Voorwaarden",
     title: "Algemene voorwaarden",
-    lead: "Geen kleine lettertjes, maar wel duidelijke afspraken. Dit is wat je van mij kunt verwachten en wat ik van jou verwacht.",
+    lead: voorwaardenLead,
     updatedLine: (updated: string) => `Laatst bijgewerkt: ${updated}`,
     updated: "26 augustus 2026",
   },

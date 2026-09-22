@@ -28,7 +28,7 @@ export default async function HulpPage({ params }: LangParams) {
   const t = pages.hulp;
   const h = pricing.hulp;
   const tarief = services.hulpTarief;
-  const apkPrijs = { "computer-apk": h.apk.computer, "website-apk": h.apk.website } as const;
+  const apkPrijs = { "computer-apk": h.apk.computer, "website-apk": h.apk.website };
   const apk = (id: "computer-apk" | "website-apk") => t.apk.items.find((a) => a.id === id)!;
   const schema = {
     "@context": "https://schema.org",
@@ -94,7 +94,7 @@ export default async function HulpPage({ params }: LangParams) {
                 <div className="flex h-full flex-col rounded-2xl border border-line bg-panel p-[clamp(24px,2.6vw,34px)]">
                   <div className="flex items-baseline justify-between gap-4">
                     <h3 className="font-display text-[clamp(22px,2.2vw,26px)] font-semibold tracking-[-0.02em]">{a.title}</h3>
-                    <span className="font-display text-[clamp(24px,2.4vw,30px)] font-semibold tracking-[-0.02em]">{euro(apkPrijs[a.id as keyof typeof apkPrijs])}</span>
+                    <span className="font-display text-[clamp(24px,2.4vw,30px)] font-semibold tracking-[-0.02em]">{euro(apkPrijs[a.id])}</span>
                   </div>
                   <p className="mt-3 text-[15px] leading-[1.6] text-muted">{a.body}</p>
                   <div className="mt-auto pt-6">

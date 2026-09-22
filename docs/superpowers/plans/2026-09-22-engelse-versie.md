@@ -1398,6 +1398,10 @@ const websitesH1 = { pre: "Een website die direct ", accent: "professioneler", p
 const hostingH1 = { pre: "Online blijven, ", accent: "zonder gedoe", post: "." };
 const hulpH1 = { pre: "Vastgelopen? Ik kijk ", accent: "direct", post: " mee." };
 
+/** Lead van de juridische pagina's: staat zowel in de hero als op de OG-afbeelding. */
+const privacyLead = "Ik vind het belangrijk dat je weet wat ik met jouw gegevens doe. Op deze pagina lees je hoe ik dat doe.";
+const voorwaardenLead = "Geen kleine lettertjes, maar wel duidelijke afspraken. Dit is wat je van mij kunt verwachten en wat ik van jou verwacht.";
+
 /** Copy per pagina: metadata, OG-afbeelding, hero, secties, CTA-band. */
 export const pages = {
   home: {
@@ -1663,9 +1667,10 @@ export const pages = {
       title: "Privacybeleid | HitzDigital",
       description: "Wat HitzDigital met je gegevens doet, in gewone taal: welke gegevens ik bewaar, waarom, hoe lang, met wie ik ze deel en welke rechten je hebt.",
     },
+    og: { title: "Privacybeleid", kicker: "Privacy", sub: privacyLead },
     crumb: "Privacy",
     title: "Privacybeleid",
-    lead: "Ik vind het belangrijk dat je weet wat ik met jouw gegevens doe. Op deze pagina lees je hoe ik dat doe.",
+    lead: privacyLead,
     versionLine: (version: string, updated: string) => `Versie ${version}, bijgewerkt op ${updated}`,
     version: "2.0",
     updated: "29 augustus 2026",
@@ -1676,9 +1681,10 @@ export const pages = {
       title: "Algemene voorwaarden | HitzDigital",
       description: "De afspraken van HitzDigital in gewone taal: websites, hosting en onderhoud, computer- en websitehulp, betalen, opzeggen en eigendom.",
     },
+    og: { title: "Algemene voorwaarden", kicker: "Voorwaarden", sub: voorwaardenLead },
     crumb: "Voorwaarden",
     title: "Algemene voorwaarden",
-    lead: "Geen kleine lettertjes, maar wel duidelijke afspraken. Dit is wat je van mij kunt verwachten en wat ik van jou verwacht.",
+    lead: voorwaardenLead,
     updatedLine: (updated: string) => `Laatst bijgewerkt: ${updated}`,
     updated: "26 augustus 2026",
   },
@@ -2907,11 +2913,11 @@ export default async function HostingPage({ params }: LangParams) {
   const lang = langOf((await params).lang);
   const { pages, services, ui } = getDict(lang);
   const t = pages.hosting;
-  const mailbox = pricing.addons[0];
-  const [mailOne, mailMulti] = mailbox.tiers;
+  const mailbox = pricing.addons.find((a) => a.id === "mailbox")!;
+  const tierPrice = (id: "one" | "multi") => mailbox.tiers.find((t) => t.id === id)!.monthly;
   const tiers = [
-    { label: services.mailbox.tiers.one, monthly: mailOne.monthly },
-    { label: services.mailbox.tiers.multi, monthly: mailMulti.monthly },
+    { id: "one", label: services.mailbox.tiers.one, monthly: tierPrice("one") },
+    { id: "multi", label: services.mailbox.tiers.multi, monthly: tierPrice("multi") },
   ];
   const schema = {
     "@context": "https://schema.org",
@@ -2971,7 +2977,7 @@ export default async function HostingPage({ params }: LangParams) {
         <Container>
           <Reveal>
             <SectionTitle className="mb-4 max-w-[720px]">{t.packages.title}</SectionTitle>
-            <p className="mb-[54px] max-w-[52ch] text-[16px] leading-[1.65] text-muted">{t.packages.lead(euro(mailOne.monthly))}</p>
+            <p className="mb-[54px] max-w-[52ch] text-[16px] leading-[1.65] text-muted">{t.packages.lead(euro(tierPrice("one")))}</p>
           </Reveal>
           <div className="grid grid-cols-1 gap-[18px] min-[901px]:grid-cols-2">
             {liveHosting.map((h, i) => (
@@ -2990,7 +2996,7 @@ export default async function HostingPage({ params }: LangParams) {
               </div>
               <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1">
                 {tiers.map((tier) => (
-                  <span key={tier.label} className="font-display text-[20px] font-semibold tracking-[-0.02em]">
+                  <span key={tier.id} className="font-display text-[20px] font-semibold tracking-[-0.02em]">
                     {euro(tier.monthly)} <span className="text-[13px] font-normal text-muted">{t.packages.tierPerMonth(tier.label)}</span>
                   </span>
                 ))}
@@ -3008,7 +3014,7 @@ export default async function HostingPage({ params }: LangParams) {
               <SectionTitle className="max-w-[16ch]">{t.domain.title}</SectionTitle>
               <p className="mt-6 max-w-[46ch] text-[16px] leading-[1.65] text-muted">{t.domain.p1(services.domains.included, services.domains.other)}</p>
               <p className="mt-4 max-w-[46ch] text-[16px] leading-[1.65] text-muted">
-                {t.domain.p2(euro(mailOne.monthly), euro(mailMulti.monthly), mailbox.quotaGb, services.mailbox.more)}
+                {t.domain.p2(euro(tierPrice("one")), euro(tierPrice("multi")), mailbox.quotaGb, services.mailbox.more)}
               </p>
             </div>
             <div className="self-center rounded-2xl border border-line bg-panel p-[clamp(22px,2.4vw,30px)]">
@@ -3022,7 +3028,7 @@ export default async function HostingPage({ params }: LangParams) {
                     </tr>
                   ))}
                   {tiers.map((tier) => (
-                    <tr key={tier.label}>
+                    <tr key={tier.id}>
                       <td className="py-3 font-mono text-[14px] text-ink">@</td>
                       <td className="py-3 text-muted">{t.packages.tierPerMonth(tier.label)}</td>
                       <td className="py-3 text-right text-ink">{euro(tier.monthly)}</td>
@@ -3126,7 +3132,7 @@ export default async function HulpPage({ params }: LangParams) {
   const t = pages.hulp;
   const h = pricing.hulp;
   const tarief = services.hulpTarief;
-  const apkPrijs = { "computer-apk": h.apk.computer, "website-apk": h.apk.website } as const;
+  const apkPrijs = { "computer-apk": h.apk.computer, "website-apk": h.apk.website };
   const apk = (id: "computer-apk" | "website-apk") => t.apk.items.find((a) => a.id === id)!;
   const schema = {
     "@context": "https://schema.org",
@@ -3192,7 +3198,7 @@ export default async function HulpPage({ params }: LangParams) {
                 <div className="flex h-full flex-col rounded-2xl border border-line bg-panel p-[clamp(24px,2.6vw,34px)]">
                   <div className="flex items-baseline justify-between gap-4">
                     <h3 className="font-display text-[clamp(22px,2.2vw,26px)] font-semibold tracking-[-0.02em]">{a.title}</h3>
-                    <span className="font-display text-[clamp(24px,2.4vw,30px)] font-semibold tracking-[-0.02em]">{euro(apkPrijs[a.id as keyof typeof apkPrijs])}</span>
+                    <span className="font-display text-[clamp(24px,2.4vw,30px)] font-semibold tracking-[-0.02em]">{euro(apkPrijs[a.id])}</span>
                   </div>
                   <p className="mt-3 text-[15px] leading-[1.6] text-muted">{a.body}</p>
                   <div className="mt-auto pt-6">
@@ -3744,7 +3750,6 @@ import { services } from "./services";
 
 /** Body van de algemene voorwaarden (26-08-2026). Verplaatst uit de pagina; tekst ongewijzigd. */
 export function TermsBody() {
-  const onderhoud = pricing.hosting.find((h) => h.id === "onderhoud")!;
   const webshop = liveHosting.find((h) => h.id === "webshop");
   const [mailOne, mailMulti] = pricing.addons[0].tiers;
   const namen = liveHosting.map((h) => services.plans[h.id].name);
@@ -3757,7 +3762,7 @@ export function TermsBody() {
 }
 ```
 
-Twee vervangingen in de verplaatste JSX: `{pricing.hulp.card.validity}` → `{services.hulpTarief.cardValidity}`; verder niets. (`onderhoud`, `webshop`, `mailOne`, `mailMulti`, `pakketten`, `euro`, `pricing`, `site` worden precies zo gebruikt als voorheen.)
+Twee vervangingen in de verplaatste JSX: `{pricing.hulp.card.validity}` → `{services.hulpTarief.cardValidity}`; verder niets. (`webshop`, `mailOne`, `mailMulti`, `pakketten`, `euro`, `pricing`, `site` worden precies zo gebruikt als voorheen. De naam "Onderhoud" staat als losse tekst in de JSX, dus een `onderhoud`-const is hier niet nodig.)
 
 - [ ] **Step 3: Registreer de bodies in `lib/i18n/nl/index.ts`**
 
@@ -3828,6 +3833,7 @@ git commit -m "Privacy en voorwaarden: body-componenten in het woordenboek"
 ### Task 15: Support (alleen NL), OG-afbeeldingen per taal
 
 **Files:**
+- Create: `app/[lang]/(site)/privacy/opengraph-image.tsx`, `app/[lang]/(site)/voorwaarden/opengraph-image.tsx`
 - Modify: `app/[lang]/(site)/support/page.tsx`, `app/[lang]/(site)/support/[slug]/page.tsx`, `lib/og.tsx`, alle `opengraph-image.tsx` onder `app/[lang]/(site)/`
 
 - [ ] **Step 1: Support-pagina's alleen voor `nl`**
@@ -3882,7 +3888,9 @@ export default async function OpengraphImage({ params }: LangParams) {
 }
 ```
 
-Zelfde bestand voor `websites/`, `hosting/`, `hulp/`, `werk/`, `contact/` met respectievelijk `pages.websites.og`, `pages.hosting.og`, `pages.hulp.og`, `pages.werk.og`, `pages.contact.og`. Laat in elk bestand `generateStaticParams` staan, anders wordt de route weer dynamisch.
+Zelfde bestand voor `websites/`, `hosting/`, `hulp/`, `werk/`, `contact/`, `privacy/` en `voorwaarden/` met respectievelijk `pages.websites.og`, `pages.hosting.og`, `pages.hulp.og`, `pages.werk.og`, `pages.contact.og`, `pages.privacy.og` en `pages.voorwaarden.og`. Laat in elk bestand `generateStaticParams` staan, anders wordt de route weer dynamisch.
+
+`privacy/opengraph-image.tsx` en `voorwaarden/opengraph-image.tsx` zijn **nieuw**: `pageMetadata` geeft die twee pagina's sinds Task 14 een eigen `openGraph`-blok, waardoor ze de OG-afbeelding van de `(site)`-laag niet meer erven. Zonder eigen route zouden `/privacy` en `/voorwaarden` helemaal geen `og:image` meer sturen.
 
 `support/opengraph-image.tsx`: behoud de drie strings en `generateStaticParams`, voeg `footer: getDict("nl").ui.og.footer` toe.
 
@@ -4036,7 +4044,7 @@ In `app/[lang]/layout.tsx`: `const { ui } = getDict(lang);` (import `getDict` ui
 ```ts
 /**
  * Alle verkoopprijzen op de site komen hieruit (besloten 26-08-2026, zie docs 11 §7 en 12).
- * Regel: alle bedragen INCL. 21% btw. Kostprijzen staan niet in de code. Labels: lib/i18n/*/services.ts (plans, mailbox, hulpTarief).
+ * Regel: alle bedragen INCL. 21% btw. Kostprijzen staan niet in de code. Labels: lib/i18n/{nl,en}/services.ts (plans, mailbox, hulpTarief).
  */
 export const pricing = {
   website: { from: 250 },
@@ -5257,13 +5265,20 @@ git commit -m "EN: contact"
       title: "Privacy policy | HitzDigital",
       description: "What HitzDigital does with your data, in plain language: what I keep, why, for how long, who I share it with and what your rights are.",
     },
+    og: { title: "Privacy policy", kicker: "Privacy", sub: privacyLead },
     crumb: "Privacy",
     title: "Privacy policy",
-    lead: "I think it matters that you know what I do with your data. This page explains how I handle it.",
+    lead: privacyLead,
     versionLine: (version: string, updated: string) => `Version ${version}, updated ${updated}`,
     version: "2.0",
     updated: "29 August 2026",
   },
+```
+
+Met, bij de consts bovenin `lib/i18n/en/pages.tsx` (net als in de NL-versie, zodat de lead niet dubbel staat):
+
+```tsx
+const privacyLead = "I think it matters that you know what I do with your data. This page explains how I handle it.";
 ```
 
 - [ ] **Step 2: Vertaal `lib/i18n/en/legal-privacy.tsx`**
@@ -5303,12 +5318,19 @@ git commit -m "EN: privacy policy"
       title: "Terms and conditions | HitzDigital",
       description: "HitzDigital's terms in plain language: websites, hosting and maintenance, computer and website help, payment, cancellation and ownership.",
     },
+    og: { title: "Terms and conditions", kicker: "Terms", sub: voorwaardenLead },
     crumb: "Terms",
     title: "Terms and conditions",
-    lead: "No small print, but clear agreements. This is what you can expect from me, and what I expect from you.",
+    lead: voorwaardenLead,
     updatedLine: (updated: string) => `Last updated: ${updated}`,
     updated: "26 August 2026",
   },
+```
+
+Met, bij de consts bovenin `lib/i18n/en/pages.tsx`:
+
+```tsx
+const voorwaardenLead = "No small print, but clear agreements. This is what you can expect from me, and what I expect from you.";
 ```
 
 - [ ] **Step 2: Vertaal `lib/i18n/en/legal-terms.tsx`**
