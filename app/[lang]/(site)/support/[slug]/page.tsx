@@ -6,30 +6,30 @@ import { Container } from "@/components/layout/Container";
 import { WhatsAppFab } from "@/components/ui/WhatsAppFab";
 import { supportArticles, getSupportArticle } from "@/lib/support";
 import { site } from "@/lib/site";
+import { getDict } from "@/lib/i18n";
+import { pageMetadata } from "@/lib/i18n/meta";
+import { langOf, type SlugParams } from "@/lib/i18n/paths";
 
-type Params = { slug: string };
-
-export function generateStaticParams(): Params[] {
+export function generateStaticParams() {
   return supportArticles.map((a) => ({ slug: a.slug }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
-  const { slug } = await params;
+export async function generateMetadata({ params }: SlugParams): Promise<Metadata> {
+  const { lang: raw, slug } = await params;
+  const lang = langOf(raw);
   const a = getSupportArticle(slug);
-  if (!a) return {};
+  if (lang !== "nl" || !a) return {};
   const title = `${a.title} | Support | HitzDigital`;
-  return {
-    title,
-    description: a.summary,
-    alternates: { canonical: `/support/${a.slug}` },
-    openGraph: { title, description: a.summary, url: `/support/${a.slug}`, type: "article" },
-  };
+  return pageMetadata("nl", "support", { title, description: a.summary }, { slug: a.slug, type: "article" });
 }
 
-export default async function SupportArticlePage({ params }: { params: Promise<Params> }) {
-  const { slug } = await params;
+export default async function SupportArticlePage({ params }: SlugParams) {
+  const { lang: raw, slug } = await params;
+  const lang = langOf(raw);
+  if (lang !== "nl") notFound(); // support bestaat alleen in het Nederlands (spec §1)
   const a = getSupportArticle(slug);
   if (!a) notFound();
+  const { ui } = getDict("nl");
   const Body = a.body;
   const schema = {
     "@context": "https://schema.org",
@@ -54,7 +54,7 @@ export default async function SupportArticlePage({ params }: { params: Promise<P
           </Prose>
         </Container>
       </section>
-      <WhatsAppFab afterId="artikel" untilId="" label="Heb je een vraag?" aria="Heb je een vraag? Stuur een WhatsApp" />
+      <WhatsAppFab afterId="artikel" untilId="" label={ui.fab.label} aria={ui.fab.aria} />
     </main>
   );
 }

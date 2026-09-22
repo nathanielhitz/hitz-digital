@@ -1,5 +1,6 @@
 import { renderOg, ogSize } from "@/lib/og";
-import { locales } from "@/lib/i18n/paths";
+import { getDict } from "@/lib/i18n";
+import { locales, langOf, type LangParams } from "@/lib/i18n/paths";
 
 export const size = ogSize;
 export const contentType = "image/png";
@@ -9,10 +10,8 @@ export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
 }
 
-export default function OpengraphImage() {
-  return renderOg({
-    title: "Alles rond je *website*. Eén aanspreekpunt.",
-    kicker: "Websites · Hosting · Hulp",
-    sub: "Websites, hosting en computerhulp voor ondernemers in de Hoeksche Waard. Eén persoon, korte lijnen.",
-  });
+export default async function OpengraphImage({ params }: LangParams) {
+  const lang = langOf((await params).lang);
+  const { pages, ui } = getDict(lang);
+  return renderOg({ ...pages.home.og, footer: ui.og.footer });
 }

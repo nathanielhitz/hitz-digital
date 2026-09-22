@@ -1,4 +1,5 @@
 import { renderOg, ogSize } from "@/lib/og";
+import { getDict } from "@/lib/i18n";
 import { locales } from "@/lib/i18n/paths";
 
 export const size = ogSize;
@@ -14,5 +15,6 @@ export default function OpengraphImage() {
     title: "Support & *handleidingen*",
     kicker: "Voor klanten",
     sub: "E-mail instellen, domein, website en meer. Stap voor stap, in gewoon Nederlands.",
+    footer: getDict("nl").ui.og.footer,
   });
 }

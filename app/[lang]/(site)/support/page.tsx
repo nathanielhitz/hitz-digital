@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { PageHero } from "@/components/page/PageHero";
 import { Container } from "@/components/layout/Container";
 import { Reveal } from "@/components/ui/Reveal";
@@ -6,19 +7,22 @@ import { Button } from "@/components/ui/Button";
 import { supportArticles } from "@/lib/support";
 import { whatsapp } from "@/lib/content";
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
+import { pageMetadata } from "@/lib/i18n/meta";
+import { langOf, type LangParams } from "@/lib/i18n/paths";
 
 const title = "Support & handleidingen | HitzDigital";
 const description =
   "Handleidingen voor klanten van HitzDigital: e-mail instellen, domein, website en meer. Stap voor stap, in gewoon Nederlands.";
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: "/support" },
-  openGraph: { title, description, url: "/support", type: "website" },
-};
+export async function generateMetadata({ params }: LangParams): Promise<Metadata> {
+  const lang = langOf((await params).lang);
+  if (lang !== "nl") return {};
+  return pageMetadata(lang, "support", { title, description });
+}
 
-export default function SupportPage() {
+export default async function SupportPage({ params }: LangParams) {
+  const lang = langOf((await params).lang);
+  if (lang !== "nl") notFound(); // support bestaat alleen in het Nederlands (spec §1)
   const categories = Array.from(new Set(supportArticles.map((a) => a.category)));
   return (
     <main id="main" className="relative z-[2] bg-deep">
