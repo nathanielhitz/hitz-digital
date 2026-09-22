@@ -18,6 +18,7 @@ Besluiten uit de brainstorm (22-09-2026):
 - Technische aanpak: één routeboom onder `app/[lang]`, eigen middleware, getypte woordenboeken. Geen i18n-bibliotheek.
 - Taalschakelaar: in de nav naast de themaknop (tekst), in het mobiele menu als pil-schakelaar zoals de themaknop, en herhaald in de footer-onderbalk. Geen suggestiebalk bij diepe links.
 - Uitrol: alles in één keer live, ook de refactor van fase 1 blijft op de branch tot de EN-versie compleet is.
+- Header-knop: wordt contextueel per pijler (nu overal "Gratis demo", ook op Hosting en Hulp waar de pagina zelf om iets anders vraagt). Meegenomen omdat de knoplabels toch naar de woordenboeken verhuizen. Klikken worden gemeten.
 
 ## Doel
 
@@ -89,7 +90,7 @@ lib/i18n/
   paths.ts        padkaart NL↔EN (zie §1) + helpers: counterpart(lang, pathname), href(lang, routeKey, slug?)
   types.ts        Lang = "nl" | "en"; Dictionary-type afgeleid van het NL-woordenboek
   index.ts        getDict(lang), isLang(x), locales, defaultLang = "nl"
-  nl/ui.tsx       nav, footer, skip-link, themaknop-labels, taalschakelaar-labels, formulier (labels, keuzes, fouten, bevestiging, mailto-tekst), WhatsApp-FAB, kruimelpad "Home", 404
+  nl/ui.tsx       nav (links + de vier header-knop-labels), footer, skip-link, themaknop-labels, taalschakelaar-labels, formulier (labels, keuzes, fouten, bevestiging, mailto-tekst), WhatsApp-FAB, kruimelpad "Home", 404
   nl/pages.tsx    per pagina: metadata (title, description), OG-teksten, hero, secties, CTA-labels
   nl/services.ts  pijlers, werkwijze, websiteOpties, websiteInbegrepen, FAQ's, pakketten-labels, aanvraagKeuzes-labels
   nl/work.ts      case-teksten (meta-regel, alt-teksten, casepagina-copy)
@@ -124,6 +125,23 @@ Gedrag:
 - Op een pagina zonder tegenhanger (support) linkt EN naar `/en`.
 - De huidige taal is niet klikbaar (`aria-current="true"`), de andere heeft een `aria-label` als "Switch to English" / "Schakel naar Nederlands".
 - `Nav` krijgt de pathname via `usePathname()` en geeft die door; de layout geeft `lang` en labels door als props.
+
+#### Header-knop per pijler
+
+De knop rechts in de desktop-nav en de brede knop onderin het mobiele menu zijn dezelfde knop. Het label en de link volgen de pagina, zodat de header nooit om iets anders vraagt dan de pagina zelf:
+
+| Route | Label NL | Label EN | Link |
+|---|---|---|---|
+| home, websites, werk, werk/[slug] | Gratis demo | Free demo | `/contact?voor=website` |
+| hosting | Vraag hosting aan | Request hosting | `/contact?voor=hosting` |
+| hulp | Vraag hulp aan | Request help | `/contact?voor=hulp` |
+| privacy, voorwaarden, support, 404 | Contact | Contact | `/contact` |
+| contact | geen knop (desktop én mobiel menu) | | |
+
+- De keuze staat als `cta` per route in de padkaart (`"demo" | "hosting" | "hulp" | "contact" | null`); labels komen uit `ui.tsx`, de link uit de `href`-helper met de juiste `?voor=`. Casepagina's erven `demo` van `werk`.
+- De layout bepaalt de route uit de pathname en geeft label en href als props aan `Nav`. Geen aparte logica in `Nav`.
+- Meting: bij klik `track("nav_cta", { cta, lang, path })` via `@vercel/analytics` (zelfde import als het formulier). Zonder JavaScript blijft het een gewone link.
+- Stijl, maat en positie van de knop veranderen niet.
 
 ### 5. SEO en metadata
 
@@ -164,9 +182,10 @@ Playwright (bestaande opzet: `npx playwright`, lokale Chromium, poort 3111), nie
 - **Diepe links redirecten nooit:** `/websites` met Engelse header → 200 NL; `/en/websites` met Nederlandse header → 200 EN.
 - **Canonieke URL's:** `/nl/hosting` → 301 `/hosting`; `/en/hulp` → 301 `/en/help`; `/en/support` → 301 `/support`; `/fr` → 404.
 - **Schakelaar:** op elke route uit de padkaart wijst de schakelaar (alle drie de varianten) naar de juiste tegenhanger; klik zet de cookie.
+- **Header-knop:** per route klopt label en `href` volgens de tabel in §4, in beide talen; op `/contact` en `/en/contact` is er geen knop in nav of mobiel menu.
 - **Metadata:** `<html lang>` klopt; hreflang-tags zijn symmetrisch (NL noemt EN, EN noemt NL, beide noemen `x-default`); sitemap bevat elke route in beide talen met alternates.
 - **Lek-check:** elke EN-pagina wordt gescand op een vaste lijst Nederlandse woorden (o.a. "Gratis", "Vraag", "Neem contact", "per maand", "incl. btw", "Hoeksche Waard" buiten de adresregel). Elke treffer is een falende test.
-- **Nul-verandering NL:** de bestaande screenshots in `../screenshots/` worden opnieuw gemaakt en visueel vergeleken; afwijkingen zijn alleen toegestaan in nav (schakelaar) en footer-onderbalk.
+- **Nul-verandering NL:** na fase 1 worden de bestaande screenshots in `../screenshots/` opnieuw gemaakt en visueel vergeleken; er mag niets afwijken. Na fase 3 opnieuw; dan zijn alleen de taalschakelaar (nav, footer-onderbalk) en het label van de header-knop op Hosting, Hulp, Privacy, Voorwaarden en Support toegestaan als verschil.
 - `tsc --noEmit` en `next build` slagen; de build toont alle routes in beide talen als statisch.
 
 ### 9. Uitrol
@@ -174,8 +193,8 @@ Playwright (bestaande opzet: `npx playwright`, lokale Chromium, poort 3111), nie
 Alles op één branch (`feature/engels`), in vier bouwfasen met checkpoint en akkoord van Nathaniel na elke fase. Niets gaat live vóór fase 4 klaar is.
 
 1. **Refactor naar `[lang]`, alleen NL.** Woordenboeken `nl/*` gevuld vanuit de huidige inline copy, middleware doet alleen rewrites (regels 1, 2, 7). Controle: nul zichtbare verandering (screenshots), alle huidige URL's 200.
-2. **Engelse woordenboeken en copy**, pagina voor pagina in deze volgorde: ui (nav/footer/formulier/404), home, websites, hosting, help, work + cases, contact, privacy, terms. Nathaniel leest per pagina tegen.
-3. **Taalschakelaar, cookie, homepage-detectie** (middleware regels 3 t/m 6), tests uit §8.
+2. **Engelse woordenboeken en copy**, pagina voor pagina in deze volgorde: ui (nav inclusief header-knoppen/footer/formulier/404), home, websites, hosting, help, work + cases, contact, privacy, terms. Nathaniel leest per pagina tegen.
+3. **Taalschakelaar, contextuele header-knop met klikmeting, cookie, homepage-detectie** (middleware regels 3 t/m 6), tests uit §8. De header-knop zit bewust hier en niet in fase 1, zodat fase 1 écht nul zichtbare verandering is.
 4. **hreflang, sitemap, OG-afbeeldingen, schema.** Daarna merge naar `main` → Vercel deploy → sitemap opnieuw indienen in Search Console en de redirect-matrix op productie nalopen.
 
 **Later, zodra hitzdigital.com gekocht is:** domein in Vercel toevoegen als redirect-domein (301) naar `https://www.hitzdigital.nl/en` met behoud van pad. Geen codewijziging nodig.
