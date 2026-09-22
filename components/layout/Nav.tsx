@@ -40,11 +40,12 @@ export function Nav({ lang, links, ctaLabels, contactHref, labels, theme, langLa
   const pathname = publicPath(usePathname() ?? "/");
   const kind = ctaFor(pathname);
   const cta = kind
-    ? { kind, label: ctaLabels[kind], href: kind === "contact" ? contactHref : `${contactHref}?voor=${kind === "demo" ? "website" : kind}` }
+    ? { label: ctaLabels[kind], href: kind === "contact" ? contactHref : `${contactHref}?voor=${kind === "demo" ? "website" : kind}` }
     : null;
   const onCta = () => {
+    if (!kind) return;
     try {
-      track("nav_cta", { cta: kind ?? "", lang, path: pathname });
+      track("nav_cta", { cta: kind, lang, path: pathname });
     } catch {}
   };
 

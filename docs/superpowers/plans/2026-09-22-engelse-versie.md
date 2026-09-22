@@ -463,7 +463,7 @@ export type SlugParams = { params: Promise<{ lang: string; slug: string }> };
 - [ ] **Step 4: Run de tests, verwacht slagen**
 
 Run: `npm run test:unit`
-Expected: `ℹ pass 10`, `ℹ fail 0`.
+Expected: `ℹ pass 11`, `ℹ fail 0`.
 
 - [ ] **Step 5: Typecheck en commit**
 
@@ -556,7 +556,7 @@ export function prefersEnglish(header: string | null): boolean {
 - [ ] **Step 4: Run, verwacht slagen**
 
 Run: `npm run test:unit`
-Expected: `ℹ pass 15`, `ℹ fail 0`.
+Expected: `ℹ pass 16`, `ℹ fail 0`.
 
 - [ ] **Step 5: Commit**
 
@@ -5482,29 +5482,48 @@ export function LangSwitch({ lang, labels, variant, className }: { lang: Lang; l
   const route = publicPath(usePathname() ?? "/");
   // Query en hash staan niet in usePathname(); ze komen na hydration uit de URL, net als in AanvraagForm.
   // (useSearchParams zou elke statische pagina naar client-rendering trekken.)
-  const [suffix, setSuffix] = useState("");
+  // De suffix wordt bewaard mét de route waar hij bij hoort. Na een clientnavigatie (next/link) rendert
+  // deze component de nieuwe route al terwijl de state nog van de vorige pagina is; dan hoort de query
+  // van die vorige pagina er niet meer bij en is de suffix meteen leeg — geen flits met een oude ?voor=.
+  const [applied, setApplied] = useState({ route: "", suffix: "" });
+  const suffix = applied.route === route ? applied.suffix : "";
   useEffect(() => {
-    const apply = () => setSuffix(`${window.location.search}${window.location.hash}`);
+    const apply = () => {
+      // Loopt de adresbalk nog achter op de route, dan is deze URL nog die van de vorige pagina: niets opslaan.
+      if (publicPath(window.location.pathname) !== route) return;
+      setApplied({ route, suffix: `${window.location.search}${window.location.hash}` });
+    };
     apply();
+    const raf = requestAnimationFrame(apply);
     window.addEventListener("hashchange", apply);
-    return () => window.removeEventListener("hashchange", apply);
-  }, []);
+    window.addEventListener("popstate", apply);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("hashchange", apply);
+      window.removeEventListener("popstate", apply);
+    };
+    // route in de deps: elke navigatie leest de query en hash opnieuw.
+  }, [route]);
   const pathname = route + suffix;
   const target = other(lang);
   const link = {
     href: counterpart(pathname, target),
     hrefLang: target,
     lang: target,
-    "aria-label": labels.switchTo[target],
     onClick: () => remember(target),
   };
+  // Toegankelijke naam per variant: de naam moet zeggen waar je staat (segment) of het zichtbare
+  // woord bevatten (text, voor spraakbediening). De names-variant toont de bestemming al voluit.
+  const segmentLabel = `${labels[lang]} – ${labels.switchTo[target]}`;
+  const textLabel = `${target.toUpperCase()} – ${labels.switchTo[target]}`;
 
   if (variant === "segment") {
     return (
       <a
         {...link}
+        aria-label={segmentLabel}
         className={cn(
-          "group relative inline-flex h-10 w-[76px] flex-none items-center rounded-full border border-line bg-field p-[3px] transition-[border-color,background-color] duration-200 hover:border-accent/55",
+          "relative inline-flex h-10 w-[76px] flex-none items-center rounded-full border border-line bg-field p-[3px] transition-[border-color,background-color] duration-200 hover:border-accent/55",
           className,
         )}
       >
@@ -5535,11 +5554,15 @@ export function LangSwitch({ lang, labels, variant, className }: { lang: Lang; l
         <Fragment key={l}>
           {i > 0 && (names ? <span aria-hidden className="select-none">|</span> : <span aria-hidden className="h-3 w-px bg-line" />)}
           {l === lang ? (
-            <span aria-current="true" className={cn("inline-block py-1", names ? "text-faint" : "text-ink")}>
+            <span aria-current="true" lang={names ? l : undefined} className={cn("inline-block py-1", names ? "text-faint" : "text-ink")}>
               {label(l)}
             </span>
           ) : (
-            <a {...link} className={cn("inline-block py-1 transition-colors hover:text-ink", names ? "text-muted" : "text-faint")}>
+            <a
+              {...link}
+              aria-label={names ? labels.switchTo[target] : textLabel}
+              className={cn("inline-block py-1 transition-colors hover:text-ink", names ? "text-muted" : "text-faint")}
+            >
               {label(l)}
             </a>
           )}
@@ -5611,6 +5634,8 @@ git commit -m "Taalschakelaar in nav, mobiel menu en footer; cookie bij klik"
 ```js
 test("header-knop volgt de pagina (spec §4)", async () => {
   const header = (html) => html.slice(html.indexOf("<header"), html.indexOf("</header>"));
+  // Het mobiele menu staat naast de header, tussen </header> en de <main> van de pagina.
+  const mobile = (html) => html.slice(html.indexOf('id="mobile-menu"'), html.indexOf("<main"));
   const expect = [
     ["/", "/contact?voor=website", "Gratis demo"],
     ["/websites", "/contact?voor=website", "Gratis demo"],
@@ -5625,16 +5650,19 @@ test("header-knop volgt de pagina (spec §4)", async () => {
     ["/en/terms", "/en/contact", "Contact"],
   ];
   for (const [path, href, label] of expect) {
-    const h = header(await (await get(path)).text());
+    const html = await (await get(path)).text();
     const re = new RegExp(`href="${href.replace("?", "\\?")}"[^>]*>\\s*${label}`);
-    assert.match(h, re, path);
+    assert.match(header(html), re, path);
+    // Eén positieve steekproef: het mobiele menu toont dezelfde knop als de desktop-nav.
+    if (path === "/hosting") assert.match(mobile(html), re, `${path}: mobiel menu`);
   }
   // De taalschakelaar (Task 28) linkt op de contactpagina zelf ook naar /contact resp. /en/contact;
   // die valt buiten de vraag "staat er een knop?" en wordt er eerst uitgeknipt.
   const withoutLangSwitch = (h) => h.replace(/<a [^>]*hrefLang="[a-z]{2}"[^>]*>.*?<\/a>/g, "");
   for (const path of ["/contact", "/en/contact"]) {
-    const h = withoutLangSwitch(header(await (await get(path)).text()));
-    assert.doesNotMatch(h, /href="\/(en\/)?contact/, `${path}: geen knop`);
+    const html = await (await get(path)).text();
+    assert.doesNotMatch(withoutLangSwitch(header(html)), /href="\/(en\/)?contact/, `${path}: geen knop`);
+    assert.doesNotMatch(withoutLangSwitch(mobile(html)), /href="\/(en\/)?contact/, `${path}: geen knop in het mobiele menu`);
   }
 });
 ```
@@ -5667,11 +5695,12 @@ Bovenin de component (na de `useState`-regels):
   const pathname = publicPath(usePathname() ?? "/");
   const kind = ctaFor(pathname);
   const cta = kind
-    ? { kind, label: ctaLabels[kind], href: kind === "contact" ? contactHref : `${contactHref}?voor=${kind === "demo" ? "website" : kind}` }
+    ? { label: ctaLabels[kind], href: kind === "contact" ? contactHref : `${contactHref}?voor=${kind === "demo" ? "website" : kind}` }
     : null;
   const onCta = () => {
+    if (!kind) return;
     try {
-      track("nav_cta", { cta: kind ?? "", lang, path: pathname });
+      track("nav_cta", { cta: kind, lang, path: pathname });
     } catch {}
   };
 ```

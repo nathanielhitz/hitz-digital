@@ -114,6 +114,8 @@ test("diepe links redirecten nooit op taal", async () => {
 
 test("header-knop volgt de pagina (spec §4)", async () => {
   const header = (html) => html.slice(html.indexOf("<header"), html.indexOf("</header>"));
+  // Het mobiele menu staat naast de header, tussen </header> en de <main> van de pagina.
+  const mobile = (html) => html.slice(html.indexOf('id="mobile-menu"'), html.indexOf("<main"));
   const expect = [
     ["/", "/contact?voor=website", "Gratis demo"],
     ["/websites", "/contact?voor=website", "Gratis demo"],
@@ -128,16 +130,19 @@ test("header-knop volgt de pagina (spec §4)", async () => {
     ["/en/terms", "/en/contact", "Contact"],
   ];
   for (const [path, href, label] of expect) {
-    const h = header(await (await get(path)).text());
+    const html = await (await get(path)).text();
     const re = new RegExp(`href="${href.replace("?", "\\?")}"[^>]*>\\s*${label}`);
-    assert.match(h, re, path);
+    assert.match(header(html), re, path);
+    // Eén positieve steekproef: het mobiele menu toont dezelfde knop als de desktop-nav.
+    if (path === "/hosting") assert.match(mobile(html), re, `${path}: mobiel menu`);
   }
   // De taalschakelaar (Task 28) linkt op de contactpagina zelf ook naar /contact resp. /en/contact;
   // die valt buiten de vraag "staat er een knop?" en wordt er eerst uitgeknipt.
   const withoutLangSwitch = (h) => h.replace(/<a [^>]*hrefLang="[a-z]{2}"[^>]*>.*?<\/a>/g, "");
   for (const path of ["/contact", "/en/contact"]) {
-    const h = withoutLangSwitch(header(await (await get(path)).text()));
-    assert.doesNotMatch(h, /href="\/(en\/)?contact/, `${path}: geen knop`);
+    const html = await (await get(path)).text();
+    assert.doesNotMatch(withoutLangSwitch(header(html)), /href="\/(en\/)?contact/, `${path}: geen knop`);
+    assert.doesNotMatch(withoutLangSwitch(mobile(html)), /href="\/(en\/)?contact/, `${path}: geen knop in het mobiele menu`);
   }
 });
 

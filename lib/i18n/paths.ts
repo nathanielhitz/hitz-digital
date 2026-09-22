@@ -34,6 +34,7 @@ type Segment = {
   dynamic: boolean;
 };
 
+// Invariant waar publicPath op leunt: geen publieke EN-slug mag gelijk zijn aan de NL-mapnaam van een andere route.
 export const segments: Record<SegmentKey, Segment> = {
   websites: { nl: "websites", en: "websites", cta: "demo", dynamic: false },
   hosting: { nl: "hosting", en: "hosting", cta: "hosting", dynamic: false },

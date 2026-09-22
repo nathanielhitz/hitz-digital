@@ -28,29 +28,48 @@ export function LangSwitch({ lang, labels, variant, className }: { lang: Lang; l
   const route = publicPath(usePathname() ?? "/");
   // Query en hash staan niet in usePathname(); ze komen na hydration uit de URL, net als in AanvraagForm.
   // (useSearchParams zou elke statische pagina naar client-rendering trekken.)
-  const [suffix, setSuffix] = useState("");
+  // De suffix wordt bewaard mét de route waar hij bij hoort. Na een clientnavigatie (next/link) rendert
+  // deze component de nieuwe route al terwijl de state nog van de vorige pagina is; dan hoort de query
+  // van die vorige pagina er niet meer bij en is de suffix meteen leeg — geen flits met een oude ?voor=.
+  const [applied, setApplied] = useState({ route: "", suffix: "" });
+  const suffix = applied.route === route ? applied.suffix : "";
   useEffect(() => {
-    const apply = () => setSuffix(`${window.location.search}${window.location.hash}`);
+    const apply = () => {
+      // Loopt de adresbalk nog achter op de route, dan is deze URL nog die van de vorige pagina: niets opslaan.
+      if (publicPath(window.location.pathname) !== route) return;
+      setApplied({ route, suffix: `${window.location.search}${window.location.hash}` });
+    };
     apply();
+    const raf = requestAnimationFrame(apply);
     window.addEventListener("hashchange", apply);
-    return () => window.removeEventListener("hashchange", apply);
-  }, []);
+    window.addEventListener("popstate", apply);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("hashchange", apply);
+      window.removeEventListener("popstate", apply);
+    };
+    // route in de deps: elke navigatie leest de query en hash opnieuw.
+  }, [route]);
   const pathname = route + suffix;
   const target = other(lang);
   const link = {
     href: counterpart(pathname, target),
     hrefLang: target,
     lang: target,
-    "aria-label": labels.switchTo[target],
     onClick: () => remember(target),
   };
+  // Toegankelijke naam per variant: de naam moet zeggen waar je staat (segment) of het zichtbare
+  // woord bevatten (text, voor spraakbediening). De names-variant toont de bestemming al voluit.
+  const segmentLabel = `${labels[lang]} – ${labels.switchTo[target]}`;
+  const textLabel = `${target.toUpperCase()} – ${labels.switchTo[target]}`;
 
   if (variant === "segment") {
     return (
       <a
         {...link}
+        aria-label={segmentLabel}
         className={cn(
-          "group relative inline-flex h-10 w-[76px] flex-none items-center rounded-full border border-line bg-field p-[3px] transition-[border-color,background-color] duration-200 hover:border-accent/55",
+          "relative inline-flex h-10 w-[76px] flex-none items-center rounded-full border border-line bg-field p-[3px] transition-[border-color,background-color] duration-200 hover:border-accent/55",
           className,
         )}
       >
@@ -81,11 +100,15 @@ export function LangSwitch({ lang, labels, variant, className }: { lang: Lang; l
         <Fragment key={l}>
           {i > 0 && (names ? <span aria-hidden className="select-none">|</span> : <span aria-hidden className="h-3 w-px bg-line" />)}
           {l === lang ? (
-            <span aria-current="true" className={cn("inline-block py-1", names ? "text-faint" : "text-ink")}>
+            <span aria-current="true" lang={names ? l : undefined} className={cn("inline-block py-1", names ? "text-faint" : "text-ink")}>
               {label(l)}
             </span>
           ) : (
-            <a {...link} className={cn("inline-block py-1 transition-colors hover:text-ink", names ? "text-muted" : "text-faint")}>
+            <a
+              {...link}
+              aria-label={names ? labels.switchTo[target] : textLabel}
+              className={cn("inline-block py-1 transition-colors hover:text-ink", names ? "text-muted" : "text-faint")}
+            >
               {label(l)}
             </a>
           )}
