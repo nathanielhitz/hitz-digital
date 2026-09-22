@@ -12,6 +12,8 @@ type Props = {
   untilId?: string;
   /** Extra klassen, bv. `max-[900px]:hidden` op pagina's met de mobiele StickyCallBar. */
   className?: string;
+  label: string;
+  aria: string;
 };
 
 /**
@@ -20,7 +22,7 @@ type Props = {
  * - verdwijnt weer zodra `untilId` in beeld komt (daar staat WhatsApp al)
  * - IntersectionObserver (zie useRangeVisible), geen scroll-listener; SSR-safe (start verborgen)
  */
-export function WhatsAppFab({ afterId = "pijlers", untilId = "contact", className }: Props) {
+export function WhatsAppFab({ afterId = "pijlers", untilId = "contact", className, label, aria }: Props) {
   const visible = useRangeVisible(afterId, untilId, 0.6);
 
   return (
@@ -28,7 +30,7 @@ export function WhatsAppFab({ afterId = "pijlers", untilId = "contact", classNam
       href={whatsapp}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Heb je een vraag? Stuur een WhatsApp"
+      aria-label={aria}
       aria-hidden={!visible}
       tabIndex={visible ? 0 : -1}
       className={cn(
@@ -41,7 +43,7 @@ export function WhatsAppFab({ afterId = "pijlers", untilId = "contact", classNam
       )}
     >
       <WhatsappLogo size={22} weight="fill" aria-hidden />
-      <span>Heb je een vraag?</span>
+      <span>{label}</span>
     </a>
   );
 }

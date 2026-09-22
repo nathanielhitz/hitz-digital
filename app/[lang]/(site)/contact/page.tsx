@@ -37,6 +37,7 @@ export default async function ContactPage() {
   return (
     <main id="main" className="relative z-[2] bg-deep">
       <PageHero
+        lang="nl"
         crumbs={[{ label: "Contact" }]}
         title="Waar kan ik je mee helpen?"
         lead="Kies waarvoor je me nodig hebt en vertel kort wat er speelt. Ik reageer binnen 1 werkdag, vrijblijvend. Bij een storing of spoed: bel."

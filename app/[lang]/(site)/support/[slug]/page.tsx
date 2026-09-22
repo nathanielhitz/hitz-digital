@@ -45,7 +45,7 @@ export default async function SupportArticlePage({ params }: { params: Promise<P
   return (
     <main id="main" className="relative z-[2] bg-deep">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
-      <PageHero crumbs={[{ label: "Support", href: "/support" }, { label: a.title }]} title={a.title} lead={a.summary} />
+      <PageHero lang="nl" crumbs={[{ label: "Support", href: "/support" }, { label: a.title }]} title={a.title} lead={a.summary} />
       <section id="artikel" className="px-[clamp(20px,5vw,64px)] pb-10 md:pb-12">
         <Container>
           <Prose>
@@ -54,7 +54,7 @@ export default async function SupportArticlePage({ params }: { params: Promise<P
           </Prose>
         </Container>
       </section>
-      <WhatsAppFab afterId="artikel" untilId="" />
+      <WhatsAppFab afterId="artikel" untilId="" label="Heb je een vraag?" aria="Heb je een vraag? Stuur een WhatsApp" />
     </main>
   );
 }

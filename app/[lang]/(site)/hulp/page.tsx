@@ -47,6 +47,7 @@ export default function HulpPage() {
   return (
     <main id="main" className="relative z-[2] bg-deep">
       <PageHero
+        lang="nl"
         crumbs={[{ label: "Hulp" }]}
         title={
           <>
@@ -203,13 +204,14 @@ export default function HulpPage() {
       </Section>
 
       <CtaBand
+        lang="nl"
         title="Zit je nu vast?"
         body="Bel of app, dan kijk ik direct mee. Liever eerst een bericht? Vertel kort wat er speelt."
         label={cta.hulp.label}
         href={cta.hulp.href}
       />
-      <StickyCallBar afterId="apk" untilId="cta" />
-      <WhatsAppFab afterId="apk" untilId="cta" className="max-[900px]:hidden" />
+      <StickyCallBar afterId="apk" untilId="cta" labels={{ aria: "Direct contact", call: "Bel", whatsapp: "WhatsApp" }} />
+      <WhatsAppFab afterId="apk" untilId="cta" className="max-[900px]:hidden" label="Heb je een vraag?" aria="Heb je een vraag? Stuur een WhatsApp" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
     </main>
   );

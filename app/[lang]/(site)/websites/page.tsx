@@ -37,6 +37,7 @@ export default function WebsitesPage() {
   return (
     <main id="main" className="relative z-[2] bg-deep">
       <PageHero
+        lang="nl"
         crumbs={[{ label: "Websites" }]}
         title={
           <>
@@ -194,12 +195,13 @@ export default function WebsitesPage() {
       </Section>
 
       <CtaBand
+        lang="nl"
         title="Benieuwd hoe jouw website eruit kan zien?"
         body="Stuur je huidige site of vertel kort wat je doet. Je krijgt een echte demo van je homepage, gratis en zonder verplichtingen."
         label={cta.demoLang.label}
         href={cta.demoLang.href}
       />
-      <WhatsAppFab afterId="nieuw-of-vernieuwen" untilId="cta" />
+      <WhatsAppFab afterId="nieuw-of-vernieuwen" untilId="cta" label="Heb je een vraag?" aria="Heb je een vraag? Stuur een WhatsApp" />
     </main>
   );
 }

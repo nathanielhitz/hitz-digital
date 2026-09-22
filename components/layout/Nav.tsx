@@ -3,16 +3,27 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Wordmark } from "@/components/ui/Wordmark";
-import { ThemeSwitch } from "@/components/ui/ThemeSwitch";
+import { ThemeSwitch, type ThemeLabels } from "@/components/ui/ThemeSwitch";
 import { cn } from "@/lib/cn";
-import { nav, cta } from "@/lib/content";
+import type { Lang } from "@/lib/i18n/paths";
+
+export type NavLabels = { aria: string; homeAria: string; menuOpen: string; menuClose: string; menu: string; themeRow: string };
+
+type Props = {
+  lang: Lang;
+  links: { label: string; href: string }[];
+  /** Header-knop (desktop rechts, mobiel onderin het menu). Fase 3 maakt dit contextueel. */
+  cta: { label: string; href: string };
+  labels: NavLabels;
+  theme: ThemeLabels;
+};
 
 /**
  * Vaste navigatie. Condenseert (blur + hairline) na 24px scroll via een
  * IntersectionObserver-sentinel (geen scroll-listener). Onder 901px: hamburger
  * + fullscreen menu met focus-beheer, Escape en scroll-lock.
  */
-export function Nav() {
+export function Nav({ lang, links, cta, labels, theme }: Props) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
@@ -76,25 +87,25 @@ export function Nav() {
         )}
       >
         <nav
-          aria-label="Hoofdnavigatie"
+          aria-label={labels.aria}
           className="mx-auto flex max-w-[1280px] items-center justify-between px-[clamp(20px,5vw,64px)] py-5"
         >
-          <a href="/" aria-label="HitzDigital home" className="inline-flex items-center py-2">
+          <a href={lang === "nl" ? "/" : `/${lang}`} aria-label={labels.homeAria} className="inline-flex items-center py-2">
             <Wordmark />
           </a>
 
           <div className="hidden items-center gap-8 text-[14px] text-muted min-[901px]:flex">
-            {nav.links.map((l) => (
+            {links.map((l) => (
               <a key={l.href} href={l.href} className="transition-colors hover:text-ink">
                 {l.label}
               </a>
             ))}
-            <ThemeSwitch />
+            <ThemeSwitch labels={theme} />
             <a
-              href={cta.demo.href}
+              href={cta.href}
               className="inline-flex items-center gap-2 rounded-full border border-line px-[17px] py-[9px] font-medium text-ink transition-[border-color,background-color] duration-[250ms] hover:border-accent/55 hover:bg-accent/12"
             >
-              {cta.demo.label}
+              {cta.label}
             </a>
           </div>
 
@@ -102,7 +113,7 @@ export function Nav() {
             ref={toggleRef}
             type="button"
             className="flex h-11 w-11 items-center justify-center text-ink min-[901px]:hidden"
-            aria-label={open ? "Menu sluiten" : "Menu openen"}
+            aria-label={open ? labels.menuClose : labels.menuOpen}
             aria-expanded={open}
             aria-controls="mobile-menu"
             onClick={() => setOpen((v) => !v)}
@@ -123,7 +134,7 @@ export function Nav() {
         id="mobile-menu"
         role="dialog"
         aria-modal="true"
-        aria-label="Menu"
+        aria-label={labels.menu}
         aria-hidden={!open}
         inert={!open}
         className={cn(
@@ -132,7 +143,7 @@ export function Nav() {
         )}
       >
         <div className="my-auto flex flex-col gap-0.5">
-          {nav.links.map((l, i) => (
+          {links.map((l, i) => (
             <a
               key={l.href}
               href={l.href}
@@ -148,11 +159,11 @@ export function Nav() {
           ))}
         </div>
         <div className="mb-6 flex items-center justify-between text-[14px] text-muted">
-          <span>Weergave</span>
-          <ThemeSwitch size="lg" />
+          <span>{labels.themeRow}</span>
+          <ThemeSwitch labels={theme} size="lg" />
         </div>
-        <Button href={cta.demo.href} className="w-full py-4 text-[16px]" onClick={close}>
-          {cta.demo.label}
+        <Button href={cta.href} className="w-full py-4 text-[16px]" onClick={close}>
+          {cta.label}
         </Button>
       </div>
     </>

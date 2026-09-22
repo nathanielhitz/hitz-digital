@@ -10,12 +10,12 @@ import { useRangeVisible } from "@/lib/useRangeVisible";
  * in de bovenste 15% van het scherm) en verdwijnt bij `untilId`, waar dezelfde knoppen al staan.
  * Zo staan er nooit twee keer "Bel" en "WhatsApp" in één schermhoogte.
  */
-export function StickyCallBar({ afterId, untilId }: { afterId: string; untilId?: string }) {
+export function StickyCallBar({ afterId, untilId, labels }: { afterId: string; untilId?: string; labels: { aria: string; call: string; whatsapp: string } }) {
   const visible = useRangeVisible(afterId, untilId, 0.15);
   return (
     <div
       role="region"
-      aria-label="Direct contact"
+      aria-label={labels.aria}
       aria-hidden={!visible}
       inert={!visible}
       className={cn(
@@ -29,7 +29,7 @@ export function StickyCallBar({ afterId, untilId }: { afterId: string; untilId?:
           href={tel}
           className="inline-flex items-center justify-center gap-2 rounded-full border border-line py-3 text-[15px] font-semibold text-ink transition-transform duration-[120ms] active:scale-[0.98]"
         >
-          Bel
+          {labels.call}
         </a>
         <a
           href={whatsapp}
@@ -37,7 +37,7 @@ export function StickyCallBar({ afterId, untilId }: { afterId: string; untilId?:
           rel="noopener noreferrer"
           className="inline-flex items-center justify-center gap-2 rounded-full bg-accent py-3 text-[15px] font-semibold text-on-accent transition-transform duration-[120ms] active:scale-[0.98]"
         >
-          WhatsApp
+          {labels.whatsapp}
         </a>
       </div>
     </div>

@@ -24,6 +24,7 @@ export default function WerkPage() {
   return (
     <main id="main" className="relative z-[2] bg-deep">
       <PageHero
+        lang="nl"
         crumbs={[{ label: "Werk" }]}
         title="Voorbeelden van mijn werk."
         lead="Geen sjablonen, geen stockfoto's. Sites die ik gebouwd heb voor bedrijven in de regio, en een paar eigen projecten. Bij de klanten lees je hoe het ging."
@@ -40,12 +41,13 @@ export default function WerkPage() {
         </Container>
       </Section>
       <CtaBand
+        lang="nl"
         title="Wil je dit ook voor jouw bedrijf?"
         body="Stuur je huidige site of vertel kort wat je doet. Je krijgt een echte demo van je homepage, gratis en zonder verplichtingen."
         label={cta.demoLang.label}
         href={cta.demoLang.href}
       />
-      <WhatsAppFab afterId="cases" untilId="cta" />
+      <WhatsAppFab afterId="cases" untilId="cta" label="Heb je een vraag?" aria="Heb je een vraag? Stuur een WhatsApp" />
     </main>
   );
 }

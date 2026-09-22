@@ -55,6 +55,7 @@ export default async function CasePage({ params }: { params: Promise<Params> }) 
   return (
     <main id="main" className="relative z-[2] bg-deep">
       <PageHero
+        lang="nl"
         crumbs={[{ label: "Werk", href: "/werk" }, { label: c.title }]}
         title={c.title}
         lead={c.intro}
@@ -172,13 +173,14 @@ export default async function CasePage({ params }: { params: Promise<Params> }) 
       )}
 
       <CtaBand
+        lang="nl"
         title="Wil je dit ook voor jouw bedrijf?"
         body="Stuur je huidige site of vertel kort wat je doet. Je krijgt een echte demo van je homepage, gratis en zonder verplichtingen."
         label={cta.demoLang.label}
         href={cta.demoLang.href}
       />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
-      <WhatsAppFab afterId="case" untilId="cta" />
+      <WhatsAppFab afterId="case" untilId="cta" label="Heb je een vraag?" aria="Heb je een vraag? Stuur een WhatsApp" />
     </main>
   );
 }

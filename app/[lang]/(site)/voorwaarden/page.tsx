@@ -25,6 +25,7 @@ export default function VoorwaardenPage() {
   return (
     <main id="main" className="relative z-[2] bg-deep">
       <PageHero
+        lang="nl"
         crumbs={[{ label: "Voorwaarden" }]}
         title="Algemene voorwaarden"
         lead="Geen kleine lettertjes, maar wel duidelijke afspraken. Dit is wat je van mij kunt verwachten en wat ik van jou verwacht."

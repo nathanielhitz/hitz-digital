@@ -23,6 +23,7 @@ export default function SupportPage() {
   return (
     <main id="main" className="relative z-[2] bg-deep">
       <PageHero
+        lang="nl"
         crumbs={[{ label: "Support" }]}
         title="Support & handleidingen"
         lead="Handleidingen voor als je zelf iets wilt instellen of nakijken. Kom je er niet uit? Dan app je mij gewoon."

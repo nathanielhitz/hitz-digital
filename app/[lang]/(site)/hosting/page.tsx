@@ -55,6 +55,7 @@ export default function HostingPage() {
   return (
     <main id="main" className="relative z-[2] bg-deep">
       <PageHero
+        lang="nl"
         crumbs={[{ label: "Hosting & domeinen" }]}
         title={
           <>
@@ -197,13 +198,14 @@ export default function HostingPage() {
       </Section>
 
       <CtaBand
+        lang="nl"
         title="Zeker weten dat je site gewoon werkt?"
         body="Vertel kort waar je site en domein nu staan. Ik laat je weten wat het wordt en regel de overstap."
         label="Vraag hosting aan"
         href="/contact?voor=hosting"
       />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
-      <WhatsAppFab afterId="pakketten" untilId="cta" />
+      <WhatsAppFab afterId="pakketten" untilId="cta" label="Heb je een vraag?" aria="Heb je een vraag? Stuur een WhatsApp" />
     </main>
   );
 }

@@ -20,6 +20,7 @@ export default function PrivacyPage() {
   return (
     <main id="main" className="relative z-[2] bg-deep">
       <PageHero
+        lang="nl"
         crumbs={[{ label: "Privacy" }]}
         title="Privacybeleid"
         lead="Ik vind het belangrijk dat je weet wat ik met jouw gegevens doe. Op deze pagina lees je hoe ik dat doe."

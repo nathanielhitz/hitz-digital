@@ -4,19 +4,24 @@ import { Button } from "@/components/ui/Button";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Reveal } from "@/components/ui/Reveal";
 import { whatsapp, tel, telDisplay } from "@/lib/content";
+import { getDict } from "@/lib/i18n";
+import type { Lang } from "@/lib/i18n/paths";
 
 /** Afsluitende oproep op subpagina's; het formulier zelf staat op de homepage (#contact). */
 export function CtaBand({
+  lang,
   title,
   body,
   label,
   href,
 }: {
+  lang: Lang;
   title: string;
   body: string;
   label: string;
   href: string;
 }) {
+  const { ui } = getDict(lang);
   return (
     <Section id="cta" padding="large" className="overflow-hidden">
       <div
@@ -32,15 +37,15 @@ export function CtaBand({
           <div className="flex flex-wrap items-center justify-center gap-[14px]">
             <Button href={href}>{label}</Button>
             <Button href={whatsapp} variant="ghost" target="_blank" rel="noopener noreferrer">
-              App via WhatsApp
+              {ui.cta.whatsapp}
             </Button>
           </div>
           <p className="mt-6 text-[13.5px] text-faint">
-            Of bel{" "}
+            {ui.ctaBand.orCall}{" "}
             <a href={tel} className="inline-block py-1 text-muted underline">
               {telDisplay}
             </a>
-            . Reactie binnen 1 werkdag, vrijblijvend.
+            . {ui.ctaBand.reply}
           </p>
         </Reveal>
       </Container>

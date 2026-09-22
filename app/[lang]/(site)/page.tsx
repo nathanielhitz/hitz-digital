@@ -17,7 +17,7 @@ export default function Home() {
         <Over />
         <Contact />
       </main>
-      <WhatsAppFab />
+      <WhatsAppFab label="Heb je een vraag?" aria="Heb je een vraag? Stuur een WhatsApp" />
     </>
   );
 }

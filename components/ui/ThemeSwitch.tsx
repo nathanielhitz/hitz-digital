@@ -5,13 +5,15 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 
+export type ThemeLabels = { toLight: string; toDark: string; light: string; dark: string };
+
 /**
  * Licht/donker-schakelaar: pil-track, schuivende knop, zon links / maan rechts.
  * Standaard volgt de site het systeem (next-themes); één klik overschrijft dat en
  * bewaart de keuze in localStorage. Vóór hydration rendert een lege placeholder
  * van dezelfde maat, zodat er geen layout-shift is.
  */
-export function ThemeSwitch({ className, size = "md" }: { className?: string; size?: "md" | "lg" }) {
+export function ThemeSwitch({ className, size = "md", labels }: { className?: string; size?: "md" | "lg"; labels: ThemeLabels }) {
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
@@ -27,8 +29,8 @@ export function ThemeSwitch({ className, size = "md" }: { className?: string; si
       type="button"
       role="switch"
       aria-checked={dark}
-      aria-label={dark ? "Schakel naar licht thema" : "Schakel naar donker thema"}
-      title={dark ? "Licht thema" : "Donker thema"}
+      aria-label={dark ? labels.toLight : labels.toDark}
+      title={dark ? labels.light : labels.dark}
       onClick={() => setTheme(dark ? "light" : "dark")}
       className={cn(
         "group relative inline-flex flex-none items-center rounded-full border border-line bg-field p-[3px] transition-[border-color,background-color] duration-200 hover:border-accent/55",
