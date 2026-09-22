@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  href, parsePublic, internalPath, redirectForEn, counterpart, ctaFor, alternatesFor, ogLocale, isLang, langOf,
+  href, parsePublic, internalPath, publicPath, redirectForEn, counterpart, ctaFor, alternatesFor, ogLocale, isLang, langOf,
 } from "../../lib/i18n/paths.ts";
 
 test("href: NL zonder prefix, EN met /en en Engelse slug", () => {
@@ -43,6 +43,19 @@ test("internalPath: mapnaam blijft Nederlands", () => {
   assert.equal(internalPath({ lang: "en", key: "hulp" }), "/en/hulp");
   assert.equal(internalPath({ lang: "en", key: "werk", slug: "x" }), "/en/werk/x");
   assert.equal(internalPath({ lang: "nl", key: "voorwaarden" }), "/nl/voorwaarden");
+});
+
+test("publicPath: intern (herschreven) pad terug naar het publieke adres", () => {
+  assert.equal(publicPath("/nl"), "/");
+  assert.equal(publicPath("/en"), "/en");
+  assert.equal(publicPath("/nl/hulp"), "/hulp");
+  assert.equal(publicPath("/en/hulp"), "/en/help");
+  assert.equal(publicPath("/nl/werk/monster-zorg"), "/werk/monster-zorg");
+  assert.equal(publicPath("/nl/support/e-mail-instellingen"), "/support/e-mail-instellingen");
+  assert.equal(publicPath("/nl/contact?voor=hosting"), "/contact?voor=hosting");
+  assert.equal(publicPath("/en/does-not-exist"), "/en/does-not-exist"); // niet herschreven: onveranderd
+  assert.equal(publicPath("/hulp"), "/hulp"); // al publiek: onveranderd
+  assert.equal(publicPath("/nl/hulp/extra"), "/nl/hulp/extra"); // geen route: onveranderd
 });
 
 test("redirectForEn: interne slug en support onder /en", () => {

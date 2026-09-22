@@ -14,6 +14,7 @@ export type NotFoundTexts = { title: string; body: string; back: string; href: s
  * 404-antwoord zelf, dus de teksten van beide talen gaan mee in de payload.
  */
 export function NotFoundView({ texts }: { texts: Record<Lang, NotFoundTexts> }) {
+  // Ruw pad is genoeg: een herschreven /en-pad begint nog steeds met "/en" (geen publicPath nodig).
   const pathname = usePathname() ?? "/";
   const lang: Lang = pathname === "/en" || pathname.startsWith("/en/") ? "en" : "nl";
   const t = texts[lang];

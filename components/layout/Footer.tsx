@@ -1,3 +1,4 @@
+import { LangSwitch } from "@/components/ui/LangSwitch";
 import { MailtoLink } from "@/components/ui/MailtoLink";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { contactEmail, whatsapp, tel, telDisplay } from "@/lib/content";
@@ -80,6 +81,7 @@ export function Footer({ lang }: { lang: Lang }) {
               </li>
             ))}
           </ul>
+          <LangSwitch lang={lang} labels={ui.lang} variant="names" className="text-[12.5px]" />
           <span className="min-[761px]:ml-auto">{t.vat}</span>
         </div>
       </div>

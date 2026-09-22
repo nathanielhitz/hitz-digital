@@ -4,10 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { ThemeSwitch, type ThemeLabels } from "@/components/ui/ThemeSwitch";
+import { LangSwitch, type LangSwitchLabels } from "@/components/ui/LangSwitch";
 import { cn } from "@/lib/cn";
 import { href, type Lang } from "@/lib/i18n/paths";
 
-export type NavLabels = { aria: string; homeAria: string; menuOpen: string; menuClose: string; menu: string; themeRow: string };
+export type NavLabels = { aria: string; homeAria: string; menuOpen: string; menuClose: string; menu: string; themeRow: string; langRow: string };
 
 type Props = {
   lang: Lang;
@@ -16,6 +17,7 @@ type Props = {
   cta: { label: string; href: string };
   labels: NavLabels;
   theme: ThemeLabels;
+  langLabels: LangSwitchLabels;
 };
 
 /**
@@ -23,7 +25,7 @@ type Props = {
  * IntersectionObserver-sentinel (geen scroll-listener). Onder 901px: hamburger
  * + fullscreen menu met focus-beheer, Escape en scroll-lock.
  */
-export function Nav({ lang, links, cta, labels, theme }: Props) {
+export function Nav({ lang, links, cta, labels, theme, langLabels }: Props) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
@@ -100,6 +102,7 @@ export function Nav({ lang, links, cta, labels, theme }: Props) {
                 {l.label}
               </a>
             ))}
+            <LangSwitch lang={lang} labels={langLabels} variant="text" />
             <ThemeSwitch labels={theme} />
             <a
               href={cta.href}
@@ -158,9 +161,15 @@ export function Nav({ lang, links, cta, labels, theme }: Props) {
             </a>
           ))}
         </div>
-        <div className="mb-6 flex items-center justify-between text-[14px] text-muted">
-          <span>{labels.themeRow}</span>
-          <ThemeSwitch labels={theme} size="lg" />
+        <div className="mb-6 flex flex-col gap-[14px] text-[14px] text-muted">
+          <div className="flex items-center justify-between">
+            <span>{labels.themeRow}</span>
+            <ThemeSwitch size="lg" labels={theme} />
+          </div>
+          <div className="flex items-center justify-between">
+            <span>{labels.langRow}</span>
+            <LangSwitch lang={lang} labels={langLabels} variant="segment" />
+          </div>
         </div>
         <Button href={cta.href} className="w-full py-4 text-[16px]" onClick={close}>
           {cta.label}

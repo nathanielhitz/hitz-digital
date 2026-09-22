@@ -18,7 +18,7 @@ export default async function SiteLayout({ children, params }: Readonly<{ childr
       >
         {ui.skipLink}
       </a>
-      <Nav lang={lang} links={ui.nav.links} cta={{ label: ui.nav.cta.demo, href: ui.cta.demo.href }} labels={ui.nav} theme={ui.theme} />
+      <Nav lang={lang} links={ui.nav.links} cta={{ label: ui.nav.cta.demo, href: ui.cta.demo.href }} labels={ui.nav} theme={ui.theme} langLabels={ui.lang} />
       {children}
       <Footer lang={lang} />
     </>

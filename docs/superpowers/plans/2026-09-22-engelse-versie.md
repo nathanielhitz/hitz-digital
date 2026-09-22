@@ -34,7 +34,7 @@
 | Bestand | Verantwoordelijkheid |
 |---|---|
 | `middleware.ts` | Rewrites/redirects per spec §2 |
-| `lib/i18n/paths.ts` | Padkaart NL↔EN, `Lang`, `locales`, `href()`, `parsePublic()`, `internalPath()`, `redirectForEn()`, `counterpart()`, `ctaFor()`, `alternatesFor()`, `ogLocale()`. Geen runtime-imports (draait los onder `node --test`) |
+| `lib/i18n/paths.ts` | Padkaart NL↔EN, `Lang`, `locales`, `href()`, `parsePublic()`, `internalPath()`, `publicPath()`, `redirectForEn()`, `counterpart()`, `ctaFor()`, `alternatesFor()`, `ogLocale()`. Geen runtime-imports (draait los onder `node --test`) |
 | `lib/i18n/accept-language.ts` | `prefersEnglish(header)` |
 | `lib/i18n/index.ts` | `getDict(lang)`, type `Dict` |
 | `lib/i18n/nl/ui.tsx` | Nav, footer, skip-link, thema- en taalknop-labels, formulier, FAB, sticky balk, CTA-band, kruimelpad, 404, OG-onderregel, schema-teksten, WerkCard/PlanCard-labels |
@@ -87,6 +87,7 @@ export type Parsed = { lang: Lang; key: RouteKey; slug?: string };
 export function href(lang: Lang, key: RouteKey, slug?: string): string;   // publiek pad
 export function parsePublic(pathname: string): Parsed | null;
 export function internalPath(p: Parsed): string;                          // "/nl/hulp", "/en/hulp", "/en", "/nl"
+export function publicPath(pathname: string): string;                     // omgekeerde: "/nl/hulp" → "/hulp", "/en/hulp" → "/en/help"
 export function redirectForEn(pathname: string): string | null;           // "/en/hulp" → "/en/help"; "/en/support/x" → "/support/x"
 export function counterpart(pathname: string, target: Lang): string;
 export function ctaFor(pathname: string): CtaKind | null;
@@ -179,7 +180,7 @@ git commit -m "Test-scaffold en npm-scripts voor de Engelse versie"
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  href, parsePublic, internalPath, redirectForEn, counterpart, ctaFor, alternatesFor, ogLocale, isLang, langOf,
+  href, parsePublic, internalPath, publicPath, redirectForEn, counterpart, ctaFor, alternatesFor, ogLocale, isLang, langOf,
 } from "../../lib/i18n/paths.ts";
 
 test("href: NL zonder prefix, EN met /en en Engelse slug", () => {
@@ -221,6 +222,19 @@ test("internalPath: mapnaam blijft Nederlands", () => {
   assert.equal(internalPath({ lang: "en", key: "hulp" }), "/en/hulp");
   assert.equal(internalPath({ lang: "en", key: "werk", slug: "x" }), "/en/werk/x");
   assert.equal(internalPath({ lang: "nl", key: "voorwaarden" }), "/nl/voorwaarden");
+});
+
+test("publicPath: intern (herschreven) pad terug naar het publieke adres", () => {
+  assert.equal(publicPath("/nl"), "/");
+  assert.equal(publicPath("/en"), "/en");
+  assert.equal(publicPath("/nl/hulp"), "/hulp");
+  assert.equal(publicPath("/en/hulp"), "/en/help");
+  assert.equal(publicPath("/nl/werk/monster-zorg"), "/werk/monster-zorg");
+  assert.equal(publicPath("/nl/support/e-mail-instellingen"), "/support/e-mail-instellingen");
+  assert.equal(publicPath("/nl/contact?voor=hosting"), "/contact?voor=hosting");
+  assert.equal(publicPath("/en/does-not-exist"), "/en/does-not-exist"); // niet herschreven: onveranderd
+  assert.equal(publicPath("/hulp"), "/hulp"); // al publiek: onveranderd
+  assert.equal(publicPath("/nl/hulp/extra"), "/nl/hulp/extra"); // geen route: onveranderd
 });
 
 test("redirectForEn: interne slug en support onder /en", () => {
@@ -370,6 +384,27 @@ export function parsePublic(pathname: string): Parsed | null {
 export function internalPath(p: Parsed): string {
   if (p.key === "home") return `/${p.lang}`;
   return `/${p.lang}/${segments[p.key].nl}${p.slug ? `/${p.slug}` : ""}`;
+}
+
+/**
+ * Omgekeerde van `internalPath`: het publieke adres van een intern (herschreven) pad, mét query en hash.
+ * De middleware herschrijft elk verzoek, dus `usePathname()` in een client-component geeft `/nl/hulp`
+ * of `/en/hulp` terug, niet `/hulp` of `/en/help`. Paden die niet herschreven zijn (404 onder /en) en
+ * paden buiten de padkaart komen ongewijzigd terug.
+ */
+export function publicPath(pathname: string): string {
+  const path = pathname.split(/[?#]/)[0];
+  const suffix = pathname.slice(path.length);
+  const [first, second, third, ...rest] = path.split("/").filter(Boolean);
+  if (!isLang(first)) return pathname;
+  if (second === undefined) return href(first, "home") + suffix;
+  for (const key of segmentKeys) {
+    const seg = segments[key];
+    if (seg.nl !== second) continue;
+    if (third !== undefined && (!seg.dynamic || rest.length > 0)) return pathname;
+    return href(first, key, third) + suffix;
+  }
+  return pathname;
 }
 
 /**
@@ -4170,7 +4205,15 @@ Playwright is globaal geïnstalleerd. Node lost een ESM-import van `playwright` 
 ```bash
 mkdir -p ../node_modules && ln -sfn "$(npm root -g)/playwright" ../node_modules/playwright
 ```
-De globale Playwright (1.63) verwacht Chromium-build 1243; die staat al in `~/Library/Caches/ms-playwright/`, dus `chromium.launch()` werkt zonder download.
+De globale Playwright (1.63) vraagt zelf om Chromium-build **1148**, en die staat níet in de cache; wel aanwezig zijn 1234 en 1243.
+Een kale `chromium.launch()` faalt daardoor met "Executable doesn't exist". Geef daarom altijd het gecachete 1243-binary mee:
+
+```js
+const CHROME = "/Users/nathaniel/Library/Caches/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-mac-arm64/chrome-headless-shell";
+const browser = await chromium.launch({ executablePath: CHROME });
+```
+
+Dat werkt zonder download en zonder netwerk. Zelfde regel voor `tests/e2e/switch-cookie.mjs` (Task 30) en voor `../screenshots/tools/shots.mjs`.
 
 - [ ] **Step 2: Maak `tests/visual/diff.py`**
 
@@ -4279,7 +4322,7 @@ Run: `npm run test:unit` — Expected: deze test faalt (`languages` is nog `unde
 export const locales: readonly Lang[] = ["nl", "en"];
 ```
 
-Run: `npm run test:unit` — Expected: alles slaagt (`ℹ pass 17`).
+Run: `npm run test:unit` — Expected: alles slaagt (`ℹ pass 18`, inclusief het `publicPath`-blok uit Task 2).
 
 - [ ] **Step 3: EN-skelet als kopie van NL**
 
@@ -5411,9 +5454,9 @@ git commit -m "EN: terms and conditions"
 ```tsx
 "use client";
 
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { counterpart, type Lang } from "@/lib/i18n/paths";
+import { counterpart, publicPath, type Lang } from "@/lib/i18n/paths";
 import { cn } from "@/lib/cn";
 
 export type LangSwitchLabels = { nl: string; en: string; switchTo: { nl: string; en: string } };
@@ -5435,7 +5478,18 @@ function remember(target: Lang) {
  * - names:   footer-onderbalk, "Nederlands | English"
  */
 export function LangSwitch({ lang, labels, variant, className }: { lang: Lang; labels: LangSwitchLabels; variant: LangSwitchVariant; className?: string }) {
-  const pathname = usePathname() ?? "/";
+  // publicPath: de middleware herschrijft, dus usePathname() geeft /nl/hulp in plaats van /hulp.
+  const route = publicPath(usePathname() ?? "/");
+  // Query en hash staan niet in usePathname(); ze komen na hydration uit de URL, net als in AanvraagForm.
+  // (useSearchParams zou elke statische pagina naar client-rendering trekken.)
+  const [suffix, setSuffix] = useState("");
+  useEffect(() => {
+    const apply = () => setSuffix(`${window.location.search}${window.location.hash}`);
+    apply();
+    window.addEventListener("hashchange", apply);
+    return () => window.removeEventListener("hashchange", apply);
+  }, []);
+  const pathname = route + suffix;
   const target = other(lang);
   const link = {
     href: counterpart(pathname, target),
@@ -5591,7 +5645,7 @@ Imports:
 ```tsx
 import { usePathname } from "next/navigation";
 import { track } from "@vercel/analytics";
-import { ctaFor, type CtaKind, type Lang } from "@/lib/i18n/paths";
+import { ctaFor, publicPath, type CtaKind, type Lang } from "@/lib/i18n/paths";
 ```
 
 Vervang in `Props` de regel `cta: { label: string; href: string };` door:
@@ -5606,7 +5660,8 @@ Vervang in `Props` de regel `cta: { label: string; href: string };` door:
 Bovenin de component (na de `useState`-regels):
 
 ```tsx
-  const pathname = usePathname() ?? "/";
+  // publicPath: de middleware herschrijft, dus usePathname() geeft /nl/hosting in plaats van /hosting.
+  const pathname = publicPath(usePathname() ?? "/");
   const kind = ctaFor(pathname);
   const cta = kind
     ? { kind, label: ctaLabels[kind], href: kind === "contact" ? contactHref : `${contactHref}?voor=${kind === "demo" ? "website" : kind}` }
@@ -5745,7 +5800,9 @@ import { chromium } from "playwright";
 import assert from "node:assert/strict";
 
 const BASE = process.env.BASE_URL ?? "http://localhost:3111";
-const browser = await chromium.launch();
+// De globale Playwright vindt zijn eigen Chromium niet; wijs naar de gecachete build 1243 (Task 17 Step 1).
+const CHROME = process.env.CHROME_PATH ?? "/Users/nathaniel/Library/Caches/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-mac-arm64/chrome-headless-shell";
+const browser = await chromium.launch({ executablePath: CHROME });
 try {
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
   const page = await ctx.newPage();

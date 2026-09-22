@@ -85,6 +85,27 @@ export function internalPath(p: Parsed): string {
 }
 
 /**
+ * Omgekeerde van `internalPath`: het publieke adres van een intern (herschreven) pad, mét query en hash.
+ * De middleware herschrijft elk verzoek, dus `usePathname()` in een client-component geeft `/nl/hulp`
+ * of `/en/hulp` terug, niet `/hulp` of `/en/help`. Paden die niet herschreven zijn (404 onder /en) en
+ * paden buiten de padkaart komen ongewijzigd terug.
+ */
+export function publicPath(pathname: string): string {
+  const path = pathname.split(/[?#]/)[0];
+  const suffix = pathname.slice(path.length);
+  const [first, second, third, ...rest] = path.split("/").filter(Boolean);
+  if (!isLang(first)) return pathname;
+  if (second === undefined) return href(first, "home") + suffix;
+  for (const key of segmentKeys) {
+    const seg = segments[key];
+    if (seg.nl !== second) continue;
+    if (third !== undefined && (!seg.dynamic || rest.length > 0)) return pathname;
+    return href(first, key, third) + suffix;
+  }
+  return pathname;
+}
+
+/**
  * Een /en-pad dat de interne (Nederlandse) slug gebruikt of naar support wijst,
  * krijgt het publieke adres terug; anders null. Alleen voor routes waar NL- en EN-slug verschillen.
  * Geeft alleen het pad terug; de middleware zet dat op een clone van req.nextUrl, zodat de query behouden blijft.
