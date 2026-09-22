@@ -4,6 +4,15 @@
 import { useEffect, useRef } from "react";
 import { track } from "@vercel/analytics";
 
+/** Teksten in de hero; de mock-site op het laptopscherm is klantcontent en blijft ongewijzigd. */
+export type HeroCopy = {
+  h1: { pre: string; accent: string; post: string };
+  sub: string;
+  primary: string;
+  secondary: string;
+  chips: { mobile: string; fast: string; structure: string; modern: string; selfManaged: string; friendly: string; professional: string };
+};
+
 /**
  * Signature hero: de 3D-laptop scroll-intro (pinned op desktop, samengestelde
  * eindtoestand op mobiel). Bewust als geïsoleerd HTML-fragment + eigen init
@@ -16,7 +25,8 @@ import { track } from "@vercel/analytics";
  * --line, --accent*, --shadow-ink, --code-*. Merk-invariant: --btn*, --dv-* (het apparaat
  * zelf blijft donker, zoals een echte laptop) en --device-ink/--device-muted (mock-site op het scherm).
  */
-const HERO_HTML = `
+function heroHtml(c: HeroCopy, contactHref: string): string {
+  return `
   <!-- scroll experience: laptop intro (pinned) -->
   <div class="hd-exp" style="position:relative;height:280vh">
     <div class="hd-sticky" style="position:sticky;top:0;height:100vh;overflow:hidden;background:radial-gradient(120% 90% at 70% 24%,var(--hero-1) 0%,var(--hero-2) 48%,var(--hero-3) 100%)">
@@ -29,14 +39,14 @@ const HERO_HTML = `
       <!-- hero copy -->
       <div class="hd-copy" data-screen-label="Hero copy" style="position:absolute;left:clamp(20px,5vw,64px);top:50%;z-index:5;max-width:540px;transform:translateY(-50%);will-change:transform,opacity">
         <h1 class="hd-h1" style="font-family:var(--font-display);font-weight:600;font-size:clamp(38px,5vw,66px);line-height:1.02;letter-spacing:-0.035em;margin-bottom:24px">
-          <span style="font-weight:300">Alles rond je </span><em class="hd-accent-word" style="font-style:normal;font-weight:600;color:var(--accent)">website</em><span style="font-weight:300">. Eén aanspreekpunt.</span>
+          <span style="font-weight:300">${c.h1.pre}</span><em class="hd-accent-word" style="font-style:normal;font-weight:600;color:var(--accent)">${c.h1.accent}</em><span style="font-weight:300">${c.h1.post}</span>
         </h1>
-        <p class="hd-sub" style="font-size:clamp(16px,1.25vw,18.5px);line-height:1.6;color:var(--muted);max-width:470px;margin-bottom:36px">Websites, hosting en computerhulp voor ondernemers in de Hoeksche Waard. Ik bouw je site, houd hem online en kijk direct mee als iets vastloopt. Eén persoon, korte lijnen.</p>
+        <p class="hd-sub" style="font-size:clamp(16px,1.25vw,18.5px);line-height:1.6;color:var(--muted);max-width:470px;margin-bottom:36px">${c.sub}</p>
         <div class="hd-cta" style="display:flex;flex-wrap:wrap;gap:14px">
-          <a href="#pijlers" class="hd-btn-primary" style="display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:100px;background:linear-gradient(135deg,var(--btn-hi) 0%,var(--btn) 48%,var(--btn-lo) 100%);color:var(--on-accent);text-decoration:none;font-weight:600;font-size:15px;box-shadow:var(--sh-btn);transition:transform .25s,box-shadow .25s,filter .25s">Bekijk wat ik doe
+          <a href="#pijlers" class="hd-btn-primary" style="display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:100px;background:linear-gradient(135deg,var(--btn-hi) 0%,var(--btn) 48%,var(--btn-lo) 100%);color:var(--on-accent);text-decoration:none;font-weight:600;font-size:15px;box-shadow:var(--sh-btn);transition:transform .25s,box-shadow .25s,filter .25s">${c.primary}
             <svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224.49,136.49l-72,72a12,12,0,0,1-17-17L187,140H40a12,12,0,0,1,0-24H187L135.51,64.48a12,12,0,0,1,17-17l72,72A12,12,0,0,1,224.49,136.49Z"></path></svg>
           </a>
-          <a href="/contact" class="hd-btn-ghost" style="display:inline-flex;align-items:center;gap:9px;padding:15px 24px;border-radius:100px;border:1px solid var(--line);color:var(--text);text-decoration:none;font-weight:500;font-size:15px;transition:border-color .25s,background .25s,transform .25s">Neem contact op</a>
+          <a href="${contactHref}" class="hd-btn-ghost" style="display:inline-flex;align-items:center;gap:9px;padding:15px 24px;border-radius:100px;border:1px solid var(--line);color:var(--text);text-decoration:none;font-weight:500;font-size:15px;transition:border-color .25s,background .25s,transform .25s">${c.secondary}</a>
         </div>
       </div>
 
@@ -71,7 +81,7 @@ const HERO_HTML = `
                     <div style="width:54px;height:8px;border-radius:3px;background:color-mix(in srgb,var(--device-ink) 16%,transparent)"></div>
                     <div style="display:flex;gap:7px;align-items:center"><span style="width:26px;height:6px;border-radius:3px;background:color-mix(in srgb,var(--device-ink) 10%,transparent)"></span><span style="width:26px;height:6px;border-radius:3px;background:color-mix(in srgb,var(--device-ink) 10%,transparent)"></span><span style="width:40px;height:15px;border-radius:100px;border:1px dashed color-mix(in srgb,var(--device-ink) 22%,transparent)"></span></div>
                   </div>
-                  <div style="height:150px;border:1px dashed color-mix(in srgb,var(--device-ink) 20%,transparent);border-radius:8px;position:relative;margin-bottom:13px"><div style="position:absolute;top:10px;left:12px;display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:100px;background:color-mix(in srgb,var(--sc-4) 72%,transparent);border:1px solid color-mix(in srgb,var(--device-ink) 12%,transparent);font-size:9px;color:var(--device-ink)"><span style="width:4px;height:4px;border-radius:50%;background:var(--accent)"></span>Mobielvriendelijk</div>
+                  <div style="height:150px;border:1px dashed color-mix(in srgb,var(--device-ink) 20%,transparent);border-radius:8px;position:relative;margin-bottom:13px"><div style="position:absolute;top:10px;left:12px;display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:100px;background:color-mix(in srgb,var(--sc-4) 72%,transparent);border:1px solid color-mix(in srgb,var(--device-ink) 12%,transparent);font-size:9px;color:var(--device-ink)"><span style="width:4px;height:4px;border-radius:50%;background:var(--accent)"></span>${c.chips.mobile}</div>
                     <div style="position:absolute;left:14px;bottom:14px;width:46%;height:12px;border-radius:3px;background:color-mix(in srgb,var(--device-ink) 18%,transparent)"></div>
                     <div style="position:absolute;left:14px;bottom:34px;width:60%;height:12px;border-radius:3px;background:color-mix(in srgb,var(--device-ink) 22%,transparent)"></div>
                     <div style="position:absolute;right:16px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:1px dashed color-mix(in srgb,var(--device-ink) 22%,transparent);border-radius:6px"></div>
@@ -107,7 +117,7 @@ const HERO_HTML = `
           <div class="hd-flayer" data-k="grid" style="position:absolute;left:58px;top:30px;width:226px;height:148px;opacity:0;will-change:transform,opacity">
             <div style="width:100%;height:100%;border-radius:12px;border:1px solid var(--line);background:color-mix(in srgb,var(--glass) 55%,transparent);backdrop-filter:blur(6px);position:relative;overflow:hidden">
               <div style="position:absolute;inset:0;background-image:linear-gradient(color-mix(in srgb,var(--accent) 13%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--accent) 13%,transparent) 1px,transparent 1px);background-size:26px 26px"></div>
-              <div style="position:absolute;bottom:8px;left:10px;font-family:ui-monospace,Menlo,monospace;font-size:9px;letter-spacing:0.08em;color:var(--accent-br)">Duidelijke structuur</div>
+              <div style="position:absolute;bottom:8px;left:10px;font-family:ui-monospace,Menlo,monospace;font-size:9px;letter-spacing:0.08em;color:var(--accent-br)">${c.chips.structure}</div>
             </div>
           </div>
 
@@ -121,15 +131,15 @@ const HERO_HTML = `
           <div class="hd-flayer" data-k="img" style="position:absolute;left:368px;top:48px;width:236px;height:158px;opacity:0;will-change:transform,opacity">
             <div style="width:100%;height:100%;border-radius:13px;overflow:hidden;border:1px solid var(--line);box-shadow:0 26px 60px -28px color-mix(in srgb,var(--shadow-ink) 85%,transparent);background:repeating-linear-gradient(135deg,var(--sc-1) 0,var(--sc-1) 9px,var(--sc-2) 9px,var(--sc-2) 18px);position:relative">
               <div style="position:absolute;inset:0;background:radial-gradient(120% 90% at 70% 10%,color-mix(in srgb,var(--accent) 10%,transparent),transparent 60%)"></div>
-              <div style="position:absolute;bottom:10px;left:12px;font-family:ui-monospace,Menlo,monospace;font-size:9px;letter-spacing:0.1em;color:var(--device-muted)">Moderne uitstraling</div>
+              <div style="position:absolute;bottom:10px;left:12px;font-family:ui-monospace,Menlo,monospace;font-size:9px;letter-spacing:0.1em;color:var(--device-muted)">${c.chips.modern}</div>
             </div>
           </div>
 
           <div class="hd-flayer" data-k="head" style="position:absolute;left:-46px;top:188px;width:264px;height:126px;opacity:0;will-change:transform,opacity">
             <div style="width:100%;height:100%;border-radius:14px;border:1px solid var(--line);background:color-mix(in srgb,var(--glass) 84%,transparent);backdrop-filter:blur(12px);box-shadow:0 28px 60px -26px color-mix(in srgb,var(--shadow-ink) 85%,transparent);padding:18px;display:flex;flex-direction:column;gap:11px;justify-content:center">
               <div style="height:11px;width:62%;border-radius:4px;background:color-mix(in srgb,var(--text) 80%,transparent)"></div>
-              <div style="display:flex;align-items:center;gap:9px"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex:none"></span><span style="font-size:12.5px;color:var(--text)">Zelf te beheren</span></div>
-              <div style="display:flex;align-items:center;gap:9px"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex:none"></span><span style="font-size:12.5px;color:var(--text)">Gebruiksvriendelijk</span></div>
+              <div style="display:flex;align-items:center;gap:9px"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex:none"></span><span style="font-size:12.5px;color:var(--text)">${c.chips.selfManaged}</span></div>
+              <div style="display:flex;align-items:center;gap:9px"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex:none"></span><span style="font-size:12.5px;color:var(--text)">${c.chips.friendly}</span></div>
               <div style="height:8px;width:48%;border-radius:4px;background:color-mix(in srgb,var(--text) 22%,transparent)"></div>
             </div>
           </div>
@@ -149,8 +159,8 @@ const HERO_HTML = `
         <!-- mobile phone hero -->
         <div class="hd-phone" style="display:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:222px;z-index:5;will-change:transform,opacity">
           <div class="hd-ptag" style="position:absolute;left:-32px;top:52px;z-index:6;opacity:0;display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:100px;background:color-mix(in srgb,var(--glass) 92%,transparent);border:1px solid var(--line);backdrop-filter:blur(8px);box-shadow:0 14px 30px -18px color-mix(in srgb,var(--shadow-ink) 80%,transparent);font-size:11px;color:var(--text);white-space:nowrap"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent)"></span>SEO-klaar</div>
-          <div class="hd-ptag" style="position:absolute;right:-40px;top:158px;z-index:6;opacity:0;display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:100px;background:color-mix(in srgb,var(--glass) 92%,transparent);border:1px solid var(--line);backdrop-filter:blur(8px);box-shadow:0 14px 30px -18px color-mix(in srgb,var(--shadow-ink) 80%,transparent);font-size:11px;color:var(--text);white-space:nowrap"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent)"></span>Snelle laadtijd</div>
-          <div class="hd-ptag" style="position:absolute;left:-26px;bottom:118px;z-index:6;opacity:0;display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:100px;background:color-mix(in srgb,var(--glass) 92%,transparent);border:1px solid var(--line);backdrop-filter:blur(8px);box-shadow:0 14px 30px -18px color-mix(in srgb,var(--shadow-ink) 80%,transparent);font-size:11px;color:var(--text);white-space:nowrap"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent)"></span>Mobielvriendelijk</div>
+          <div class="hd-ptag" style="position:absolute;right:-40px;top:158px;z-index:6;opacity:0;display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:100px;background:color-mix(in srgb,var(--glass) 92%,transparent);border:1px solid var(--line);backdrop-filter:blur(8px);box-shadow:0 14px 30px -18px color-mix(in srgb,var(--shadow-ink) 80%,transparent);font-size:11px;color:var(--text);white-space:nowrap"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent)"></span>${c.chips.fast}</div>
+          <div class="hd-ptag" style="position:absolute;left:-26px;bottom:118px;z-index:6;opacity:0;display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:100px;background:color-mix(in srgb,var(--glass) 92%,transparent);border:1px solid var(--line);backdrop-filter:blur(8px);box-shadow:0 14px 30px -18px color-mix(in srgb,var(--shadow-ink) 80%,transparent);font-size:11px;color:var(--text);white-space:nowrap"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent)"></span>${c.chips.mobile}</div>
           <div style="position:relative;width:222px;height:452px;border-radius:42px;background:linear-gradient(155deg,var(--dv-1),var(--dv-3));padding:8px;box-shadow:0 40px 80px -36px color-mix(in srgb,var(--shadow-ink) 90%,transparent),0 0 0 1px var(--dv-edge),inset 0 1px 0 color-mix(in srgb,var(--accent) 12%,transparent)">
             <div style="position:absolute;top:13px;left:50%;transform:translateX(-50%);width:70px;height:17px;border-radius:100px;background:var(--notch);z-index:4"></div>
             <div style="position:relative;width:100%;height:100%;border-radius:34px;overflow:hidden;background:var(--sc-4)">
@@ -171,9 +181,9 @@ const HERO_HTML = `
                 <div style="position:absolute;top:212px;left:15px;right:15px;display:flex;flex-direction:column;gap:9px"><div style="height:8px;width:72%;border-radius:3px;background:color-mix(in srgb,var(--device-ink) 20%,transparent)"></div><div style="height:8px;width:92%;border-radius:3px;background:color-mix(in srgb,var(--device-ink) 12%,transparent)"></div><div style="height:8px;width:58%;border-radius:3px;background:color-mix(in srgb,var(--device-ink) 12%,transparent)"></div></div>
               </div>
               <div style="position:absolute;left:11px;right:11px;bottom:12px;display:flex;flex-direction:column;gap:6px">
-                <div class="hd-pchip" style="opacity:0.16;display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:9px;background:color-mix(in srgb,var(--glass) 92%,transparent);border:1px solid var(--line);backdrop-filter:blur(6px)"><span class="hd-pchk" style="width:15px;height:15px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex:none;transition:background .3s,border-color .3s"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--on-accent)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="opacity:0"><path d="M5 13l4 4L19 7"></path></svg></span><span style="font-size:11px;color:var(--text)">Professionele indruk</span></div>
-                <div class="hd-pchip" style="opacity:0.16;display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:9px;background:color-mix(in srgb,var(--glass) 92%,transparent);border:1px solid var(--line);backdrop-filter:blur(6px)"><span class="hd-pchk" style="width:15px;height:15px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex:none;transition:background .3s,border-color .3s"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--on-accent)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="opacity:0"><path d="M5 13l4 4L19 7"></path></svg></span><span style="font-size:11px;color:var(--text)">Gebruiksvriendelijk</span></div>
-                <div class="hd-pchip" style="opacity:0.16;display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:9px;background:color-mix(in srgb,var(--glass) 92%,transparent);border:1px solid var(--line);backdrop-filter:blur(6px)"><span class="hd-pchk" style="width:15px;height:15px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex:none;transition:background .3s,border-color .3s"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--on-accent)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="opacity:0"><path d="M5 13l4 4L19 7"></path></svg></span><span style="font-size:11px;color:var(--text)">Duidelijke structuur</span></div>
+                <div class="hd-pchip" style="opacity:0.16;display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:9px;background:color-mix(in srgb,var(--glass) 92%,transparent);border:1px solid var(--line);backdrop-filter:blur(6px)"><span class="hd-pchk" style="width:15px;height:15px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex:none;transition:background .3s,border-color .3s"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--on-accent)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="opacity:0"><path d="M5 13l4 4L19 7"></path></svg></span><span style="font-size:11px;color:var(--text)">${c.chips.professional}</span></div>
+                <div class="hd-pchip" style="opacity:0.16;display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:9px;background:color-mix(in srgb,var(--glass) 92%,transparent);border:1px solid var(--line);backdrop-filter:blur(6px)"><span class="hd-pchk" style="width:15px;height:15px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex:none;transition:background .3s,border-color .3s"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--on-accent)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="opacity:0"><path d="M5 13l4 4L19 7"></path></svg></span><span style="font-size:11px;color:var(--text)">${c.chips.friendly}</span></div>
+                <div class="hd-pchip" style="opacity:0.16;display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:9px;background:color-mix(in srgb,var(--glass) 92%,transparent);border:1px solid var(--line);backdrop-filter:blur(6px)"><span class="hd-pchk" style="width:15px;height:15px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex:none;transition:background .3s,border-color .3s"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--on-accent)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="opacity:0"><path d="M5 13l4 4L19 7"></path></svg></span><span style="font-size:11px;color:var(--text)">${c.chips.structure}</span></div>
               </div>
             </div>
           </div>
@@ -183,6 +193,7 @@ const HERO_HTML = `
   </div>
 
 `;
+}
 
 function initHero(root: HTMLElement): () => void {
   const q = (s: string): any => root.querySelector(s);
@@ -460,11 +471,11 @@ function initHero(root: HTMLElement): () => void {
   };
 }
 
-export function HeroExperience() {
+export function HeroExperience({ copy, contactHref }: { copy: HeroCopy; contactHref: string }) {
   const rootRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!rootRef.current) return;
     return initHero(rootRef.current);
   }, []);
-  return <div ref={rootRef} className="relative w-full" dangerouslySetInnerHTML={{ __html: HERO_HTML }} />;
+  return <div ref={rootRef} className="relative w-full" dangerouslySetInnerHTML={{ __html: heroHtml(copy, contactHref) }} />;
 }

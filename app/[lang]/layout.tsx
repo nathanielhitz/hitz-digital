@@ -35,28 +35,10 @@ export function generateStaticParams() {
     Zonder dit zou een pad dat de middleware overslaat (bijv. /wp-login.php) als `lang` binnenkomen en de homepage opleveren. */
 export const dynamicParams = false;
 
-const title = "Websites, hosting en computerhulp in de Hoeksche Waard | HitzDigital";
-const description =
-  "Ik bouw websites voor ondernemers in de Hoeksche Waard, houd ze online en help als je computer of site vastloopt. Eén persoon, korte lijnen. Website vanaf €250, hosting vanaf €5 per maand, alles incl. btw.";
-
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title,
-  description,
-  alternates: { canonical: "/" },
-  openGraph: {
-    title,
-    description,
-    url: site.url,
-    siteName: site.name,
-    locale: "nl_NL",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title,
-    description,
-  },
+  openGraph: { siteName: site.name, type: "website" },
+  twitter: { card: "summary_large_image" },
 };
 
 export default async function LangLayout({ children, params }: Readonly<{ children: React.ReactNode }> & LangParams) {
