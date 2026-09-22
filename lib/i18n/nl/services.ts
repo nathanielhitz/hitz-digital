@@ -4,12 +4,14 @@ import { href } from "../paths";
 const L = "nl" as const;
 const online = pricing.hosting.find((h) => h.id === "online")!;
 const onderhoud = pricing.hosting.find((h) => h.id === "onderhoud")!;
+const nlDomain = pricing.domains.table.find((d) => d.tld === ".nl")!;
+const guaranteeLine = "Niet opgelost? Dan betaal je niets.";
 
 /** Dienst-teksten: pijlers, lijsten, FAQ's, pakket- en tarieflabels. Getallen komen uit lib/pricing.ts. */
 export const services = {
   pijlers: [
     {
-      id: "websites",
+      id: "websites" as const,
       n: "01",
       title: "Websites",
       body: "Een moderne site die past bij je bedrijf. Je ziet eerst een echte demo van je eigen homepage, daarna beslis je pas.",
@@ -17,7 +19,7 @@ export const services = {
       href: href(L, "websites"),
     },
     {
-      id: "hosting",
+      id: "hosting" as const,
       n: "02",
       title: "Hosting & domeinen",
       body: "Domein, hosting, e-mail en een kleine wijziging per maand in één bedrag. Maandelijks opzegbaar.",
@@ -25,11 +27,11 @@ export const services = {
       href: href(L, "hosting"),
     },
     {
-      id: "hulp",
+      id: "hulp" as const,
       n: "03",
       title: "Hulp",
       body: "Computer, e-mail, domein of website: ik los het op en leg het uit. Meestal op afstand, en anders kom ik langs.",
-      price: `${euro(pricing.hulp.quarter)} per kwartier · Niet opgelost? Dan betaal je niets.`,
+      price: `${euro(pricing.hulp.quarter)} per kwartier · ${guaranteeLine}`,
       href: href(L, "hulp"),
     },
   ],
@@ -122,7 +124,7 @@ export const services = {
       name: "Online",
       summary: "Alleen hosting van je website.",
       includes: ["SSL-certificaat", "Dagelijkse back-ups", "Updates", "Monitoring"],
-      excludes: ["Domeinnaam (los €15 per jaar)", "Wijzigingen (op kwartiertarief)"],
+      excludes: [`Domeinnaam (los ${euro(nlDomain.yearly)} per jaar)`, "Wijzigingen (op kwartiertarief)"],
       fairUse: undefined as string | undefined,
     },
     onderhoud: {
@@ -139,7 +141,7 @@ export const services = {
       excludes: [] as string[],
       fairUse: "Een kleine wijziging is bijvoorbeeld een product, prijs, foto of tekst. Geen nieuwe pagina's of ontwerpwerk. Ongebruikte tijd vervalt." as string | undefined,
     },
-  },
+  } satisfies Record<(typeof pricing.hosting)[number]["id"], { name: string; summary: string; includes: string[]; excludes: string[]; fairUse: string | undefined }>,
   mailbox: {
     name: "Zakelijke mailbox",
     summary: "Op je eigen domein.",
@@ -177,14 +179,14 @@ export const services = {
     { q: "Hoe werkt op afstand meekijken?", a: "Je opent een link die ik je stuur, en ik zie je scherm terwijl we bellen. Jij houdt de controle en kunt altijd afsluiten. Er blijft niets achter op je computer." },
     { q: "Wat als het niet lukt?", a: "Dan betaal je niets voor die hulp. We spreken vooraf af wat het probleem is; los ik dat niet op, dan kost het je niks. Voor de APK's, uitleg en advies geldt dat niet, en ook niet als de oorzaak buiten mijn bereik ligt en ik je dat gemeld heb." },
     { q: "Help je ook met mijn telefoon of tablet?", a: "Ja. Mail instellen, foto's overzetten, een nieuwe telefoon inrichten, opruimen en beveiligen: het hoort er allemaal bij." },
-    { q: "Help je ook particulieren?", a: "Ja, in de Hoeksche Waard, tegen hetzelfde tarief: €15 per kwartier incl. btw. Ondernemers gaan voor als het druk is, maar je bent welkom." },
+    { q: "Help je ook particulieren?", a: `Ja, in de Hoeksche Waard, tegen hetzelfde tarief: ${euro(pricing.hulp.quarter)} per kwartier incl. btw. Ondernemers gaan voor als het druk is, maar je bent welkom.` },
   ],
   hulpTarief: {
     billing: "Op afstand per kwartier; aan huis per half uur, minimaal een uur.",
     travel: "Geen voorrijkosten in de Hoeksche Waard.",
     cardValidity: "12 maanden geldig",
     guarantee: {
-      line: "Niet opgelost? Dan betaal je niets.",
+      line: guaranteeLine,
       conditions: [
         "Geldt per probleem dat we vooraf samen benoemen.",
         "Niet voor de APK's, uitleg en advies; die lever ik altijd.",

@@ -13,7 +13,6 @@ export const work = {
   cases: {
     "volmer-techniek": {
       branche: "Metaalbewerking",
-      kicker: "Metaalbewerking · Puttershoek",
       intro: "Een tweetalige website voor een verspanend bedrijf dat op locatie en in de eigen werkplaats werkt, met offerteformulier, projectgalerij en servicegebied.",
       situatie: "Volmer Techniek B.V. uit Puttershoek verspaant, repareert en bouwt machines, op locatie bij de klant en in de eigen werkplaats. De oude website was een standaard WordPress-site met een kant-en-klaar thema. Voor een bedrijf dat ook buiten Nederland werkt, moest de site in twee talen kunnen en de zes disciplines helder naast elkaar zetten.",
       aanpak: [
@@ -33,7 +32,6 @@ export const work = {
     },
     "mourits-schilderwerken": {
       branche: "Schildersbedrijf",
-      kicker: "Schildersbedrijf · Klaaswaal",
       intro: "Een nieuwe site voor een schildersbedrijf uit Klaaswaal dat sinds 2015 in de hele Hoeksche Waard werkt: vijf diensten, projectgalerij en direct bellen vanaf je telefoon.",
       situatie: "Mourits Schilderwerken B.V. werkt sinds 2015 vanuit Klaaswaal in de hele Hoeksche Waard: schilderwerk binnen en buiten, wandafwerking, beglazing, restauratie en spuitwerk. De oude website stamde uit de begintijd van het bedrijf, met een fotoslider en een tabel met contactgegevens bovenaan, en was op een telefoon lastig te gebruiken.",
       aanpak: [
@@ -52,7 +50,6 @@ export const work = {
     },
     "monster-zorg": {
       branche: "Zzp-zorgverlener",
-      kicker: "Zzp-zorgverlener · Gouda",
       intro: "Een persoonlijke site vanaf nul voor een toegepast psycholoog en zorgverlener die zichzelf als zzp'er inzet: wie hij is, wat hij doet, en hoe je hem bereikt.",
       situatie: "Jarno Monster werkt als toegepast psycholoog en zorgverlener met ruim acht jaar ervaring in de woonbegeleiding, en zet zichzelf als zzp'er in bij zorgorganisaties. Er was nog geen website. Opdrachtgevers moesten snel kunnen zien wat hij doet, wat zijn achtergrond is en hoe ze hem bereiken.",
       aanpak: [

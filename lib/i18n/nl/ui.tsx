@@ -16,6 +16,17 @@ const mailBody = [
   "Groet,",
 ].join("\n");
 
+/** Knoppen naar het contactformulier. `nav.cta` leidt zijn labels hiervan af, zodat ze niet uiteenlopen. */
+const cta = {
+  contact: { label: "Neem contact op", href: contact() },
+  demo: { label: "Gratis demo", href: contact("website") },
+  demoLang: { label: "Vraag je gratis demo aan", href: contact("website") },
+  hosting: { label: "Vraag hosting aan", href: contact("hosting") },
+  hulp: { label: "Vraag hulp aan", href: contact("hulp") },
+  whatsapp: "App via WhatsApp",
+  call: "Bel",
+};
+
 /** Alle tekst van de site-schil (nav, footer, formulier, 404, schema). Nederlands is de bron; en/ui.tsx krijgt `typeof ui`. */
 export const ui = {
   skipLink: "Naar inhoud",
@@ -35,7 +46,7 @@ export const ui = {
     themeRow: "Weergave",
     langRow: "Taal",
     /** Header-knop per soort (spec §4). Fase 1 gebruikt alleen `demo`. */
-    cta: { demo: "Gratis demo", hosting: "Vraag hosting aan", hulp: "Vraag hulp aan", contact: "Contact" } satisfies Record<CtaKind, string>,
+    cta: { demo: cta.demo.label, hosting: cta.hosting.label, hulp: cta.hulp.label, contact: "Contact" } satisfies Record<CtaKind, string>,
   },
   theme: {
     toLight: "Schakel naar licht thema",
@@ -69,15 +80,7 @@ export const ui = {
     vat: "Prijzen incl. btw",
   },
   crumbs: { aria: "Kruimelpad", home: "Home" },
-  cta: {
-    contact: { label: "Neem contact op", href: contact() },
-    demo: { label: "Gratis demo", href: contact("website") },
-    demoLang: { label: "Vraag je gratis demo aan", href: contact("website") },
-    hosting: { label: "Vraag hosting aan", href: contact("hosting") },
-    hulp: { label: "Vraag hulp aan", href: contact("hulp") },
-    whatsapp: "App via WhatsApp",
-    call: "Bel",
-  },
+  cta,
   ctaBand: { orCall: "Of bel", reply: "Reactie binnen 1 werkdag, vrijblijvend." },
   fab: { label: "Heb je een vraag?", aria: "Heb je een vraag? Stuur een WhatsApp" },
   stickyBar: { aria: "Direct contact", call: "Bel", whatsapp: "WhatsApp" },

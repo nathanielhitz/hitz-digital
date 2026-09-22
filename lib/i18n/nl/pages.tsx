@@ -1,22 +1,44 @@
 import type { ReactNode } from "react";
+import { pricing, euro } from "@/lib/pricing";
 
 const accent = (word: string): ReactNode => <em className="hd-accent-word not-italic text-accent">{word}</em>;
+
+const websiteFrom = euro(pricing.website.from);
+const online = pricing.hosting.find((h) => h.id === "online")!;
+const onderhoud = pricing.hosting.find((h) => h.id === "onderhoud")!;
+const quarter = euro(pricing.hulp.quarter);
+
+type Accented = { pre: string; accent: string; post: string };
+/** OG-afbeelding: accentwoord tussen sterretjes (conventie van lib/og.tsx). */
+const star = (h: Accented) => `${h.pre}*${h.accent}*${h.post}`;
+/** H1 met accentwoord. */
+const accented = (h: Accented): ReactNode => (
+  <>
+    {h.pre}
+    {accent(h.accent)}
+    {h.post}
+  </>
+);
+
+const homeH1 = { pre: "Alles rond je ", accent: "website", post: ". Eén aanspreekpunt." };
+const websitesH1 = { pre: "Een website die direct ", accent: "professioneler", post: " voelt." };
+const hostingH1 = { pre: "Online blijven, ", accent: "zonder gedoe", post: "." };
+const hulpH1 = { pre: "Vastgelopen? Ik kijk ", accent: "direct", post: " mee." };
 
 /** Copy per pagina: metadata, OG-afbeelding, hero, secties, CTA-band. */
 export const pages = {
   home: {
     meta: {
       title: "Websites, hosting en computerhulp in de Hoeksche Waard | HitzDigital",
-      description:
-        "Ik bouw websites voor ondernemers in de Hoeksche Waard, houd ze online en help als je computer of site vastloopt. Eén persoon, korte lijnen. Website vanaf €250, hosting vanaf €5 per maand, alles incl. btw.",
+      description: `Ik bouw websites voor ondernemers in de Hoeksche Waard, houd ze online en help als je computer of site vastloopt. Eén persoon, korte lijnen. Website vanaf ${websiteFrom}, hosting vanaf ${euro(online.monthly)} per maand, alles incl. btw.`,
     },
     og: {
-      title: "Alles rond je *website*. Eén aanspreekpunt.",
+      title: star(homeH1),
       kicker: "Websites · Hosting · Hulp",
       sub: "Websites, hosting en computerhulp voor ondernemers in de Hoeksche Waard. Eén persoon, korte lijnen.",
     },
     hero: {
-      h1: { pre: "Alles rond je ", accent: "website", post: ". Eén aanspreekpunt." },
+      h1: homeH1,
       sub: "Websites, hosting en computerhulp voor ondernemers in de Hoeksche Waard. Ik bouw je site, houd hem online en kijk direct mee als iets vastloopt. Eén persoon, korte lijnen.",
       primary: "Bekijk wat ik doe",
       secondary: "Neem contact op",
@@ -52,18 +74,17 @@ export const pages = {
   websites: {
     meta: {
       title: "Website laten maken in de Hoeksche Waard | HitzDigital",
-      description:
-        "Een moderne website voor je bedrijf, vanaf €250 incl. btw. Je ziet eerst een gratis demo van je eigen homepage, daarna beslis je. Voor vakbedrijven en horeca in de Hoeksche Waard.",
+      description: `Een moderne website voor je bedrijf, vanaf ${websiteFrom} incl. btw. Je ziet eerst een gratis demo van je eigen homepage, daarna beslis je. Voor vakbedrijven en horeca in de Hoeksche Waard.`,
     },
     og: {
-      title: "Een website die direct *professioneler* voelt.",
+      title: star(websitesH1),
       kicker: "Websites",
-      sub: "Je ziet eerst een gratis demo van je eigen homepage. Daarna beslis je. Vanaf €250 incl. btw.",
+      sub: `Je ziet eerst een gratis demo van je eigen homepage. Daarna beslis je. Vanaf ${websiteFrom} incl. btw.`,
     },
     crumb: "Websites",
     werkwijzeTitle: "In drie stappen naar een betere website.",
     hero: {
-      title: <>Een website die direct {accent("professioneler")} voelt.</>,
+      title: accented(websitesH1),
       lead: "Voor cafés, schilders, installateurs, hoveniers en andere vakbedrijven in de Hoeksche Waard. Je ziet eerst een echte demo van je eigen site. Daarna beslis je.",
       secondary: "Bekijk mijn werk",
       asideAlt: "Website van Mourits Schilderwerken op desktop",
@@ -103,17 +124,16 @@ export const pages = {
   hosting: {
     meta: {
       title: "Hosting, domein en onderhoud voor je website | HitzDigital",
-      description:
-        "Hosting vanaf €5 per maand, onderhoud met domein en een kleine wijziging per maand voor €15. Maandelijks opzegbaar, alles incl. btw. Overstappen regel ik.",
+      description: `Hosting vanaf ${euro(online.monthly)} per maand, onderhoud met domein en een kleine wijziging per maand voor ${euro(onderhoud.monthly)}. Maandelijks opzegbaar, alles incl. btw. Overstappen regel ik.`,
     },
     og: {
-      title: "Online blijven, *zonder gedoe*.",
+      title: star(hostingH1),
       kicker: "Hosting & domeinen",
       sub: "Domein, hosting, e-mail en een kleine wijziging per maand in één bedrag. Maandelijks opzegbaar.",
     },
     crumb: "Hosting & domeinen",
     hero: {
-      title: <>Online blijven, {accent("zonder gedoe")}.</>,
+      title: accented(hostingH1),
       lead: "Domein, hosting, e-mail en een kleine wijziging per maand in één bedrag. Maandelijks opzegbaar. En als er iets is, app je mij, geen ticketsysteem.",
       primary: "Kies je pakket",
       secondary: "Overstappen? Ik regel het",
@@ -150,17 +170,16 @@ export const pages = {
   hulp: {
     meta: {
       title: "Computer- en websitehulp in de Hoeksche Waard | HitzDigital",
-      description:
-        "Vastgelopen? Ik kijk direct mee. Hulp bij computer, e-mail, domein, netwerk of website, op afstand of aan huis in de Hoeksche Waard. €15 per kwartier incl. btw. Niet opgelost? Dan betaal je niets.",
+      description: `Vastgelopen? Ik kijk direct mee. Hulp bij computer, e-mail, domein, netwerk of website, op afstand of aan huis in de Hoeksche Waard. ${quarter} per kwartier incl. btw. Niet opgelost? Dan betaal je niets.`,
     },
     og: {
-      title: "Vastgelopen? Ik kijk *direct* mee.",
+      title: star(hulpH1),
       kicker: "Computer- en websitehulp",
-      sub: "€15 per kwartier incl. btw. Op afstand of aan huis in de Hoeksche Waard. Niet opgelost? Dan betaal je niets.",
+      sub: `${quarter} per kwartier incl. btw. Op afstand of aan huis in de Hoeksche Waard. Niet opgelost? Dan betaal je niets.`,
     },
     crumb: "Hulp",
     hero: {
-      title: <>Vastgelopen? Ik kijk {accent("direct")} mee.</>,
+      title: accented(hulpH1),
       lead: "Voor ondernemers in de Hoeksche Waard, en ook gewoon thuis. Je laptop, je mail, je domein, je netwerk of je website: ik los het op, in gewone taal. Meestal op afstand, binnen een kwartier begonnen. Moet ik langskomen? Dan kom ik langs.",
       aside: {
         rate: "Tarief",
@@ -173,12 +192,12 @@ export const pages = {
       title: "Eén vaste prijs, geen verrassingen.",
       items: [
         {
-          id: "computer-apk",
+          id: "computer-apk" as const,
           title: "Computer APK",
           body: "Updates en opschonen, virus- en malwarescan, snelheidscheck, back-up en wachtwoorden met tweestapsverificatie gecheckt. Je krijgt een kort lijstje met wat ik gedaan heb en wat je zelf nog kunt doen. Ongeveer 45 minuten, op afstand of aan huis.",
         },
         {
-          id: "website-apk",
+          id: "website-apk" as const,
           title: "Website APK",
           body: "Snelheid, mobiel, vindbaarheid, SSL, back-ups en verouderde plugins, met een kort rapport in gewone taal. Ook als ik je site niet gebouwd heb. Valt de uitslag tegen? Dan maak ik gratis een demo van hoe het wél kan.",
         },
@@ -195,7 +214,7 @@ export const pages = {
     how: {
       title: "Bellen, meekijken, opgelost.",
       homeLead: "Ook thuis vastgelopen?",
-      homeBody: (quarter: string) => ` Ik help ook particulieren in de Hoeksche Waard, tegen hetzelfde tarief: ${quarter} per kwartier, incl. btw.`,
+      homeBody: (quarter: string) => `Ik help ook particulieren in de Hoeksche Waard, tegen hetzelfde tarief: ${quarter} per kwartier, incl. btw.`,
     },
     ctaBand: { title: "Zit je nu vast?", body: "Bel of app, dan kijk ik direct mee. Liever eerst een bericht? Vertel kort wat er speelt." },
     schema: {
@@ -203,8 +222,6 @@ export const pages = {
       serviceType: "Computerhulp en websiteondersteuning",
       perQuarter: "Hulp per kwartier",
       unit: "kwartier",
-      computerApk: "Computer APK",
-      websiteApk: "Website APK",
       card: (quarters: number) => `Strippenkaart ${quarters} kwartier`,
     },
   },
@@ -259,7 +276,7 @@ export const pages = {
       title: "Waar kan ik je mee helpen?",
       lead: "Kies waarvoor je me nodig hebt en vertel kort wat er speelt. Ik reageer binnen 1 werkdag, vrijblijvend. Bij een storing of spoed: bel.",
     },
-    direct: { eyebrow: "Liever direct", whatsappNote: " · snelste voor korte vragen", callNote: " · bel bij storing of spoed" },
+    direct: { eyebrow: "Liever direct", whatsappNote: "snelste voor korte vragen", callNote: "bel bij storing of spoed" },
     about: {
       place: (founder: string, city: string) => `${founder} · ${city}, Hoeksche Waard`,
       kvk: (kvk: string) => `KvK ${kvk}`,

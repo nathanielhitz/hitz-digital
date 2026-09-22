@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { ThemeSwitch, type ThemeLabels } from "@/components/ui/ThemeSwitch";
 import { cn } from "@/lib/cn";
-import type { Lang } from "@/lib/i18n/paths";
+import { href, type Lang } from "@/lib/i18n/paths";
 
 export type NavLabels = { aria: string; homeAria: string; menuOpen: string; menuClose: string; menu: string; themeRow: string };
 
@@ -90,7 +90,7 @@ export function Nav({ lang, links, cta, labels, theme }: Props) {
           aria-label={labels.aria}
           className="mx-auto flex max-w-[1280px] items-center justify-between px-[clamp(20px,5vw,64px)] py-5"
         >
-          <a href={lang === "nl" ? "/" : `/${lang}`} aria-label={labels.homeAria} className="inline-flex items-center py-2">
+          <a href={href(lang, "home")} aria-label={labels.homeAria} className="inline-flex items-center py-2">
             <Wordmark />
           </a>
 

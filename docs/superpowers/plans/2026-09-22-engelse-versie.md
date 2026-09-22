@@ -575,6 +575,17 @@ const mailBody = [
   "Groet,",
 ].join("\n");
 
+/** Knoppen naar het contactformulier. `nav.cta` leidt zijn labels hiervan af, zodat ze niet uiteenlopen. */
+const cta = {
+  contact: { label: "Neem contact op", href: contact() },
+  demo: { label: "Gratis demo", href: contact("website") },
+  demoLang: { label: "Vraag je gratis demo aan", href: contact("website") },
+  hosting: { label: "Vraag hosting aan", href: contact("hosting") },
+  hulp: { label: "Vraag hulp aan", href: contact("hulp") },
+  whatsapp: "App via WhatsApp",
+  call: "Bel",
+};
+
 /** Alle tekst van de site-schil (nav, footer, formulier, 404, schema). Nederlands is de bron; en/ui.tsx krijgt `typeof ui`. */
 export const ui = {
   skipLink: "Naar inhoud",
@@ -594,7 +605,7 @@ export const ui = {
     themeRow: "Weergave",
     langRow: "Taal",
     /** Header-knop per soort (spec §4). Fase 1 gebruikt alleen `demo`. */
-    cta: { demo: "Gratis demo", hosting: "Vraag hosting aan", hulp: "Vraag hulp aan", contact: "Contact" } satisfies Record<CtaKind, string>,
+    cta: { demo: cta.demo.label, hosting: cta.hosting.label, hulp: cta.hulp.label, contact: "Contact" } satisfies Record<CtaKind, string>,
   },
   theme: {
     toLight: "Schakel naar licht thema",
@@ -628,15 +639,7 @@ export const ui = {
     vat: "Prijzen incl. btw",
   },
   crumbs: { aria: "Kruimelpad", home: "Home" },
-  cta: {
-    contact: { label: "Neem contact op", href: contact() },
-    demo: { label: "Gratis demo", href: contact("website") },
-    demoLang: { label: "Vraag je gratis demo aan", href: contact("website") },
-    hosting: { label: "Vraag hosting aan", href: contact("hosting") },
-    hulp: { label: "Vraag hulp aan", href: contact("hulp") },
-    whatsapp: "App via WhatsApp",
-    call: "Bel",
-  },
+  cta,
   ctaBand: { orCall: "Of bel", reply: "Reactie binnen 1 werkdag, vrijblijvend." },
   fab: { label: "Heb je een vraag?", aria: "Heb je een vraag? Stuur een WhatsApp" },
   stickyBar: { aria: "Direct contact", call: "Bel", whatsapp: "WhatsApp" },
@@ -1083,12 +1086,14 @@ import { href } from "../paths";
 const L = "nl" as const;
 const online = pricing.hosting.find((h) => h.id === "online")!;
 const onderhoud = pricing.hosting.find((h) => h.id === "onderhoud")!;
+const nlDomain = pricing.domains.table.find((d) => d.tld === ".nl")!;
+const guaranteeLine = "Niet opgelost? Dan betaal je niets.";
 
 /** Dienst-teksten: pijlers, lijsten, FAQ's, pakket- en tarieflabels. Getallen komen uit lib/pricing.ts. */
 export const services = {
   pijlers: [
     {
-      id: "websites",
+      id: "websites" as const,
       n: "01",
       title: "Websites",
       body: "Een moderne site die past bij je bedrijf. Je ziet eerst een echte demo van je eigen homepage, daarna beslis je pas.",
@@ -1096,7 +1101,7 @@ export const services = {
       href: href(L, "websites"),
     },
     {
-      id: "hosting",
+      id: "hosting" as const,
       n: "02",
       title: "Hosting & domeinen",
       body: "Domein, hosting, e-mail en een kleine wijziging per maand in één bedrag. Maandelijks opzegbaar.",
@@ -1104,11 +1109,11 @@ export const services = {
       href: href(L, "hosting"),
     },
     {
-      id: "hulp",
+      id: "hulp" as const,
       n: "03",
       title: "Hulp",
       body: "Computer, e-mail, domein of website: ik los het op en leg het uit. Meestal op afstand, en anders kom ik langs.",
-      price: `${euro(pricing.hulp.quarter)} per kwartier · Niet opgelost? Dan betaal je niets.`,
+      price: `${euro(pricing.hulp.quarter)} per kwartier · ${guaranteeLine}`,
       href: href(L, "hulp"),
     },
   ],
@@ -1201,7 +1206,7 @@ export const services = {
       name: "Online",
       summary: "Alleen hosting van je website.",
       includes: ["SSL-certificaat", "Dagelijkse back-ups", "Updates", "Monitoring"],
-      excludes: ["Domeinnaam (los €15 per jaar)", "Wijzigingen (op kwartiertarief)"],
+      excludes: [`Domeinnaam (los ${euro(nlDomain.yearly)} per jaar)`, "Wijzigingen (op kwartiertarief)"],
       fairUse: undefined as string | undefined,
     },
     onderhoud: {
@@ -1218,7 +1223,7 @@ export const services = {
       excludes: [] as string[],
       fairUse: "Een kleine wijziging is bijvoorbeeld een product, prijs, foto of tekst. Geen nieuwe pagina's of ontwerpwerk. Ongebruikte tijd vervalt." as string | undefined,
     },
-  },
+  } satisfies Record<(typeof pricing.hosting)[number]["id"], { name: string; summary: string; includes: string[]; excludes: string[]; fairUse: string | undefined }>,
   mailbox: {
     name: "Zakelijke mailbox",
     summary: "Op je eigen domein.",
@@ -1256,14 +1261,14 @@ export const services = {
     { q: "Hoe werkt op afstand meekijken?", a: "Je opent een link die ik je stuur, en ik zie je scherm terwijl we bellen. Jij houdt de controle en kunt altijd afsluiten. Er blijft niets achter op je computer." },
     { q: "Wat als het niet lukt?", a: "Dan betaal je niets voor die hulp. We spreken vooraf af wat het probleem is; los ik dat niet op, dan kost het je niks. Voor de APK's, uitleg en advies geldt dat niet, en ook niet als de oorzaak buiten mijn bereik ligt en ik je dat gemeld heb." },
     { q: "Help je ook met mijn telefoon of tablet?", a: "Ja. Mail instellen, foto's overzetten, een nieuwe telefoon inrichten, opruimen en beveiligen: het hoort er allemaal bij." },
-    { q: "Help je ook particulieren?", a: "Ja, in de Hoeksche Waard, tegen hetzelfde tarief: €15 per kwartier incl. btw. Ondernemers gaan voor als het druk is, maar je bent welkom." },
+    { q: "Help je ook particulieren?", a: `Ja, in de Hoeksche Waard, tegen hetzelfde tarief: ${euro(pricing.hulp.quarter)} per kwartier incl. btw. Ondernemers gaan voor als het druk is, maar je bent welkom.` },
   ],
   hulpTarief: {
     billing: "Op afstand per kwartier; aan huis per half uur, minimaal een uur.",
     travel: "Geen voorrijkosten in de Hoeksche Waard.",
     cardValidity: "12 maanden geldig",
     guarantee: {
-      line: "Niet opgelost? Dan betaal je niets.",
+      line: guaranteeLine,
       conditions: [
         "Geldt per probleem dat we vooraf samen benoemen.",
         "Niet voor de APK's, uitleg en advies; die lever ik altijd.",
@@ -1302,7 +1307,6 @@ export const work = {
   cases: {
     "volmer-techniek": {
       branche: "Metaalbewerking",
-      kicker: "Metaalbewerking · Puttershoek",
       intro: "Een tweetalige website voor een verspanend bedrijf dat op locatie en in de eigen werkplaats werkt, met offerteformulier, projectgalerij en servicegebied.",
       situatie: "Volmer Techniek B.V. uit Puttershoek verspaant, repareert en bouwt machines, op locatie bij de klant en in de eigen werkplaats. De oude website was een standaard WordPress-site met een kant-en-klaar thema. Voor een bedrijf dat ook buiten Nederland werkt, moest de site in twee talen kunnen en de zes disciplines helder naast elkaar zetten.",
       aanpak: [
@@ -1322,7 +1326,6 @@ export const work = {
     },
     "mourits-schilderwerken": {
       branche: "Schildersbedrijf",
-      kicker: "Schildersbedrijf · Klaaswaal",
       intro: "Een nieuwe site voor een schildersbedrijf uit Klaaswaal dat sinds 2015 in de hele Hoeksche Waard werkt: vijf diensten, projectgalerij en direct bellen vanaf je telefoon.",
       situatie: "Mourits Schilderwerken B.V. werkt sinds 2015 vanuit Klaaswaal in de hele Hoeksche Waard: schilderwerk binnen en buiten, wandafwerking, beglazing, restauratie en spuitwerk. De oude website stamde uit de begintijd van het bedrijf, met een fotoslider en een tabel met contactgegevens bovenaan, en was op een telefoon lastig te gebruiken.",
       aanpak: [
@@ -1341,7 +1344,6 @@ export const work = {
     },
     "monster-zorg": {
       branche: "Zzp-zorgverlener",
-      kicker: "Zzp-zorgverlener · Gouda",
       intro: "Een persoonlijke site vanaf nul voor een toegepast psycholoog en zorgverlener die zichzelf als zzp'er inzet: wie hij is, wat hij doet, en hoe je hem bereikt.",
       situatie: "Jarno Monster werkt als toegepast psycholoog en zorgverlener met ruim acht jaar ervaring in de woonbegeleiding, en zet zichzelf als zzp'er in bij zorgorganisaties. Er was nog geen website. Opdrachtgevers moesten snel kunnen zien wat hij doet, wat zijn achtergrond is en hoe ze hem bereiken.",
       aanpak: [
@@ -1370,24 +1372,46 @@ Functies met parameters vervangen zinnen waarin bedragen of namen staan; zo kan 
 
 ```tsx
 import type { ReactNode } from "react";
+import { pricing, euro } from "@/lib/pricing";
 
 const accent = (word: string): ReactNode => <em className="hd-accent-word not-italic text-accent">{word}</em>;
+
+const websiteFrom = euro(pricing.website.from);
+const online = pricing.hosting.find((h) => h.id === "online")!;
+const onderhoud = pricing.hosting.find((h) => h.id === "onderhoud")!;
+const quarter = euro(pricing.hulp.quarter);
+
+type Accented = { pre: string; accent: string; post: string };
+/** OG-afbeelding: accentwoord tussen sterretjes (conventie van lib/og.tsx). */
+const star = (h: Accented) => `${h.pre}*${h.accent}*${h.post}`;
+/** H1 met accentwoord. */
+const accented = (h: Accented): ReactNode => (
+  <>
+    {h.pre}
+    {accent(h.accent)}
+    {h.post}
+  </>
+);
+
+const homeH1 = { pre: "Alles rond je ", accent: "website", post: ". Eén aanspreekpunt." };
+const websitesH1 = { pre: "Een website die direct ", accent: "professioneler", post: " voelt." };
+const hostingH1 = { pre: "Online blijven, ", accent: "zonder gedoe", post: "." };
+const hulpH1 = { pre: "Vastgelopen? Ik kijk ", accent: "direct", post: " mee." };
 
 /** Copy per pagina: metadata, OG-afbeelding, hero, secties, CTA-band. */
 export const pages = {
   home: {
     meta: {
       title: "Websites, hosting en computerhulp in de Hoeksche Waard | HitzDigital",
-      description:
-        "Ik bouw websites voor ondernemers in de Hoeksche Waard, houd ze online en help als je computer of site vastloopt. Eén persoon, korte lijnen. Website vanaf €250, hosting vanaf €5 per maand, alles incl. btw.",
+      description: `Ik bouw websites voor ondernemers in de Hoeksche Waard, houd ze online en help als je computer of site vastloopt. Eén persoon, korte lijnen. Website vanaf ${websiteFrom}, hosting vanaf ${euro(online.monthly)} per maand, alles incl. btw.`,
     },
     og: {
-      title: "Alles rond je *website*. Eén aanspreekpunt.",
+      title: star(homeH1),
       kicker: "Websites · Hosting · Hulp",
       sub: "Websites, hosting en computerhulp voor ondernemers in de Hoeksche Waard. Eén persoon, korte lijnen.",
     },
     hero: {
-      h1: { pre: "Alles rond je ", accent: "website", post: ". Eén aanspreekpunt." },
+      h1: homeH1,
       sub: "Websites, hosting en computerhulp voor ondernemers in de Hoeksche Waard. Ik bouw je site, houd hem online en kijk direct mee als iets vastloopt. Eén persoon, korte lijnen.",
       primary: "Bekijk wat ik doe",
       secondary: "Neem contact op",
@@ -1423,18 +1447,17 @@ export const pages = {
   websites: {
     meta: {
       title: "Website laten maken in de Hoeksche Waard | HitzDigital",
-      description:
-        "Een moderne website voor je bedrijf, vanaf €250 incl. btw. Je ziet eerst een gratis demo van je eigen homepage, daarna beslis je. Voor vakbedrijven en horeca in de Hoeksche Waard.",
+      description: `Een moderne website voor je bedrijf, vanaf ${websiteFrom} incl. btw. Je ziet eerst een gratis demo van je eigen homepage, daarna beslis je. Voor vakbedrijven en horeca in de Hoeksche Waard.`,
     },
     og: {
-      title: "Een website die direct *professioneler* voelt.",
+      title: star(websitesH1),
       kicker: "Websites",
-      sub: "Je ziet eerst een gratis demo van je eigen homepage. Daarna beslis je. Vanaf €250 incl. btw.",
+      sub: `Je ziet eerst een gratis demo van je eigen homepage. Daarna beslis je. Vanaf ${websiteFrom} incl. btw.`,
     },
     crumb: "Websites",
     werkwijzeTitle: "In drie stappen naar een betere website.",
     hero: {
-      title: <>Een website die direct {accent("professioneler")} voelt.</>,
+      title: accented(websitesH1),
       lead: "Voor cafés, schilders, installateurs, hoveniers en andere vakbedrijven in de Hoeksche Waard. Je ziet eerst een echte demo van je eigen site. Daarna beslis je.",
       secondary: "Bekijk mijn werk",
       asideAlt: "Website van Mourits Schilderwerken op desktop",
@@ -1474,17 +1497,16 @@ export const pages = {
   hosting: {
     meta: {
       title: "Hosting, domein en onderhoud voor je website | HitzDigital",
-      description:
-        "Hosting vanaf €5 per maand, onderhoud met domein en een kleine wijziging per maand voor €15. Maandelijks opzegbaar, alles incl. btw. Overstappen regel ik.",
+      description: `Hosting vanaf ${euro(online.monthly)} per maand, onderhoud met domein en een kleine wijziging per maand voor ${euro(onderhoud.monthly)}. Maandelijks opzegbaar, alles incl. btw. Overstappen regel ik.`,
     },
     og: {
-      title: "Online blijven, *zonder gedoe*.",
+      title: star(hostingH1),
       kicker: "Hosting & domeinen",
       sub: "Domein, hosting, e-mail en een kleine wijziging per maand in één bedrag. Maandelijks opzegbaar.",
     },
     crumb: "Hosting & domeinen",
     hero: {
-      title: <>Online blijven, {accent("zonder gedoe")}.</>,
+      title: accented(hostingH1),
       lead: "Domein, hosting, e-mail en een kleine wijziging per maand in één bedrag. Maandelijks opzegbaar. En als er iets is, app je mij, geen ticketsysteem.",
       primary: "Kies je pakket",
       secondary: "Overstappen? Ik regel het",
@@ -1521,17 +1543,16 @@ export const pages = {
   hulp: {
     meta: {
       title: "Computer- en websitehulp in de Hoeksche Waard | HitzDigital",
-      description:
-        "Vastgelopen? Ik kijk direct mee. Hulp bij computer, e-mail, domein, netwerk of website, op afstand of aan huis in de Hoeksche Waard. €15 per kwartier incl. btw. Niet opgelost? Dan betaal je niets.",
+      description: `Vastgelopen? Ik kijk direct mee. Hulp bij computer, e-mail, domein, netwerk of website, op afstand of aan huis in de Hoeksche Waard. ${quarter} per kwartier incl. btw. Niet opgelost? Dan betaal je niets.`,
     },
     og: {
-      title: "Vastgelopen? Ik kijk *direct* mee.",
+      title: star(hulpH1),
       kicker: "Computer- en websitehulp",
-      sub: "€15 per kwartier incl. btw. Op afstand of aan huis in de Hoeksche Waard. Niet opgelost? Dan betaal je niets.",
+      sub: `${quarter} per kwartier incl. btw. Op afstand of aan huis in de Hoeksche Waard. Niet opgelost? Dan betaal je niets.`,
     },
     crumb: "Hulp",
     hero: {
-      title: <>Vastgelopen? Ik kijk {accent("direct")} mee.</>,
+      title: accented(hulpH1),
       lead: "Voor ondernemers in de Hoeksche Waard, en ook gewoon thuis. Je laptop, je mail, je domein, je netwerk of je website: ik los het op, in gewone taal. Meestal op afstand, binnen een kwartier begonnen. Moet ik langskomen? Dan kom ik langs.",
       aside: {
         rate: "Tarief",
@@ -1544,12 +1565,12 @@ export const pages = {
       title: "Eén vaste prijs, geen verrassingen.",
       items: [
         {
-          id: "computer-apk",
+          id: "computer-apk" as const,
           title: "Computer APK",
           body: "Updates en opschonen, virus- en malwarescan, snelheidscheck, back-up en wachtwoorden met tweestapsverificatie gecheckt. Je krijgt een kort lijstje met wat ik gedaan heb en wat je zelf nog kunt doen. Ongeveer 45 minuten, op afstand of aan huis.",
         },
         {
-          id: "website-apk",
+          id: "website-apk" as const,
           title: "Website APK",
           body: "Snelheid, mobiel, vindbaarheid, SSL, back-ups en verouderde plugins, met een kort rapport in gewone taal. Ook als ik je site niet gebouwd heb. Valt de uitslag tegen? Dan maak ik gratis een demo van hoe het wél kan.",
         },
@@ -1566,7 +1587,7 @@ export const pages = {
     how: {
       title: "Bellen, meekijken, opgelost.",
       homeLead: "Ook thuis vastgelopen?",
-      homeBody: (quarter: string) => ` Ik help ook particulieren in de Hoeksche Waard, tegen hetzelfde tarief: ${quarter} per kwartier, incl. btw.`,
+      homeBody: (quarter: string) => `Ik help ook particulieren in de Hoeksche Waard, tegen hetzelfde tarief: ${quarter} per kwartier, incl. btw.`,
     },
     ctaBand: { title: "Zit je nu vast?", body: "Bel of app, dan kijk ik direct mee. Liever eerst een bericht? Vertel kort wat er speelt." },
     schema: {
@@ -1574,8 +1595,6 @@ export const pages = {
       serviceType: "Computerhulp en websiteondersteuning",
       perQuarter: "Hulp per kwartier",
       unit: "kwartier",
-      computerApk: "Computer APK",
-      websiteApk: "Website APK",
       card: (quarters: number) => `Strippenkaart ${quarters} kwartier`,
     },
   },
@@ -1630,7 +1649,7 @@ export const pages = {
       title: "Waar kan ik je mee helpen?",
       lead: "Kies waarvoor je me nodig hebt en vertel kort wat er speelt. Ik reageer binnen 1 werkdag, vrijblijvend. Bij een storing of spoed: bel.",
     },
-    direct: { eyebrow: "Liever direct", whatsappNote: " · snelste voor korte vragen", callNote: " · bel bij storing of spoed" },
+    direct: { eyebrow: "Liever direct", whatsappNote: "snelste voor korte vragen", callNote: "bel bij storing of spoed" },
     about: {
       place: (founder: string, city: string) => `${founder} · ${city}, Hoeksche Waard`,
       kvk: (kvk: string) => `KvK ${kvk}`,
@@ -1727,7 +1746,7 @@ import { Button } from "@/components/ui/Button";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { ThemeSwitch, type ThemeLabels } from "@/components/ui/ThemeSwitch";
 import { cn } from "@/lib/cn";
-import type { Lang } from "@/lib/i18n/paths";
+import { href, type Lang } from "@/lib/i18n/paths";
 
 export type NavLabels = { aria: string; homeAria: string; menuOpen: string; menuClose: string; menu: string; themeRow: string };
 
@@ -1750,7 +1769,7 @@ export function Nav({ lang, links, cta, labels, theme }: Props) {
 
 Vervang in de JSX:
 - `aria-label="Hoofdnavigatie"` → `aria-label={labels.aria}`
-- `<a href="/" aria-label="HitzDigital home"` → `<a href={lang === "nl" ? "/" : \`/${lang}\`} aria-label={labels.homeAria}`
+- `<a href="/" aria-label="HitzDigital home"` → `<a href={href(lang, "home")} aria-label={labels.homeAria}` (de import van `href` uit `@/lib/i18n/paths` staat hierboven al)
 - beide `nav.links.map(` → `links.map(`
 - beide `<ThemeSwitch` → `<ThemeSwitch labels={theme}` (met behoud van `size="lg"` in het menu)
 - `href={cta.demo.href}` → `href={cta.href}` en `{cta.demo.label}` → `{cta.label}` (twee plekken: desktop-link en `<Button>` in het menu)
@@ -2209,7 +2228,7 @@ git commit -m "Homepage en hero lezen uit het woordenboek; pageMetadata-helper"
 
 - [ ] **Step 1: `lib/work.ts` zonder tekstvelden**
 
-Vervang de types en verwijder `meta`, `alt`, `branche`, `kicker`, `intro`, `situatie`, `aanpak`, `resultaat`, `voorAlt`, `naAlt` en `quote` uit de data. Tags worden ids. De overige waarden blijven exact gelijk.
+Vervang de types en verwijder `meta`, `alt`, `branche`, `kicker`, `intro`, `situatie`, `aanpak`, `resultaat`, `voorAlt`, `naAlt` en `quote` uit de data (`kicker` verdwijnt helemaal: de case-pagina stelt hem samen uit `branche` en `plaats`). Tags worden ids. De overige waarden blijven exact gelijk.
 
 ```ts
 import { href, type Lang } from "@/lib/i18n/paths";
@@ -2286,7 +2305,7 @@ Voeg bovenaan toe: `import type { WorkSlug, CaseSlug } from "@/lib/work";` en ve
 ```ts
 } satisfies {
   items: Record<WorkSlug, { meta: string; alt: string }>;
-  cases: Record<CaseSlug, { branche: string; kicker: string; intro: string; situatie: string; aanpak: string[]; resultaat: string[]; voorNaAlt: { voor: string; na: string } | undefined; quote: { text: string; author: string } | undefined }>;
+  cases: Record<CaseSlug, { branche: string; intro: string; situatie: string; aanpak: string[]; resultaat: string[]; voorNaAlt: { voor: string; na: string } | undefined; quote: { text: string; author: string } | undefined }>;
 };
 ```
 
@@ -2493,7 +2512,7 @@ export default async function CasePage({ params }: SlugParams) {
             <Button href={c.url} variant="ghost" target="_blank" rel="noopener noreferrer">
               {t.viewSite}
             </Button>
-            <span className="text-[13.5px] text-faint">{copy.kicker}</span>
+            <span className="text-[13.5px] text-faint">{`${copy.branche} · ${c.plaats}`}</span>
           </>
         }
       />
@@ -3102,6 +3121,7 @@ export default async function HulpPage({ params }: LangParams) {
   const h = pricing.hulp;
   const tarief = services.hulpTarief;
   const apkPrijs = { "computer-apk": h.apk.computer, "website-apk": h.apk.website } as const;
+  const apk = (id: "computer-apk" | "website-apk") => t.apk.items.find((a) => a.id === id)!;
   const schema = {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -3112,8 +3132,8 @@ export default async function HulpPage({ params }: LangParams) {
     url: `${site.url}${href(lang, "hulp")}`,
     offers: [
       { "@type": "Offer", name: t.schema.perQuarter, price: h.quarter.toFixed(2), priceCurrency: "EUR", priceSpecification: { "@type": "UnitPriceSpecification", price: h.quarter.toFixed(2), priceCurrency: "EUR", unitText: t.schema.unit, valueAddedTaxIncluded: true } },
-      { "@type": "Offer", name: t.schema.computerApk, price: h.apk.computer.toFixed(2), priceCurrency: "EUR" },
-      { "@type": "Offer", name: t.schema.websiteApk, price: h.apk.website.toFixed(2), priceCurrency: "EUR" },
+      { "@type": "Offer", name: apk("computer-apk").title, price: h.apk.computer.toFixed(2), priceCurrency: "EUR" },
+      { "@type": "Offer", name: apk("website-apk").title, price: h.apk.website.toFixed(2), priceCurrency: "EUR" },
       { "@type": "Offer", name: t.schema.card(h.card.quarters), price: h.card.price.toFixed(2), priceCurrency: "EUR" },
     ],
   };
@@ -3239,6 +3259,7 @@ export default async function HulpPage({ params }: LangParams) {
             </div>
             <p className="mt-14 max-w-[60ch] text-[15px] leading-[1.65] text-muted">
               <span className="text-ink">{t.how.homeLead}</span>
+              {" "}
               {t.how.homeBody(euro(h.quarter))}
             </p>
           </Reveal>
@@ -3268,7 +3289,7 @@ export default async function HulpPage({ params }: LangParams) {
 
 - [ ] **Step 2: Typecheck, bouw, vergelijk, commit**
 
-Run: `npx tsc --noEmit && npm run build`. In `npm run dev` op `/hulp`: let op de regel "Ook thuis vastgelopen? Ik help ook particulieren…" (spatie na het vraagteken komt uit `homeBody`) en de strippenkaart-regel.
+Run: `npx tsc --noEmit && npm run build`. In `npm run dev` op `/hulp`: let op de regel "Ook thuis vastgelopen? Ik help ook particulieren…" (de spatie na het vraagteken staat als `{" "}` in de JSX, niet in `homeBody`) en de strippenkaart-regel.
 
 ```bash
 git add -A
@@ -3629,13 +3650,13 @@ export default async function ContactPage({ params }: LangParams) {
                       <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="inline-block py-1 text-ink underline-offset-4 hover:underline">
                         {ui.footer.whatsapp}
                       </a>
-                      <span className="text-muted">{t.direct.whatsappNote}</span>
+                      <span className="text-muted"> · {t.direct.whatsappNote}</span>
                     </li>
                     <li>
                       <a href={tel} className="inline-block py-1 text-ink underline-offset-4 hover:underline">
                         {telDisplay}
                       </a>
-                      <span className="text-muted">{t.direct.callNote}</span>
+                      <span className="text-muted"> · {t.direct.callNote}</span>
                     </li>
                     <li>
                       <MailtoLink href={ui.mailto} className="inline-block py-1 text-ink underline-offset-4 hover:underline">
@@ -4187,6 +4208,8 @@ Meld Nathaniel: build groen, unit + e2e groen, screenshots identiek aan `main`, 
 
 # Fase 2 — Engelse woordenboeken en copy
 
+Vormafspraken uit de review van Task 6/7: bedragen altijd via `pricing`/`euro`, accentkoppen één keer als `{ pre, accent, post }` met `star()`/`accented()`, technische ids met `as const`, geen scheidingstekens of voorloopspaties in strings, `nav.cta` afgeleid van `cta`, geen `kicker`.
+
 Doel: na Task 27 bestaat de complete Engelse site onder `/en/…`, door Nathaniel per pagina nagelezen. Nog zonder taalschakelaar en zonder automatische detectie (fase 3).
 
 Schrijfregels voor alle Engelse copy (spec §7): Brits-Engels (colour, organise, favourite), ik-vorm, korte zinnen, geen jargon en geen superlatieven. De Hoeksche Waard is thuisbasis, niet doelgroep. Websites en hosting: op afstand, wereldwijd. Hulp aan huis: alleen in de regio. Prijzen ongewijzigd met "incl. 21% VAT". De Engelse copy hieronder is de eerste versie; Nathaniel leest per task tegen en wijzigingen worden direct in het EN-woordenboek doorgevoerd.
@@ -4377,6 +4400,17 @@ const mailBody = [
   "Kind regards,",
 ].join("\n");
 
+/** Knoppen naar het contactformulier. `nav.cta` leidt zijn labels hiervan af, zodat ze niet uiteenlopen. */
+const cta = {
+  contact: { label: "Get in touch", href: contact() },
+  demo: { label: "Free demo", href: contact("website") },
+  demoLang: { label: "Request your free demo", href: contact("website") },
+  hosting: { label: "Request hosting", href: contact("hosting") },
+  hulp: { label: "Request help", href: contact("hulp") },
+  whatsapp: "Message me on WhatsApp",
+  call: "Call",
+};
+
 export const ui: UiDict = {
   skipLink: "Skip to content",
   nav: {
@@ -4394,7 +4428,7 @@ export const ui: UiDict = {
     menu: "Menu",
     themeRow: "Appearance",
     langRow: "Language",
-    cta: { demo: "Free demo", hosting: "Request hosting", hulp: "Request help", contact: "Contact" },
+    cta: { demo: cta.demo.label, hosting: cta.hosting.label, hulp: cta.hulp.label, contact: "Contact" },
   },
   theme: { toLight: "Switch to light theme", toDark: "Switch to dark theme", light: "Light theme", dark: "Dark theme" },
   lang: { nl: "Nederlands", en: "English", switchTo: { nl: "Schakel naar Nederlands", en: "Switch to English" } },
@@ -4418,15 +4452,7 @@ export const ui: UiDict = {
     vat: "Prices incl. VAT",
   },
   crumbs: { aria: "Breadcrumb", home: "Home" },
-  cta: {
-    contact: { label: "Get in touch", href: contact() },
-    demo: { label: "Free demo", href: contact("website") },
-    demoLang: { label: "Request your free demo", href: contact("website") },
-    hosting: { label: "Request hosting", href: contact("hosting") },
-    hulp: { label: "Request help", href: contact("hulp") },
-    whatsapp: "Message me on WhatsApp",
-    call: "Call",
-  },
+  cta,
   ctaBand: { orCall: "Or call", reply: "Reply within one working day, no obligation." },
   fab: { label: "Got a question?", aria: "Got a question? Send me a WhatsApp message" },
   stickyBar: { aria: "Direct contact", call: "Call", whatsapp: "WhatsApp" },
@@ -4520,19 +4546,21 @@ git commit -m "EN: site-schil (nav, footer, formulier, 404, schema)"
 - [ ] **Step 1: Blok `home` in `lib/i18n/en/pages.tsx`**
 
 ```tsx
+// Bovenin het bestand, bij de andere accentkoppen (de helpers `star`/`accented` staan er al, uit de NL-kopie):
+const homeH1 = { pre: "Everything around your ", accent: "website", post: ". One point of contact." };
+
   home: {
     meta: {
       title: "Websites, hosting and tech help for small businesses | HitzDigital",
-      description:
-        "I build websites for small businesses, keep them online and help when your computer or site lets you down. One person, short lines, based in the Netherlands and working with clients here and abroad. Websites from €250, hosting from €5 a month, all incl. VAT.",
+      description: `I build websites for small businesses, keep them online and help when your computer or site lets you down. One person, short lines, based in the Netherlands and working with clients here and abroad. Websites from ${websiteFrom}, hosting from ${euro(online.monthly)} a month, all incl. VAT.`,
     },
     og: {
-      title: "Everything around your *website*. One point of contact.",
+      title: star(homeH1),
       kicker: "Websites · Hosting · Help",
       sub: "Websites, hosting and tech help for small businesses. One person, based in the Netherlands, working with clients here and abroad.",
     },
     hero: {
-      h1: { pre: "Everything around your ", accent: "website", post: ". One point of contact." },
+      h1: homeH1,
       sub: "Websites, hosting and tech help for small businesses. One person, based in the Netherlands, working with clients here and abroad. I build your site, keep it online and step in the moment something breaks.",
       primary: "See what I do",
       secondary: "Get in touch",
@@ -4636,21 +4664,23 @@ git commit -m "EN: homepage"
 - [ ] **Step 1: Blok `websites` in `lib/i18n/en/pages.tsx`**
 
 ```tsx
+// Bovenin het bestand, bij de andere accentkoppen (de helpers `star`/`accented` staan er al, uit de NL-kopie):
+const websitesH1 = { pre: "A website that instantly feels more ", accent: "professional", post: "." };
+
   websites: {
     meta: {
       title: "Website design for small businesses | HitzDigital",
-      description:
-        "A modern website for your business, from €250 incl. VAT. You see a free demo of your own homepage first, then you decide. For trades, hospitality and independent professionals, in the Netherlands and abroad.",
+      description: `A modern website for your business, from ${websiteFrom} incl. VAT. You see a free demo of your own homepage first, then you decide. For trades, hospitality and independent professionals, in the Netherlands and abroad.`,
     },
     og: {
-      title: "A website that instantly feels more *professional*.",
+      title: star(websitesH1),
       kicker: "Websites",
-      sub: "You see a free demo of your own homepage first. Then you decide. From €250 incl. VAT.",
+      sub: `You see a free demo of your own homepage first. Then you decide. From ${websiteFrom} incl. VAT.`,
     },
     crumb: "Websites",
     werkwijzeTitle: "A better website in three steps.",
     hero: {
-      title: <>A website that instantly feels more {accent("professional")}.</>,
+      title: accented(websitesH1),
       lead: "For cafés, painters, installers, landscapers and other hands-on businesses, wherever you're based. You see a real demo of your own site first. Then you decide.",
       secondary: "See my work",
       asideAlt: "Website of Mourits Schilderwerken on desktop",
@@ -4760,20 +4790,22 @@ Openstaande zakelijke keuze voor Nathaniel (niet in de spec): het Onderhoud-pakk
 - [ ] **Step 1: Blok `hosting` in `lib/i18n/en/pages.tsx`**
 
 ```tsx
+// Bovenin het bestand, bij de andere accentkoppen (de helpers `star`/`accented` staan er al, uit de NL-kopie):
+const hostingH1 = { pre: "Stay online, ", accent: "without the hassle", post: "." };
+
   hosting: {
     meta: {
       title: "Website hosting, domain and maintenance | HitzDigital",
-      description:
-        "Hosting from €5 a month, or maintenance with domain and one small change per month for €15. Cancel monthly, all incl. VAT. I handle the switch from your current host.",
+      description: `Hosting from ${euro(online.monthly)} a month, or maintenance with domain and one small change per month for ${euro(onderhoud.monthly)}. Cancel monthly, all incl. VAT. I handle the switch from your current host.`,
     },
     og: {
-      title: "Stay online, *without the hassle*.",
+      title: star(hostingH1),
       kicker: "Hosting & domains",
       sub: "Domain, hosting, email and one small change per month in one fee. Cancel monthly.",
     },
     crumb: "Hosting & domains",
     hero: {
-      title: <>Stay online, {accent("without the hassle")}.</>,
+      title: accented(hostingH1),
       lead: "Domain, hosting, email and one small change per month in one fee. Cancel monthly. And if anything comes up, you message me. No ticket system.",
       primary: "Choose your plan",
       secondary: "Switching? I'll handle it",
@@ -4891,20 +4923,22 @@ De Nederlandse "APK" (autokeuring) heet in het Engels "check-up". De ids `comput
 - [ ] **Step 1: Blok `hulp` in `lib/i18n/en/pages.tsx`**
 
 ```tsx
+// Bovenin het bestand, bij de andere accentkoppen (de helpers `star`/`accented` staan er al, uit de NL-kopie):
+const hulpH1 = { pre: "Stuck? I'll take a look ", accent: "right away", post: "." };
+
   hulp: {
     meta: {
       title: "Computer and website help, remote or on-site | HitzDigital",
-      description:
-        "Stuck? I'll take a look right away. Help with your computer, email, domain, network or website: remote via screen sharing wherever you are, on-site in the Hoeksche Waard area. €15 per quarter hour incl. VAT. No fix, no fee.",
+      description: `Stuck? I'll take a look right away. Help with your computer, email, domain, network or website: remote via screen sharing wherever you are, on-site in the Hoeksche Waard area. ${quarter} per quarter hour incl. VAT. No fix, no fee.`,
     },
     og: {
-      title: "Stuck? I'll take a look *right away*.",
+      title: star(hulpH1),
       kicker: "Computer and website help",
-      sub: "€15 per quarter hour incl. VAT. Remote wherever you are, on-site in the Hoeksche Waard. No fix, no fee.",
+      sub: `${quarter} per quarter hour incl. VAT. Remote wherever you are, on-site in the Hoeksche Waard. No fix, no fee.`,
     },
     crumb: "Help",
     hero: {
-      title: <>Stuck? I'll take a look {accent("right away")}.</>,
+      title: accented(hulpH1),
       lead: "For small businesses, and for home users too. Your laptop, email, domain, network or website: I fix it and explain it in plain language. Usually remote via screen sharing, started within fifteen minutes. Need me on-site? In the Hoeksche Waard area, I'll come to you.",
       aside: {
         rate: "Rate",
@@ -4917,12 +4951,12 @@ De Nederlandse "APK" (autokeuring) heet in het Engels "check-up". De ids `comput
       title: "One fixed price, no surprises.",
       items: [
         {
-          id: "computer-apk",
+          id: "computer-apk" as const,
           title: "Computer check-up",
           body: "Updates and clean-up, virus and malware scan, speed check, backup and passwords with two-step verification checked. You get a short list of what I did and what you can still do yourself. About 45 minutes, remote or on-site.",
         },
         {
-          id: "website-apk",
+          id: "website-apk" as const,
           title: "Website check-up",
           body: "Speed, mobile, findability, SSL, backups and outdated plugins, with a short report in plain language. Even if I didn't build your site. Disappointing result? Then I'll build a free demo of how it could be.",
         },
@@ -4939,7 +4973,7 @@ De Nederlandse "APK" (autokeuring) heet in het Engels "check-up". De ids `comput
     how: {
       title: "Call, share your screen, sorted.",
       homeLead: "Stuck at home?",
-      homeBody: (quarter: string) => ` I also help private individuals in the Hoeksche Waard area, at the same rate: ${quarter} per quarter hour, incl. VAT.`,
+      homeBody: (quarter: string) => `I also help private individuals in the Hoeksche Waard area, at the same rate: ${quarter} per quarter hour, incl. VAT.`,
     },
     ctaBand: { title: "Stuck right now?", body: "Call or message me and I'll take a look straight away. Prefer to send a message first? Tell me briefly what's going on." },
     schema: {
@@ -4947,8 +4981,6 @@ De Nederlandse "APK" (autokeuring) heet in het Engels "check-up". De ids `comput
       serviceType: "Computer support and website support",
       perQuarter: "Help per quarter hour",
       unit: "quarter hour",
-      computerApk: "Computer check-up",
-      websiteApk: "Website check-up",
       card: (quarters: number) => `Prepaid card, ${quarters} quarter hours`,
     },
   },
@@ -5081,7 +5113,6 @@ export const work: WorkDict = {
   cases: {
     "volmer-techniek": {
       branche: "Metalworking",
-      kicker: "Metalworking · Puttershoek",
       intro: "A bilingual website for a machining company that works on-site and in its own workshop, with a quote form, project gallery and service area.",
       situatie:
         "Volmer Techniek B.V. from Puttershoek machines, repairs and builds machinery, on-site at the customer and in its own workshop. The old website was a standard WordPress site with an off-the-shelf theme. For a company that also works outside the Netherlands, the site had to work in two languages and present the six disciplines clearly side by side.",
@@ -5102,7 +5133,6 @@ export const work: WorkDict = {
     },
     "mourits-schilderwerken": {
       branche: "Painting company",
-      kicker: "Painting company · Klaaswaal",
       intro: "A new site for a painting company from Klaaswaal that has worked across the Hoeksche Waard since 2015: five services, a project gallery and one-tap calling from your phone.",
       situatie:
         "Mourits Schilderwerken B.V. has worked from Klaaswaal across the whole Hoeksche Waard since 2015: interior and exterior painting, wall finishing, glazing, restoration and spray work. The old website dated from the company's early days, with a photo slider and a table of contact details at the top, and was awkward to use on a phone.",
@@ -5122,7 +5152,6 @@ export const work: WorkDict = {
     },
     "monster-zorg": {
       branche: "Freelance care professional",
-      kicker: "Freelance care professional · Gouda",
       intro: "A personal site from scratch for an applied psychologist and care professional who works freelance: who he is, what he does, and how to reach him.",
       situatie:
         "Jarno Monster works as an applied psychologist and care professional with over eight years of experience in supported living, and takes on freelance assignments with care organisations. There was no website yet. Clients needed to see quickly what he does, what his background is and how to reach him.",
@@ -5176,7 +5205,7 @@ git commit -m "EN: work en cases"
       title: "What can I help you with?",
       lead: "Pick what you need me for and tell me briefly what's going on. I reply within one working day, no obligation. Site down or urgent? Call.",
     },
-    direct: { eyebrow: "Prefer to skip the form", whatsappNote: " · quickest for short questions", callNote: " · call if your site is down or it's urgent" },
+    direct: { eyebrow: "Prefer to skip the form", whatsappNote: "quickest for short questions", callNote: "call if your site is down or it's urgent" },
     about: {
       place: (founder: string, city: string) => `${founder} · ${city}, the Netherlands`,
       kvk: (kvk: string) => `Chamber of Commerce (KvK) ${kvk}`,
