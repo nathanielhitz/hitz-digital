@@ -8,16 +8,18 @@ type Opts = { slug?: string; type?: "website" | "article" };
 /** Metadata voor één pagina: titel, beschrijving, canonical + hreflang, OpenGraph en Twitter. */
 export function pageMetadata(lang: Lang, key: RouteKey, t: Texts, opts: Opts = {}): Metadata {
   const url = href(lang, key, opts.slug);
+  const alternates = alternatesFor(lang, key, opts.slug);
   return {
     title: t.title,
     description: t.description,
-    alternates: alternatesFor(lang, key, opts.slug),
+    alternates,
     openGraph: {
       title: t.title,
       description: t.description,
       url,
       siteName: site.name,
       locale: ogLocale(lang),
+      ...(alternates.languages ? { alternateLocale: ogLocale(lang === "nl" ? "en" : "nl") } : {}),
       type: opts.type ?? "website",
     },
     twitter: { card: "summary_large_image", title: t.title, description: t.description },

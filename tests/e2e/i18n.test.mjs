@@ -174,3 +174,61 @@ test("detectie geldt alleen voor de kale homepage", async () => {
     assert.equal(res.status, 200, p);
   }
 });
+
+const PAIRS = [
+  ["/", "/en"], ["/websites", "/en/websites"], ["/hosting", "/en/hosting"], ["/hulp", "/en/help"],
+  ["/werk", "/en/work"], ["/werk/monster-zorg", "/en/work/monster-zorg"], ["/contact", "/en/contact"],
+  ["/privacy", "/en/privacy"], ["/voorwaarden", "/en/terms"],
+];
+const SITE = "https://www.hitzdigital.nl";
+const abs = (p) => (p === "/" ? SITE : SITE + p);
+const esc = (s) => s.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&");
+
+// Next/React schrijft het attribuut als `hrefLang` in de HTML-bron; HTML-attributen zijn
+// hoofdletterongevoelig, dus browsers en Google lezen `hreflang`. De regexes matchen daarom case-insensitive.
+test("hreflang is symmetrisch en heeft x-default = NL", async () => {
+  for (const [nl, en] of PAIRS) {
+    for (const p of [nl, en]) {
+      const html = await (await get(p)).text();
+      assert.match(html, new RegExp(`hreflang="nl"[^>]*href="${esc(abs(nl))}"|href="${esc(abs(nl))}"[^>]*hreflang="nl"`, "i"), `${p}: nl`);
+      assert.match(html, new RegExp(`hreflang="en"[^>]*href="${esc(abs(en))}"|href="${esc(abs(en))}"[^>]*hreflang="en"`, "i"), `${p}: en`);
+      assert.match(html, new RegExp(`hreflang="x-default"[^>]*href="${esc(abs(nl))}"|href="${esc(abs(nl))}"[^>]*hreflang="x-default"`, "i"), `${p}: x-default`);
+      assert.match(html, new RegExp(`rel="canonical" href="${esc(abs(p))}"`), `${p}: canonical`);
+    }
+  }
+  // Support bestaat alleen in het Nederlands: geen <link rel="alternate" hreflang>. De taalschakelaar
+  // zet wel hrefLang op haar <a>, daarom kijken we alleen naar link-tags.
+  const support = await (await get("/support")).text();
+  assert.deepEqual(support.match(/<link[^>]*hreflang=[^>]*>/gi) ?? [], [], "support heeft geen hreflang");
+});
+
+test("og:locale en alternate", async () => {
+  const nl = await (await get("/hulp")).text();
+  assert.match(nl, /property="og:locale" content="nl_NL"/);
+  assert.match(nl, /property="og:locale:alternate" content="en_GB"/);
+  const en = await (await get("/en/help")).text();
+  assert.match(en, /property="og:locale" content="en_GB"/);
+});
+
+test("sitemap bevat beide talen met alternates, support alleen NL", async () => {
+  const xml = await (await get("/sitemap.xml")).text();
+  for (const [nl, en] of PAIRS) {
+    assert.match(xml, new RegExp(`<loc>${esc(abs(nl))}</loc>`), nl);
+    assert.match(xml, new RegExp(`<loc>${esc(abs(en))}</loc>`), en);
+    assert.match(xml, new RegExp(`hreflang="en" href="${esc(abs(en))}"`, "i"), `${nl}: alternate en`);
+  }
+  assert.match(xml, new RegExp(`<loc>${esc(SITE)}/support</loc>`));
+  assert.doesNotMatch(xml, /\/en\/support/);
+});
+
+test("lek-check: geen Nederlandse schil-teksten op Engelse pagina's", async () => {
+  const forbidden = ["Gratis demo", "Vraag je", "Vraag hosting", "Vraag hulp", "Neem contact", "per maand", "incl. btw", "Werkwijze",
+    "Veelgestelde", "Maandelijks opzegbaar", "Kies je pakket", "Lees de", "Weergave", "Naar inhoud", "Heb je een vraag", "Privacybeleid",
+    "Deze pagina bestaat niet"];
+  for (const p of [...EN_PAGES, "/en/does-not-exist"]) {
+    const html = await (await get(p)).text();
+    const text = html.replace(/<script[\s\S]*?<\/script>/g, "").replace(/<[^>]+>/g, " ");
+    for (const w of forbidden) assert.ok(!text.includes(w), `${p} bevat "${w}"`);
+    if (p !== "/en/does-not-exist") assert.match(html, /"inLanguage":"en"/, `${p}: schema inLanguage`);
+  }
+});

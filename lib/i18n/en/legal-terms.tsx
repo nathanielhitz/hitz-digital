@@ -15,8 +15,8 @@ export function TermsBody() {
   return (
     <>
       <p>
-        <strong>This is a translation for convenience.</strong> The Dutch version,{" "}
-        <a href={href("nl", "voorwaarden")}>Algemene voorwaarden</a>, is the legally binding one.
+        <strong>This is a translation for convenience.</strong> The{" "}
+        <a href={href("nl", "voorwaarden")}>Dutch version</a> is the legally binding one.
       </p>
 
       <h2>In six sentences</h2>

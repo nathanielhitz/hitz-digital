@@ -8,8 +8,8 @@ export function PrivacyBody() {
   return (
     <>
       <p>
-        <strong>This is a translation for convenience.</strong> The Dutch version,{" "}
-        <a href={href("nl", "privacy")}>Privacybeleid</a>, is the binding one.
+        <strong>This is a translation for convenience.</strong> The{" "}
+        <a href={href("nl", "privacy")}>Dutch version</a> is the binding one.
       </p>
 
       <p>
