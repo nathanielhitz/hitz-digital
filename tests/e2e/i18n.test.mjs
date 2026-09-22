@@ -140,3 +140,31 @@ test("header-knop volgt de pagina (spec §4)", async () => {
     assert.doesNotMatch(h, /href="\/(en\/)?contact/, `${path}: geen knop`);
   }
 });
+
+test("homepage kiest taal: cookie eerst, dan Accept-Language (spec §2 regel 5)", async () => {
+  const matrix = [
+    [{}, 200],
+    [{ "accept-language": "en-GB,en;q=0.9" }, 307],
+    [{ "accept-language": "en-US,en;q=0.9,nl;q=0.5" }, 307],
+    [{ "accept-language": "nl-NL,nl;q=0.9,en;q=0.8" }, 200],
+    [{ "accept-language": "en;q=0.8,nl;q=0.8" }, 200],
+    [{ "accept-language": "de-DE,de;q=0.9" }, 200],
+    [{ cookie: "lang=en" }, 307],
+    [{ cookie: "lang=nl", "accept-language": "en-GB,en;q=0.9" }, 200],
+    [{ cookie: "lang=xx", "accept-language": "en-GB,en;q=0.9" }, 307],
+  ];
+  for (const [headers, status] of matrix) {
+    const res = await get("/", { headers });
+    assert.equal(res.status, status, JSON.stringify(headers));
+    if (status === 307) assert.equal(location(res), "/en", JSON.stringify(headers));
+    else assert.match(await res.text(), /<html[^>]*\blang="nl"/, JSON.stringify(headers));
+    assert.match(res.headers.get("vary") ?? "", /Accept-Language/i, JSON.stringify(headers));
+  }
+});
+
+test("detectie geldt alleen voor de kale homepage", async () => {
+  for (const p of ["/websites", "/hulp", "/contact", "/werk/volmer-techniek"]) {
+    const res = await get(p, { headers: { "accept-language": "en-GB,en;q=0.9", cookie: "lang=en" } });
+    assert.equal(res.status, 200, p);
+  }
+});

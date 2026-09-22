@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { isLive, parsePublic, internalPath, redirectForEn } from "@/lib/i18n/paths";
+import { prefersEnglish } from "@/lib/i18n/accept-language";
 
 /**
  * Taalrouting (spec §2). Nederlands en Engels.
@@ -7,9 +8,9 @@ import { isLive, parsePublic, internalPath, redirectForEn } from "@/lib/i18n/pat
  *   en elk pad met een punt erin (bestanden, dus ook sitemap.xml en robots.txt).
  * - Regel 2: /nl(/…) → 301 naar hetzelfde pad zonder prefix.
  * - Regel 3 + 4: een interne (Nederlandse) slug of /support onder /en → 301 naar het publieke adres.
+ * - Regel 5: alleen de kale homepage kiest zelf een taal — cookie `lang` eerst, anders Accept-Language.
  * - Regel 6: publieke Engelse slug → interne route /en/… (rewrite).
  * - Regel 7: alles overig → interne route /nl/… (rewrite).
- * Task 30 voegt regel 5 toe (detectie op "/").
  */
 export const config = {
   matcher: ["/((?!_next/|_vercel/|images/|icon$|apple-icon$|.*\\..*).*)"],
@@ -45,8 +46,23 @@ export function middleware(req: NextRequest) {
     return parsed ? rewrite(req, internalPath(parsed)) : NextResponse.next();
   }
 
-  // Regel 7
-  return rewrite(req, pathname === "/" ? "/nl" : `/nl${pathname}`);
+  // Regel 5: alleen de kale homepage kiest zelf een taal. Cookie eerst, anders Accept-Language.
+  if (pathname === "/" && isLive("en")) {
+    const cookie = req.cookies.get("lang")?.value;
+    const toEn = cookie === "en" || (cookie !== "nl" && prefersEnglish(req.headers.get("accept-language")));
+    if (toEn) {
+      const url = req.nextUrl.clone();
+      url.pathname = "/en";
+      const res = NextResponse.redirect(url, 307);
+      res.headers.set("Vary", "Cookie, Accept-Language");
+      return res;
+    }
+  }
+
+  // Regel 7: Nederlands zonder prefix → interne route /nl/…
+  const res = rewrite(req, pathname === "/" ? "/nl" : `/nl${pathname}`);
+  if (pathname === "/") res.headers.set("Vary", "Cookie, Accept-Language");
+  return res;
 }
 
 function rewrite(req: NextRequest, internal: string) {
