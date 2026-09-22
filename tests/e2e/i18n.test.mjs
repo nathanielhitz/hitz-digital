@@ -3,8 +3,13 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const BASE = process.env.BASE_URL ?? "http://localhost:3111";
-export const get = (path, init = {}) => fetch(BASE + path, { redirect: "manual", ...init });
-const location = (res) => new URL(res.headers.get("location"), BASE).pathname;
+const get = (path, init = {}) => fetch(BASE + path, { redirect: "manual", ...init });
+const locationUrl = (res) => {
+  const loc = res.headers.get("location");
+  assert.ok(loc, "location header");
+  return new URL(loc, BASE);
+};
+const location = (res) => locationUrl(res).pathname;
 
 const NL_PAGES = [
   "/", "/websites", "/hosting", "/hulp", "/werk", "/werk/volmer-techniek", "/contact",
@@ -23,7 +28,7 @@ test("/nl/… → 301 zonder prefix, query blijft", async () => {
   const res = await get("/nl/hosting?x=1");
   assert.equal(res.status, 301);
   assert.equal(location(res), "/hosting");
-  assert.equal(new URL(res.headers.get("location"), BASE).search, "?x=1");
+  assert.equal(locationUrl(res).search, "?x=1");
   const home = await get("/nl");
   assert.equal(home.status, 301);
   assert.equal(location(home), "/");
@@ -52,7 +57,14 @@ test("metadata-routes en OG-afbeeldingen blijven bereikbaar", async () => {
     for (const p of [pathname + search, pathname.slice(3) + search]) {
       const og = await get(p);
       assert.equal(og.status, 200, p);
-      assert.match(og.headers.get("content-type"), /image\/png/, p);
+      assert.match(og.headers.get("content-type") ?? "", /image\/png/, p);
     }
   }
+});
+
+test("paden buiten de padkaart geven 404, ook als de middleware ze overslaat", async () => {
+  for (const p of ["/wp-login.php", "/foo.php", "/iconografie", "/icon-192.png", "/en/x", "/werk/onbekend"]) {
+    assert.equal((await get(p)).status, 404, p);
+  }
+  for (const p of ["/icon", "/apple-icon"]) assert.equal((await get(p)).status, 200, p);
 });

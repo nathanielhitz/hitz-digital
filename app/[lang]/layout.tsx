@@ -31,6 +31,10 @@ export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
 }
 
+/** Alleen de talen uit generateStaticParams renderen; elke andere `lang` is een 404 (vangnet uit spec §1).
+    Zonder dit zou een pad dat de middleware overslaat (bijv. /wp-login.php) als `lang` binnenkomen en de homepage opleveren. */
+export const dynamicParams = false;
+
 const title = "Websites, hosting en computerhulp in de Hoeksche Waard | HitzDigital";
 const description =
   "Ik bouw websites voor ondernemers in de Hoeksche Waard, houd ze online en help als je computer of site vastloopt. Eén persoon, korte lijnen. Website vanaf €250, hosting vanaf €5 per maand, alles incl. btw.";

@@ -7,7 +7,12 @@ import type { Lang } from "@/lib/i18n/paths";
 
 export type NotFoundTexts = { title: string; body: string; back: string; href: string };
 
-/** 404 buiten de (site)-schil: geen nav/footer, wel dezelfde tokens. Taal uit het pad (/en/… → Engels), zodat de pagina statisch blijft. */
+/**
+ * 404 buiten de (site)-schil: geen nav/footer, wel dezelfde tokens.
+ * De taalkeuze gebeurt hier in de client (uit het pad, /en/… → Engels) zodat er geen dynamische server-API
+ * in de 404-boundary staat; die zou de hele site uit de statische prerender trekken. Next streamt het
+ * 404-antwoord zelf, dus de teksten van beide talen gaan mee in de payload.
+ */
 export function NotFoundView({ texts }: { texts: Record<Lang, NotFoundTexts> }) {
   const pathname = usePathname() ?? "/";
   const lang: Lang = pathname === "/en" || pathname.startsWith("/en/") ? "en" : "nl";

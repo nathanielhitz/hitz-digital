@@ -800,6 +800,10 @@ export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
 }
 
+/** Alleen de talen uit generateStaticParams renderen; elke andere `lang` is een 404 (vangnet uit spec §1).
+    Zonder dit zou een pad dat de middleware overslaat (bijv. /wp-login.php) als `lang` binnenkomen en de homepage opleveren. */
+export const dynamicParams = false;
+
 const title = "Websites, hosting en computerhulp in de Hoeksche Waard | HitzDigital";
 const description =
   "Ik bouw websites voor ondernemers in de Hoeksche Waard, houd ze online en help als je computer of site vastloopt. Eén persoon, korte lijnen. Website vanaf €250, hosting vanaf €5 per maand, alles incl. btw.";
@@ -925,20 +929,21 @@ import { NextResponse, type NextRequest } from "next/server";
 
 /**
  * Taalrouting (spec §2). Fase 1: alleen Nederlands.
- * - Regel 1 (matcher): _next, api, images, bestanden en root-metadata-routes worden overgeslagen.
+ * - Regel 1 (matcher): overgeslagen worden _next, _vercel, images, de routes /icon en /apple-icon,
+ *   en elk pad met een punt erin (bestanden, dus ook sitemap.xml en robots.txt).
  * - Regel 2: /nl(/…) → 301 naar hetzelfde pad zonder prefix.
  * - Regel 7: alles overig → interne route /nl/… (rewrite).
  * Task 18 voegt regels 3, 4 en 6 toe (Engelse slugs), Task 30 regel 5 (detectie op "/").
  */
 export const config = {
-  matcher: ["/((?!_next/|api/|images/|icon|apple-icon|sitemap\\.xml|robots\\.txt|.*\\..*).*)"],
+  matcher: ["/((?!_next/|_vercel/|images/|icon$|apple-icon$|.*\\..*).*)"],
 };
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // Metadata-afbeeldingen: Next vraagt ze zelf op onder /nl/… of /en/…; een oud ongeprefixt adres krijgt /nl ervoor.
-  if (pathname.includes("/opengraph-image")) {
+  if (/\/opengraph-image(-|$)/.test(pathname)) {
     if (pathname.startsWith("/nl/") || pathname.startsWith("/en/")) return NextResponse.next();
     return rewrite(req, `/nl${pathname}`);
   }
@@ -946,7 +951,7 @@ export function middleware(req: NextRequest) {
   // Regel 2
   if (pathname === "/nl" || pathname.startsWith("/nl/")) {
     const url = req.nextUrl.clone();
-    url.pathname = pathname.slice(3) || "/";
+    url.pathname = pathname.slice("/nl".length) || "/";
     return NextResponse.redirect(url, 301);
   }
 
@@ -976,8 +981,13 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const BASE = process.env.BASE_URL ?? "http://localhost:3111";
-export const get = (path, init = {}) => fetch(BASE + path, { redirect: "manual", ...init });
-const location = (res) => new URL(res.headers.get("location"), BASE).pathname;
+const get = (path, init = {}) => fetch(BASE + path, { redirect: "manual", ...init });
+const locationUrl = (res) => {
+  const loc = res.headers.get("location");
+  assert.ok(loc, "location header");
+  return new URL(loc, BASE);
+};
+const location = (res) => locationUrl(res).pathname;
 
 const NL_PAGES = [
   "/", "/websites", "/hosting", "/hulp", "/werk", "/werk/volmer-techniek", "/contact",
@@ -996,7 +1006,7 @@ test("/nl/… → 301 zonder prefix, query blijft", async () => {
   const res = await get("/nl/hosting?x=1");
   assert.equal(res.status, 301);
   assert.equal(location(res), "/hosting");
-  assert.equal(new URL(res.headers.get("location"), BASE).search, "?x=1");
+  assert.equal(locationUrl(res).search, "?x=1");
   const home = await get("/nl");
   assert.equal(home.status, 301);
   assert.equal(location(home), "/");
@@ -1009,12 +1019,32 @@ test("onbekend pad: 404 in het Nederlands", async () => {
 });
 
 test("metadata-routes en OG-afbeeldingen blijven bereikbaar", async () => {
-  for (const p of ["/sitemap.xml", "/robots.txt", "/icon", "/opengraph-image", "/websites/opengraph-image"]) {
+  for (const p of ["/sitemap.xml", "/robots.txt", "/icon", "/apple-icon", "/images/cafecentrum.webp"]) {
     const res = await get(p);
     assert.equal(res.status, 200, p);
   }
-  const og = await get("/opengraph-image");
-  assert.match(og.headers.get("content-type"), /image\/png/);
+  // Next hangt zelf een hash aan het pad van een metadata-afbeelding (/nl/opengraph-image-<hash>),
+  // dus lezen we het adres uit de pagina in plaats van het hard te coderen. Hetzelfde plaatje moet
+  // ook zonder /nl-prefix bereikbaar zijn: dat is de rewrite in de middleware (oude, gedeelde links).
+  for (const page of ["/", "/websites"]) {
+    const html = await (await get(page)).text();
+    const found = html.match(/property="og:image" content="([^"]+)"/);
+    assert.ok(found, `og:image ontbreekt op ${page}`);
+    const { pathname, search } = new URL(found[1]);
+    assert.match(pathname, /^\/nl\//, found[1]);
+    for (const p of [pathname + search, pathname.slice(3) + search]) {
+      const og = await get(p);
+      assert.equal(og.status, 200, p);
+      assert.match(og.headers.get("content-type") ?? "", /image\/png/, p);
+    }
+  }
+});
+
+test("paden buiten de padkaart geven 404, ook als de middleware ze overslaat", async () => {
+  for (const p of ["/wp-login.php", "/foo.php", "/iconografie", "/icon-192.png", "/en/x", "/werk/onbekend"]) {
+    assert.equal((await get(p)).status, 404, p);
+  }
+  for (const p of ["/icon", "/apple-icon"]) assert.equal((await get(p)).status, 200, p);
 });
 ```
 
@@ -1025,7 +1055,7 @@ npm start &            # wacht op "Ready"
 npm run test:e2e
 kill %1
 ```
-Expected: `ℹ pass 4`, `ℹ fail 0`.
+Expected: `ℹ pass 5`, `ℹ fail 0`.
 
 - [ ] **Step 9: Commit**
 
@@ -3808,10 +3838,15 @@ Signatuur: `export function renderOg({ title, kicker, sub, footer }: { title: st
 ```tsx
 import { renderOg, ogSize } from "@/lib/og";
 import { getDict } from "@/lib/i18n";
-import { langOf, type LangParams } from "@/lib/i18n/paths";
+import { locales, langOf, type LangParams } from "@/lib/i18n/paths";
 
 export const size = ogSize;
 export const contentType = "image/png";
+
+/** Zonder deze params blijft de route dynamisch: de OG-afbeelding wordt dan bij elke request opnieuw gerenderd. */
+export function generateStaticParams() {
+  return locales.map((lang) => ({ lang }));
+}
 
 export default async function OpengraphImage({ params }: LangParams) {
   const lang = langOf((await params).lang);
@@ -3820,9 +3855,9 @@ export default async function OpengraphImage({ params }: LangParams) {
 }
 ```
 
-Zelfde bestand voor `websites/`, `hosting/`, `hulp/`, `werk/`, `contact/` met respectievelijk `pages.websites.og`, `pages.hosting.og`, `pages.hulp.og`, `pages.werk.og`, `pages.contact.og`.
+Zelfde bestand voor `websites/`, `hosting/`, `hulp/`, `werk/`, `contact/` met respectievelijk `pages.websites.og`, `pages.hosting.og`, `pages.hulp.og`, `pages.werk.og`, `pages.contact.og`. Laat in elk bestand `generateStaticParams` staan, anders wordt de route weer dynamisch.
 
-`support/opengraph-image.tsx`: behoud de drie strings, voeg `footer: getDict("nl").ui.og.footer` toe.
+`support/opengraph-image.tsx`: behoud de drie strings en `generateStaticParams`, voeg `footer: getDict("nl").ui.og.footer` toe.
 
 `werk/[slug]/opengraph-image.tsx`:
 
@@ -3835,6 +3870,7 @@ import { cases, getCase } from "@/lib/work";
 export const size = ogSize;
 export const contentType = "image/png";
 
+/** Alleen de slugs; de `lang` komt uit generateStaticParams van de layout. */
 export function generateStaticParams() {
   return cases.map((c) => ({ slug: c.slug }));
 }
