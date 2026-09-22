@@ -6,7 +6,7 @@ const L = "en" as const;
 const online = pricing.hosting.find((h) => h.id === "online")!;
 const onderhoud = pricing.hosting.find((h) => h.id === "onderhoud")!;
 const nlDomain = pricing.domains.table.find((d) => d.tld === ".nl")!;
-const guaranteeLine = "Niet opgelost? Dan betaal je niets.";
+const guaranteeLine = "No fix? No fee.";
 
 /** Dienst-teksten: pijlers, lijsten, FAQ's, pakket- en tarieflabels. Getallen komen uit lib/pricing.ts. */
 export const services: ServicesDict = {
@@ -32,7 +32,7 @@ export const services: ServicesDict = {
       n: "03",
       title: "Help",
       body: "Computer, email, domain or website: I fix it and explain it. Usually remote, via screen sharing, wherever you are.",
-      price: `${euro(pricing.hulp.quarter)} per quarter hour · No fix, no fee.`,
+      price: `${euro(pricing.hulp.quarter)} per quarter hour · ${guaranteeLine}`,
       href: href(L, "hulp"),
     },
   ],
@@ -155,43 +155,44 @@ export const services: ServicesDict = {
   },
 
   hulpHelp: [
-    { title: "E-mail, domein en hosting", body: "Zakelijke mail instellen, overstappen, DNS, een verlopen domein." },
-    { title: "Je website, ook als ik hem niet gebouwd heb", body: "WordPress-fixes, updates, een formulier dat niet werkt, een trage site." },
-    { title: "Google Bedrijfsprofiel, Maps en reviews", body: "Goed vindbaar, met juiste openingstijden, foto's en een link naar je site." },
-    { title: "Werkplek", body: "Laptop of pc inrichten, opschonen, sneller maken, back-up en beveiliging." },
-    { title: "Printers, wifi, telefoon en tablet", body: "Alles wat moet samenwerken met je mail en je site." },
-    { title: "Netwerk op kantoor met TP-Link Omada", body: "Wifi-punten, gastnetwerk en beheer, netjes ingericht en uitgelegd." },
-    { title: "Lichte hardware-check en schoonmaak", body: "Stof eruit, ventilatie na, schijf en geheugen gecontroleerd." },
-    { title: "Bestanden terughalen", body: "Per ongeluk gewist of een schijf die hapert? Softwarematig herstel ik wat te redden is. Fysiek defecte schijven verwijs ik door." },
+    { title: "Email, domain and hosting", body: "Setting up business email, switching providers, DNS, an expired domain." },
+    { title: "Your website, even if I didn't build it", body: "WordPress fixes, updates, a form that doesn't work, a slow site." },
+    { title: "Google Business Profile, Maps and reviews", body: "Easy to find, with correct opening hours, photos and a link to your site." },
+    { title: "Your workplace", body: "Setting up, cleaning up and speeding up your laptop or PC, backup and security." },
+    { title: "Printers, wifi, phone and tablet", body: "Everything that needs to work together with your email and your site." },
+    { title: "Office network with TP-Link Omada", body: "Wifi access points, guest network and management, neatly set up and explained." },
+    { title: "Light hardware check and cleaning", body: "Dust out, ventilation checked, disk and memory tested. On-site only." },
+    { title: "Recovering files", body: "Accidentally deleted, or a drive that's acting up? I recover what can be saved using software. Physically damaged drives I refer on." },
   ],
   hulpNiet: [
-    "Een pc vanaf nul bouwen of repareren op onderdelenniveau (scherm, moederbord, voeding)",
-    "Datarecovery van kapotte schijven",
-    "Kassasystemen en boekhoudsoftware inrichten",
+    "Building a PC from scratch or component-level repairs (screen, motherboard, power supply)",
+    "Data recovery from physically broken drives",
+    "Setting up point-of-sale systems and accounting software",
   ],
   hulpStappen: [
-    { n: "01", title: "Je belt of appt", body: "Vertel kort wat er misgaat. Een foto van het scherm helpt al." },
-    { n: "02", title: "Ik kijk direct mee", body: "Via schermdeling, meestal binnen een kwartier begonnen. Moet ik langskomen? Dan kom ik langs." },
-    { n: "03", title: "Je betaalt alleen de tijd die het kost", body: "Per kwartier, incl. btw. En niks als het niet lukt." },
+    { n: "01", title: "You call or message", body: "Tell me briefly what's going wrong. A photo of the screen already helps." },
+    { n: "02", title: "I take a look right away", body: "Via screen sharing, usually started within fifteen minutes. Need me on-site in my region? Then I'll come by." },
+    { n: "03", title: "You only pay for the time it takes", body: "Per quarter hour, incl. VAT. And nothing if it doesn't work out." },
   ],
   hulpFaq: [
-    { q: "Kom je aan huis?", a: "Ja, in de Hoeksche Waard zonder voorrijkosten. De meeste problemen los ik sneller op afstand op, dus dat probeer ik eerst. Aan huis reken ik per half uur, met een minimum van een uur." },
-    { q: "Hoe snel kun je?", a: "Op afstand vaak dezelfde dag, soms direct. Aan huis meestal binnen een paar werkdagen." },
-    { q: "Hoe werkt op afstand meekijken?", a: "Je opent een link die ik je stuur, en ik zie je scherm terwijl we bellen. Jij houdt de controle en kunt altijd afsluiten. Er blijft niets achter op je computer." },
-    { q: "Wat als het niet lukt?", a: "Dan betaal je niets voor die hulp. We spreken vooraf af wat het probleem is; los ik dat niet op, dan kost het je niks. Voor de APK's, uitleg en advies geldt dat niet, en ook niet als de oorzaak buiten mijn bereik ligt en ik je dat gemeld heb." },
-    { q: "Help je ook met mijn telefoon of tablet?", a: "Ja. Mail instellen, foto's overzetten, een nieuwe telefoon inrichten, opruimen en beveiligen: het hoort er allemaal bij." },
-    { q: "Help je ook particulieren?", a: `Ja, in de Hoeksche Waard, tegen hetzelfde tarief: ${euro(pricing.hulp.quarter)} per kwartier incl. btw. Ondernemers gaan voor als het druk is, maar je bent welkom.` },
+    { q: "Do you come on-site?", a: "Yes, in the Hoeksche Waard area (near Rotterdam), without call-out charges. Most problems are solved faster remotely, so I try that first. On-site I charge per half hour, with a minimum of one hour." },
+    { q: "Do you help clients outside the Netherlands?", a: "Yes, remotely. Screen sharing works the same from London or Dublin as from Rotterdam. We agree a time that suits your time zone, and you pay the same rate." },
+    { q: "How fast can you help?", a: "Remotely often the same day, sometimes straight away. On-site usually within a few working days." },
+    { q: "How does remote help work?", a: "You open a link I send you, and I see your screen while we talk. You stay in control and can end it at any time. Nothing is left behind on your computer." },
+    { q: "What if it doesn't work out?", a: "Then you pay nothing for that help. We agree upfront what the problem is; if I don't fix it, it costs you nothing. That doesn't apply to the check-ups, explanations and advice, or when the cause is beyond my reach and I've told you so." },
+    { q: "Do you also help with my phone or tablet?", a: "Yes. Setting up email, transferring photos, setting up a new phone, tidying up and securing it: it's all part of it." },
+    { q: "Do you help private individuals too?", a: `Yes, in the Hoeksche Waard area, at the same rate: ${euro(pricing.hulp.quarter)} per quarter hour incl. VAT. Businesses come first when it's busy, but you're welcome.` },
   ],
   hulpTarief: {
-    billing: "Op afstand per kwartier; aan huis per half uur, minimaal een uur.",
-    travel: "Geen voorrijkosten in de Hoeksche Waard.",
-    cardValidity: "12 maanden geldig",
+    billing: "Remote per quarter hour; on-site per half hour, minimum one hour.",
+    travel: "No call-out charges in the Hoeksche Waard area.",
+    cardValidity: "valid for 12 months",
     guarantee: {
       line: guaranteeLine,
       conditions: [
-        "Geldt per probleem dat we vooraf samen benoemen.",
-        "Niet voor de APK's, uitleg en advies; die lever ik altijd.",
-        "Niet als de oorzaak buiten mijn bereik ligt (kapotte hardware, storing bij je provider) en ik je dat gemeld heb.",
+        "Applies per problem we name together upfront.",
+        "Not for the check-ups, explanations and advice; I always deliver those.",
+        "Not when the cause is beyond my reach (broken hardware, an outage at your provider) and I've told you so.",
       ],
     },
   },

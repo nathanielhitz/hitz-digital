@@ -24,7 +24,7 @@ const accented = (h: Accented): ReactNode => (
 const homeH1 = { pre: "Everything around your ", accent: "website", post: ". One point of contact." };
 const websitesH1 = { pre: "A website that instantly feels more ", accent: "professional", post: "." };
 const hostingH1 = { pre: "Stay online, ", accent: "without the hassle", post: "." };
-const hulpH1 = { pre: "Vastgelopen? Ik kijk ", accent: "direct", post: " mee." };
+const hulpH1 = { pre: "Stuck? I'll take a look ", accent: "right away", post: "." };
 
 /** Lead van de juridische pagina's: staat zowel in de hero als op de OG-afbeelding. */
 const privacyLead = "Ik vind het belangrijk dat je weet wat ik met jouw gegevens doe. Op deze pagina lees je hoe ik dat doe.";
@@ -173,60 +173,60 @@ export const pages: PagesDict = {
 
   hulp: {
     meta: {
-      title: "Computer- en websitehulp in de Hoeksche Waard | HitzDigital",
-      description: `Vastgelopen? Ik kijk direct mee. Hulp bij computer, e-mail, domein, netwerk of website, op afstand of aan huis in de Hoeksche Waard. ${quarter} per kwartier incl. btw. Niet opgelost? Dan betaal je niets.`,
+      title: "Computer and website help, remote or on-site | HitzDigital",
+      description: `Stuck? I'll take a look right away. Help with your computer, email, domain, network or website: remote via screen sharing wherever you are, on-site in the Hoeksche Waard area. ${quarter} per quarter hour incl. VAT. No fix? No fee.`,
     },
     og: {
       title: star(hulpH1),
-      kicker: "Computer- en websitehulp",
-      sub: `${quarter} per kwartier incl. btw. Op afstand of aan huis in de Hoeksche Waard. Niet opgelost? Dan betaal je niets.`,
+      kicker: "Computer and website help",
+      sub: `${quarter} per quarter hour incl. VAT. Remote wherever you are, on-site in the Hoeksche Waard. No fix? No fee.`,
     },
-    crumb: "Hulp",
+    crumb: "Help",
     hero: {
       title: accented(hulpH1),
-      lead: "Voor ondernemers in de Hoeksche Waard, en ook gewoon thuis. Je laptop, je mail, je domein, je netwerk of je website: ik los het op, in gewone taal. Meestal op afstand, binnen een kwartier begonnen. Moet ik langskomen? Dan kom ik langs.",
+      lead: "For small businesses, and for home users too. Your laptop, email, domain, network or website: I fix it and explain it in plain language. Usually remote via screen sharing, started within fifteen minutes. Need me on-site? In the Hoeksche Waard area, I'll come to you.",
       aside: {
-        rate: "Tarief",
-        vat: "incl. btw",
-        perQuarter: "per kwartier",
-        guaranteeBody: "We spreken vooraf af wat het probleem is. Los ik het niet op, dan kost het je niks.",
+        rate: "Rate",
+        vat: "incl. VAT",
+        perQuarter: "per quarter hour",
+        guaranteeBody: "We agree upfront what the problem is. If I don't fix it, it costs you nothing.",
       },
     },
     apk: {
-      title: "Eén vaste prijs, geen verrassingen.",
+      title: "One fixed price, no surprises.",
       items: [
         {
           id: "computer-apk" as const,
-          title: "Computer APK",
-          body: "Updates en opschonen, virus- en malwarescan, snelheidscheck, back-up en wachtwoorden met tweestapsverificatie gecheckt. Je krijgt een kort lijstje met wat ik gedaan heb en wat je zelf nog kunt doen. Ongeveer 45 minuten, op afstand of aan huis.",
+          title: "Computer check-up",
+          body: "Updates and clean-up, virus and malware scan, speed check, backup and passwords with two-step verification checked. You get a short list of what I did and what you can still do yourself. About 45 minutes, remote or on-site.",
         },
         {
           id: "website-apk" as const,
-          title: "Website APK",
-          body: "Snelheid, mobiel, vindbaarheid, SSL, back-ups en verouderde plugins, met een kort rapport in gewone taal. Ook als ik je site niet gebouwd heb. Valt de uitslag tegen? Dan maak ik gratis een demo van hoe het wél kan.",
+          title: "Website check-up",
+          body: "Speed, mobile, findability, SSL, backups and outdated plugins, with a short report in plain language. Even if I didn't build your site. Disappointing result? Then I'll build a free demo of how it could be.",
         },
       ],
-      plan: (title: string) => `Plan een ${title}`,
-      card: (quarters: number, price: string, validity: string) => `Vaker hulp nodig? Strippenkaart: ${quarters} kwartier voor ${price}, ${validity}.`,
+      plan: (title: string) => `Book a ${title}`,
+      card: (quarters: number, price: string, validity: string) => `Need help more often? Prepaid card: ${quarters} quarter hours for ${price}, ${validity}.`,
     },
     help: {
-      eyebrow: "Waar ik bij help",
-      title: "Van mailbox tot kantoornetwerk.",
-      notTitle: "Wat ik niet doe",
-      notBody: "Daar verwijs ik je door naar iemand die dat wél goed doet. Twijfel je of iets erbij hoort? App even, dan zeg ik eerlijk of ik het kan.",
+      eyebrow: "What I help with",
+      title: "From mailbox to office network.",
+      notTitle: "What I don't do",
+      notBody: "For these I'll point you to someone who does them well. Not sure whether something fits? Send me a message and I'll tell you honestly whether I can do it.",
     },
     how: {
-      title: "Bellen, meekijken, opgelost.",
-      homeLead: "Ook thuis vastgelopen?",
-      homeBody: (quarter: string) => `Ik help ook particulieren in de Hoeksche Waard, tegen hetzelfde tarief: ${quarter} per kwartier, incl. btw.`,
+      title: "Call, share your screen, sorted.",
+      homeLead: "Stuck at home?",
+      homeBody: (quarter: string) => `I also help private individuals in the Hoeksche Waard area, at the same rate: ${quarter} per quarter hour, incl. VAT.`,
     },
-    ctaBand: { title: "Zit je nu vast?", body: "Bel of app, dan kijk ik direct mee. Liever eerst een bericht? Vertel kort wat er speelt." },
+    ctaBand: { title: "Stuck right now?", body: "Call or message me and I'll take a look straight away. Prefer to send a message first? Tell me briefly what's going on." },
     schema: {
-      name: "Computer- en websitehulp",
-      serviceType: "Computerhulp en websiteondersteuning",
-      perQuarter: "Hulp per kwartier",
-      unit: "kwartier",
-      card: (quarters: number) => `Strippenkaart ${quarters} kwartier`,
+      name: "Computer and website help",
+      serviceType: "Computer support and website support",
+      perQuarter: "Help per quarter hour",
+      unit: "quarter hour",
+      card: (quarters: number) => `Prepaid card, ${quarters} quarter hours`,
     },
   },
 
