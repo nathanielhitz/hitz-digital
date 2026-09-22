@@ -18,12 +18,19 @@
 - Vier fasen (spec §9). Na elke fase een **checkpoint**: bouw slaagt, tests slagen, Nathaniel geeft akkoord vóór de volgende fase begint. In fase 2 leest Nathaniel elke Engelse pagina tegen vóór de volgende pagina.
 - Elke task eindigt met `npx tsc --noEmit` (typecheck) en, waar aangegeven, `npm run build`. Een task is pas klaar als beide zonder fouten zijn.
 - De dev-server draait op poort 3111 (poort 3000 is op deze machine vaak bezet): `npx next dev -p 3111`. De productie-server voor e2e-tests: `npx next start -p 3111`.
+- `tests/e2e/switch-cookie.mjs` valt buiten `npm test` (vraagt de globale Playwright); handmatig draaien met `node tests/e2e/switch-cookie.mjs` bij een server op 3111.
 - Nederlandse tekst wordt in fase 1 **letterlijk** verplaatst, niet herschreven. Elke afwijking van een bestaande string is een fout (screenshots moeten identiek blijven).
 - Afwijkingen van de spec die in dit plan bewust gemaakt zijn:
   1. Spec §4 zegt dat de layout de header-knop bepaalt. Een server-layout kent de pathname niet zonder de pagina dynamisch te maken; daarom bepaalt `Nav` (client, `usePathname()`) de knop zelf met `ctaFor()` uit de padkaart. Gedrag is identiek.
   2. Spec §3 noemt `euro(amount, lang)`. Beide talen schrijven `€250`, dus `euro(amount)` blijft ongewijzigd; "per maand" / "per month" komt uit het woordenboek.
   3. Spec §9 zet middleware-regels 3, 4 en 6 in fase 3. Ze komen in Task 18 (start fase 2), zodat Nathaniel de Engelse pagina's op hun echte URL's kan nalezen. Regel 5 (detectie) blijft fase 3.
   4. Spec §3 noemt vier woordenboekmodules per taal. De juridische teksten (privacy, voorwaarden) zijn lange JSX-prose en krijgen elk een eigen bestand (`legal-privacy.tsx`, `legal-terms.tsx`) dat vanuit `pages.tsx` wordt gerefereerd. Zelfde principe, leesbaarder.
+  5. Spec §3 en §4 gaan ervan uit dat client-componenten de publieke pathname zien. De middleware herschrijft elk verzoek, dus `usePathname()` geeft `/nl/hulp` in plaats van `/hulp`. Daarom is `publicPath()` aan de padkaart toegevoegd; `Nav` en `LangSwitch` rekenen daarmee eerst terug naar het publieke adres. Query en hash komen in `LangSwitch` na hydration uit `window.location`, niet uit `useSearchParams()` (dat zou elke pagina naar client-rendering trekken).
+  6. Spec §1 zegt dat `app/[lang]/not-found.tsx` de 404 "in de taal van het pad" rendert. Een server-side taalkeuze vraagt `headers()`, en die trekt de hele boom uit de statische prerender. Daarom kiest `NotFoundView` (client) de taal uit `usePathname()` en gaan beide woordenboeken mee in de payload. Gevolg: het 404-document is Next's `__next_error__`-schil zonder `lang`-attribuut in de bron, en zonder JavaScript blijft de pagina leeg. Statuscode 404 en `noindex` kloppen wel.
+  7. Spec §2 geeft het antwoord op `/` een `Vary: Cookie, Accept-Language`. Next overschrijft die header op de herschreven 200; alleen de 307 houdt hem. Geaccepteerd: op Vercel draait de middleware per request vóór de cache, dus de CDN kan de verkeerde taal niet serveren. Het restrisico (een gedeelde proxy die `/` op `s-maxage` cachet) is bewust genomen.
+  8. `dynamicParams = false` (spec §1) staat op `app/[lang]/layout.tsx`. Bijeffect: paden die de middleware-matcher overslaat omdat ze een punt bevatten (`/wp-login.php`) matchen geen route meer en krijgen Next's ongestylede standaard-404 in plaats van de gebrande. Er is bewust geen root-`app/not-found.tsx` teruggezet.
+  9. Next/React schrijft het alternates-attribuut als `hrefLang` in de HTML-bron. HTML-attributen zijn hoofdletterongevoelig, dus browsers en Google lezen `hreflang`; de e2e-regexes matchen daarom case-insensitive. Geen codewijziging.
+  10. Spec §3 noemt `lib/i18n/types.ts`. Die is er niet: `Lang`, `RouteKey`, `Alternates` en de params-types staan in `paths.ts`, `Dict` in `index.ts`. Nieuw t.o.v. de spec is `lib/i18n/meta.ts` met `pageMetadata()`. De OG-routes van de pagina's leven onder `app/[lang]/(site)/…`, waardoor hun publieke URL het interne pad toont (`/nl/hulp/opengraph-image-…`); de middleware laat die paden daarom ongemoeid. Spec §7 vraagt voor de EN-privacy stack-vermeldingen (Vercel fra1, Resend EU); het NL-privacybeleid is sinds augustus 2026 merknaamloos en de EN-versie volgt het NL-beleid exact.
 
 ---
 
@@ -1305,14 +1312,7 @@ export const services = {
     billing: "Op afstand per kwartier; aan huis per half uur, minimaal een uur.",
     travel: "Geen voorrijkosten in de Hoeksche Waard.",
     cardValidity: "12 maanden geldig",
-    guarantee: {
-      line: guaranteeLine,
-      conditions: [
-        "Geldt per probleem dat we vooraf samen benoemen.",
-        "Niet voor de APK's, uitleg en advies; die lever ik altijd.",
-        "Niet als de oorzaak buiten mijn bereik ligt (kapotte hardware, storing bij je provider) en ik je dat gemeld heb.",
-      ],
-    },
+    guarantee: { line: guaranteeLine },
   },
 
   contactFaq: [
@@ -5110,14 +5110,7 @@ Vertaal bovenin ook de const: `const guaranteeLine = "No fix? No fee.";`. Die st
     billing: "Remote per 15 minutes; on-site per half hour, minimum one hour.",
     travel: "No call-out charges in the Hoeksche Waard area.",
     cardValidity: "valid for 12 months",
-    guarantee: {
-      line: "No fix? No fee.",
-      conditions: [
-        "Applies per problem we name together up front.",
-        "Not for the check-ups, explanations and advice; I always deliver those.",
-        "Not when the cause is beyond my reach (broken hardware, an outage at your provider) and I've told you so.",
-      ],
-    },
+    guarantee: { line: "No fix? No fee." },
   },
 ```
 

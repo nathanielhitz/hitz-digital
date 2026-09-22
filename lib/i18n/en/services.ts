@@ -187,14 +187,7 @@ export const services: ServicesDict = {
     billing: "Remote per 15 minutes; on-site per half hour, minimum one hour.",
     travel: "No call-out charges in the Hoeksche Waard area.",
     cardValidity: "valid for 12 months",
-    guarantee: {
-      line: guaranteeLine,
-      conditions: [
-        "Applies per problem we name together up front.",
-        "Not for the check-ups, explanations and advice; I always deliver those.",
-        "Not when the cause is beyond my reach (broken hardware, an outage at your provider) and I've told you so.",
-      ],
-    },
+    guarantee: { line: guaranteeLine },
   },
 
   contactFaq: [

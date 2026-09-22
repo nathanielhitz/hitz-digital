@@ -185,14 +185,7 @@ export const services = {
     billing: "Op afstand per kwartier; aan huis per half uur, minimaal een uur.",
     travel: "Geen voorrijkosten in de Hoeksche Waard.",
     cardValidity: "12 maanden geldig",
-    guarantee: {
-      line: guaranteeLine,
-      conditions: [
-        "Geldt per probleem dat we vooraf samen benoemen.",
-        "Niet voor de APK's, uitleg en advies; die lever ik altijd.",
-        "Niet als de oorzaak buiten mijn bereik ligt (kapotte hardware, storing bij je provider) en ik je dat gemeld heb.",
-      ],
-    },
+    guarantee: { line: guaranteeLine },
   },
 
   contactFaq: [
