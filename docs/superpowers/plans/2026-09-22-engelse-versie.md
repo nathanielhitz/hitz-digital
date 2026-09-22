@@ -33,7 +33,7 @@
 
 | Bestand | Verantwoordelijkheid |
 |---|---|
-| `middleware.ts` | Rewrites/redirects per spec §2; zet request-header `x-lang` |
+| `middleware.ts` | Rewrites/redirects per spec §2 |
 | `lib/i18n/paths.ts` | Padkaart NL↔EN, `Lang`, `locales`, `href()`, `parsePublic()`, `internalPath()`, `redirectForEn()`, `counterpart()`, `ctaFor()`, `alternatesFor()`, `ogLocale()`. Geen runtime-imports (draait los onder `node --test`) |
 | `lib/i18n/accept-language.ts` | `prefersEnglish(header)` |
 | `lib/i18n/index.ts` | `getDict(lang)`, type `Dict` |
@@ -46,8 +46,9 @@
 | `lib/i18n/en/…` | Zelfde bestanden, Engels, getypt met `typeof` van de NL-tegenhanger |
 | `lib/aanvraag.ts` | De vier keuze-ids van het formulier (taalneutraal) |
 | `components/ui/LangSwitch.tsx` | Taalschakelaar, varianten `text`, `segment`, `names` |
+| `components/ui/NotFoundView.tsx` | 404-weergave (client); kiest de taal uit `usePathname()` |
 | `app/[lang]/layout.tsx` | Voormalige root-layout, met `lang` |
-| `app/[lang]/not-found.tsx` | Tweetalige 404 (leest `x-lang`) |
+| `app/[lang]/not-found.tsx` | Tweetalige 404 (rendert `NotFoundView`) |
 | `app/[lang]/[...rest]/page.tsx` | Catch-all → `notFound()` |
 | `tests/unit/paths.test.ts`, `tests/unit/accept-language.test.ts` | Unit-tests padkaart en header-parser |
 | `tests/e2e/i18n.test.mjs` | HTTP-tests tegen `next start` (redirects, rewrites, hreflang, sitemap, lek-check) |
@@ -747,7 +748,7 @@ git commit -m "i18n: NL-woordenboek voor de site-schil en getDict()"
 
 **Files:**
 - Move: `app/(site)` → `app/[lang]/(site)`; `app/layout.tsx` → `app/[lang]/layout.tsx`; `app/not-found.tsx` → `app/[lang]/not-found.tsx`; `app/opengraph-image.tsx` → `app/[lang]/(site)/opengraph-image.tsx`
-- Create: `middleware.ts`, `app/[lang]/[...rest]/page.tsx`
+- Create: `middleware.ts`, `app/[lang]/[...rest]/page.tsx`, `components/ui/NotFoundView.tsx`
 - Modify: `app/[lang]/layout.tsx`, `app/[lang]/not-found.tsx`
 - Test: `tests/e2e/i18n.test.mjs`
 
@@ -871,25 +872,29 @@ export default function CatchAll() {
 
 - [ ] **Step 4: Herschrijf `app/[lang]/not-found.tsx`**
 
-`not-found.tsx` krijgt geen params; de middleware zet de taal in de request-header `x-lang` (Step 5).
+`not-found.tsx` krijgt geen params. Géén `headers()` hier: elke dynamische server-API in de 404-boundary haalt **de hele site** uit de statische prerender (alle metadata verhuist dan uit `<head>`). De taal komt daarom uit het pad, in een client-component.
+
+`components/ui/NotFoundView.tsx`:
 
 ```tsx
-import { headers } from "next/headers";
+"use client";
+
+import { usePathname } from "next/navigation";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { Button } from "@/components/ui/Button";
-import { getDict } from "@/lib/i18n";
-import { langOf } from "@/lib/i18n/paths";
+import type { Lang } from "@/lib/i18n/paths";
 
-/** 404 buiten de (site)-schil: geen nav/footer, wel dezelfde tokens (volgt licht/donker). Taal uit `x-lang` (middleware). */
-export default async function NotFound() {
-  const lang = langOf((await headers()).get("x-lang"));
-  const t = getDict(lang).ui.notFound;
+export type NotFoundTexts = { title: string; body: string; back: string; href: string };
+
+/** 404 buiten de (site)-schil: geen nav/footer, wel dezelfde tokens. Taal uit het pad (/en/… → Engels), zodat de pagina statisch blijft. */
+export function NotFoundView({ texts }: { texts: Record<Lang, NotFoundTexts> }) {
+  const pathname = usePathname() ?? "/";
+  const lang: Lang = pathname === "/en" || pathname.startsWith("/en/") ? "en" : "nl";
+  const t = texts[lang];
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-[18px] bg-deep px-6 text-center text-ink">
       <Wordmark size={22} />
-      <h1 className="m-0 font-display text-[clamp(28px,4vw,40px)] font-semibold tracking-[-0.03em] [text-wrap:balance]">
-        {t.title}
-      </h1>
+      <h1 className="m-0 font-display text-[clamp(28px,4vw,40px)] font-semibold tracking-[-0.03em] [text-wrap:balance]">{t.title}</h1>
       <p className="m-0 max-w-[420px] text-[15px] leading-[1.6] text-muted">{t.body}</p>
       <Button href={t.href} className="mt-2">
         {t.back}
@@ -899,17 +904,30 @@ export default async function NotFound() {
 }
 ```
 
+`app/[lang]/not-found.tsx`:
+
+```tsx
+import { NotFoundView } from "@/components/ui/NotFoundView";
+import { getDict } from "@/lib/i18n";
+
+/** Tweetalige 404. De teksten van beide talen gaan mee; de client kiest op basis van het pad (zie NotFoundView). */
+export default function NotFound() {
+  return <NotFoundView texts={{ nl: getDict("nl").ui.notFound, en: getDict("en").ui.notFound }} />;
+}
+```
+
+(`getDict("en")` valt terug op NL zolang het Engelse woordenboek nog niet bestaat — dat is de bedoeling.)
+
 - [ ] **Step 5: Maak `middleware.ts` (regels 1, 2 en 7 uit spec §2)**
 
 ```ts
 import { NextResponse, type NextRequest } from "next/server";
-import type { Lang } from "@/lib/i18n/paths";
 
 /**
  * Taalrouting (spec §2). Fase 1: alleen Nederlands.
  * - Regel 1 (matcher): _next, api, images, bestanden en root-metadata-routes worden overgeslagen.
  * - Regel 2: /nl(/…) → 301 naar hetzelfde pad zonder prefix.
- * - Regel 7: alles overig → interne route /nl/… (rewrite), met request-header x-lang.
+ * - Regel 7: alles overig → interne route /nl/… (rewrite).
  * Task 18 voegt regels 3, 4 en 6 toe (Engelse slugs), Task 30 regel 5 (detectie op "/").
  */
 export const config = {
@@ -922,7 +940,7 @@ export function middleware(req: NextRequest) {
   // Metadata-afbeeldingen: Next vraagt ze zelf op onder /nl/… of /en/…; een oud ongeprefixt adres krijgt /nl ervoor.
   if (pathname.includes("/opengraph-image")) {
     if (pathname.startsWith("/nl/") || pathname.startsWith("/en/")) return NextResponse.next();
-    return rewrite(req, `/nl${pathname}`, "nl");
+    return rewrite(req, `/nl${pathname}`);
   }
 
   // Regel 2
@@ -933,15 +951,13 @@ export function middleware(req: NextRequest) {
   }
 
   // Regel 7
-  return rewrite(req, pathname === "/" ? "/nl" : `/nl${pathname}`, "nl");
+  return rewrite(req, pathname === "/" ? "/nl" : `/nl${pathname}`);
 }
 
-function rewrite(req: NextRequest, internal: string, lang: Lang) {
+function rewrite(req: NextRequest, internal: string) {
   const url = req.nextUrl.clone();
   url.pathname = internal;
-  const headers = new Headers(req.headers);
-  headers.set("x-lang", lang);
-  return NextResponse.rewrite(url, { request: { headers } });
+  return NextResponse.rewrite(url);
 }
 ```
 
@@ -4215,7 +4231,7 @@ Vervang in `middleware.ts` de import en voeg het EN-blok toe vóór "Regel 7":
 
 ```ts
 import { NextResponse, type NextRequest } from "next/server";
-import { isLive, parsePublic, internalPath, redirectForEn, type Lang } from "@/lib/i18n/paths";
+import { isLive, parsePublic, internalPath, redirectForEn } from "@/lib/i18n/paths";
 ```
 
 ```ts
@@ -4230,7 +4246,7 @@ import { isLive, parsePublic, internalPath, redirectForEn, type Lang } from "@/l
     }
     // Regel 6: publieke EN-slug → interne route. Onbekend pad blijft staan; de catch-all geeft een Engelse 404.
     const parsed = parsePublic(pathname);
-    return rewrite(req, parsed ? internalPath(parsed) : pathname, "en");
+    return rewrite(req, parsed ? internalPath(parsed) : pathname);
   }
 ```
 
@@ -5588,7 +5604,7 @@ Import: `import { prefersEnglish } from "@/lib/i18n/accept-language";`. Vervang 
   }
 
   // Regel 7: Nederlands zonder prefix → interne route /nl/…
-  const res = rewrite(req, pathname === "/" ? "/nl" : `/nl${pathname}`, "nl");
+  const res = rewrite(req, pathname === "/" ? "/nl" : `/nl${pathname}`);
   if (pathname === "/") res.headers.set("Vary", "Cookie, Accept-Language");
   return res;
 ```
