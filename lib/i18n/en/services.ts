@@ -38,16 +38,16 @@ export const services: ServicesDict = {
   ],
 
   werkwijze: [
-    { n: "01", title: "Stuur je site of vertel je idee", body: "Een appje, link of korte uitleg is genoeg." },
+    { n: "01", title: "Send me your site or tell me your idea", body: "A message, a link or a short description is enough." },
     {
       n: "02",
-      title: "Ik maak een concrete demo",
-      body: "Je krijgt een echte demo-site te zien, met vooral je nieuwe homepage. Geen praatje of PowerPoint, maar iets wat je zelf kunt bekijken.",
+      title: "I build a concrete demo",
+      body: "You get to see a real demo site, focused on your new homepage. No pitch or PowerPoint, but something you can click through yourself.",
     },
     {
       n: "03",
-      title: "Dan pas beslis je",
-      body: "Bevalt het? Dan werk ik het samen met jou uit tot een complete website. Zo niet? Dan zit je nergens aan vast. De demo blijft gratis.",
+      title: "Then you decide",
+      body: "Like it? Then we develop it together into a complete website. Not for you? Then you're not tied to anything. The demo stays free.",
     },
   ],
 
@@ -70,32 +70,32 @@ export const services: ServicesDict = {
 
   websiteOpties: [
     {
-      title: "Nog geen goede site",
-      body: "Ik bouw een moderne website die strak, snel en duidelijk is. Een site die vertrouwen wekt en past bij je bedrijf, met teksten en foto's die kloppen.",
+      title: "No decent site yet",
+      body: "I build a modern website that's clean, fast and clear. A site that builds trust and fits your business, with copy and photos that are right.",
     },
     {
-      title: "Je site is verouderd",
-      body: "Ik geef je huidige site een nieuwe uitstraling en een betere structuur. Wat goed is blijft, wat in de weg zit gaat eruit. Je hoeft niet opnieuw te beginnen.",
+      title: "Your site is dated",
+      body: "I give your current site a fresh look and a better structure. What works stays, what gets in the way goes. You don't have to start over.",
     },
   ],
   websiteInbegrepen: [
-    "Ontworpen voor je telefoon, want daar kijken je klanten",
-    "Snel, ook op een trage verbinding",
-    "Vindbaar in Google op je dienst en je plaats",
-    "Zelf teksten, foto's en prijzen aanpassen",
-    "Teksten en foto's geregeld, of je levert ze zelf aan",
-    "Domein op jouw naam",
-    "Hosting bij mij of ergens anders, jouw keuze",
+    "Designed for your phone, because that's where your customers look",
+    "Fast, even on a slow connection",
+    "Findable in Google for your service and your area",
+    "Edit copy, photos and prices yourself",
+    "Copy and photos taken care of, or you supply them",
+    "Domain in your name",
+    "Hosting with me or elsewhere, your choice",
   ],
   websiteFaq: [
-    { q: "Hoe lang duurt het?", a: "De demo van je homepage heb je meestal binnen een week. De complete website staat daarna in twee tot vier weken live, afhankelijk van hoe snel teksten en foto's rond zijn." },
-    { q: "Wat is de demo precies?", a: "Een echte, werkende voorproef van je nieuwe homepage die je zelf in je browser kunt bekijken. Geen schets of PowerPoint. Zo zie je hoe je site eruit gaat zien voordat je iets beslist." },
-    { q: "Wat als de demo niet bevalt?", a: "Dan stopt het daar, zonder kosten en zonder verplichtingen. De demo is en blijft gratis." },
-    { q: "Moet ik zelf teksten schrijven?", a: "Nee. Je mag ze zelf aanleveren, maar ik schrijf ze ook voor je op basis van een kort gesprek. Foto's lever je aan, of ik zorg voor passende beelden." },
-    { q: "Kan ik de site zelf aanpassen?", a: "Ja. Teksten, foto's, prijzen en openingstijden pas je zelf aan zonder technische kennis. Wil je dat liever niet zelf doen, dan zit een kleine wijziging per maand in het onderhoudspakket." },
-    { q: "Werk je ook buiten de Hoeksche Waard?", a: "Ja. Ik kom uit Puttershoek en de meeste klanten zitten in de regio, maar een website bouwen kan overal. Voor hulp aan huis blijf ik in de Hoeksche Waard." },
+    { q: "How long does it take?", a: "The demo of your homepage is usually ready within a week. The complete website then goes live in two to four weeks, depending on how quickly copy and photos come together." },
+    { q: "What exactly is the demo?", a: "A real, working preview of your new homepage that you can open in your own browser. No sketch or PowerPoint. So you see what your site will look like before you decide anything." },
+    { q: "What if I don't like the demo?", a: "Then it ends there, with no cost and no obligation. The demo is and stays free." },
+    { q: "Do I have to write the copy myself?", a: "No. You're welcome to supply it, but I also write it for you based on a short conversation. You supply photos, or I source fitting imagery." },
+    { q: "Can I edit the site myself?", a: "Yes. You change copy, photos, prices and opening hours yourself, without technical knowledge. Rather not? Then one small change per month is included in the maintenance plan." },
+    { q: "Do you work with clients outside the Netherlands?", a: "Yes. I'm based in Puttershoek, near Rotterdam, and building a website works just as well remotely: we talk by video call, email or WhatsApp. On-site help is limited to my own region, the Hoeksche Waard." },
   ],
-  websiteNote: "De exacte prijs hoor je na de gratis demo. Tot dan zit je nergens aan vast.",
+  websiteNote: "You hear the exact price after the free demo. Until then you're not tied to anything.",
 
   hostingAltijd: [
     "Nederlandse servers",

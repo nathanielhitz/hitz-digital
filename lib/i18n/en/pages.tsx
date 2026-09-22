@@ -22,7 +22,7 @@ const accented = (h: Accented): ReactNode => (
 );
 
 const homeH1 = { pre: "Everything around your ", accent: "website", post: ". One point of contact." };
-const websitesH1 = { pre: "Een website die direct ", accent: "professioneler", post: " voelt." };
+const websitesH1 = { pre: "A website that instantly feels more ", accent: "professional", post: "." };
 const hostingH1 = { pre: "Online blijven, ", accent: "zonder gedoe", post: "." };
 const hulpH1 = { pre: "Vastgelopen? Ik kijk ", accent: "direct", post: " mee." };
 
@@ -63,7 +63,7 @@ export const pages: PagesDict = {
     zoWerkIk: { title: "Clear upfront. No surprises afterwards." },
     werk: {
       eyebrow: "Work",
-      teaserTitle: "Businesses that went before you.",
+      teaserTitle: "Businesses that came before you.",
       all: "All my work",
     },
     contact: {
@@ -77,51 +77,51 @@ export const pages: PagesDict = {
 
   websites: {
     meta: {
-      title: "Website laten maken in de Hoeksche Waard | HitzDigital",
-      description: `Een moderne website voor je bedrijf, vanaf ${websiteFrom} incl. btw. Je ziet eerst een gratis demo van je eigen homepage, daarna beslis je. Voor vakbedrijven en horeca in de Hoeksche Waard.`,
+      title: "Website design for small businesses | HitzDigital",
+      description: `A modern website for your business, from ${websiteFrom} incl. VAT. You see a free demo of your own homepage first, then you decide. For trades, hospitality and independent professionals, in the Netherlands and abroad.`,
     },
     og: {
       title: star(websitesH1),
       kicker: "Websites",
-      sub: `Je ziet eerst een gratis demo van je eigen homepage. Daarna beslis je. Vanaf ${websiteFrom} incl. btw.`,
+      sub: `You see a free demo of your own homepage first. Then you decide. From ${websiteFrom} incl. VAT.`,
     },
     crumb: "Websites",
-    werkwijzeTitle: "In drie stappen naar een betere website.",
+    werkwijzeTitle: "A better website in three steps.",
     hero: {
       title: accented(websitesH1),
-      lead: "Voor cafés, schilders, installateurs, hoveniers en andere vakbedrijven in de Hoeksche Waard. Je ziet eerst een echte demo van je eigen site. Daarna beslis je.",
-      secondary: "Bekijk mijn werk",
-      asideAlt: "Website van Mourits Schilderwerken op desktop",
+      lead: "For cafés, painters, installers, landscapers and other hands-on businesses, wherever you're based. You see a real demo of your own site first. Then you decide.",
+      secondary: "See my work",
+      asideAlt: "Website of Mourits Schilderwerken on desktop",
     },
-    options: { title: "Twee vertrekpunten, één aanpak." },
+    options: { title: "Two starting points, one approach." },
     included: {
-      title: "Alles wat een goede site nodig heeft.",
-      lead: (from: string) => `Geen losse opties of verrassingen achteraf. Dit zit er standaard bij, ook bij een site vanaf ${from}.`,
+      title: "Everything a good site needs.",
+      lead: (from: string) => `No loose extras or surprises afterwards. This comes as standard, even with a site from ${from}.`,
     },
     price: {
-      title: (from: string) => `Een complete website vanaf ${from}.`,
+      title: (from: string) => `A complete website from ${from}.`,
       lead: (note: string, monthly: string) =>
-        `Incl. btw. ${note} Wil je dat ik hem ook online houd? Hosting & onderhoud is ${monthly} per maand, inclusief je .nl-domein en een kleine wijziging per maand. Maandelijks opzegbaar.`,
-      moreHosting: "Meer over hosting",
+        `Incl. VAT. ${note} Want me to keep it online too? Hosting & maintenance is ${monthly} a month, including your domain and one small change per month. Cancel monthly.`,
+      moreHosting: "More about hosting",
       card: {
         name: "Website",
-        from: (from: string) => `vanaf ${from}`,
-        bullets: ["Gratis demo van je homepage vooraf", "Complete site, op je eigen domein", "Teksten en foto's geregeld", "Zelf aan te passen"],
-        hostingRow: "Hosting & onderhoud",
-        perMonth: (amount: string) => `${amount} per maand`,
-        vat: "Alle prijzen incl. 21% btw.",
+        from: (from: string) => `from ${from}`,
+        bullets: ["Free demo of your homepage upfront", "Complete site, on your own domain", "Copy and photos taken care of", "Easy to edit yourself"],
+        hostingRow: "Hosting & maintenance",
+        perMonth: (amount: string) => `${amount} a month`,
+        vat: "All prices incl. 21% VAT. VAT may differ for businesses outside the Netherlands.",
       },
     },
     voorNa: {
-      eyebrow: "Voor en na",
-      title: "Van verouderd naar verzorgd.",
+      eyebrow: "Before and after",
+      title: "From dated to polished.",
       lead: (title: string, branche: string, plaats: string) =>
-        `${title}, ${branche.toLowerCase()} in ${plaats}. Sleep de greep om de oude en de nieuwe site te vergelijken, precies zoals je klant ze op zijn telefoon ziet.`,
-      link: "Lees de hele case",
+        `${title}, a ${branche.toLowerCase()} in ${plaats}. Drag the handle to compare the old and the new site, exactly as your customer sees them on their phone.`,
+      link: "Read the full case",
     },
     ctaBand: {
-      title: "Benieuwd hoe jouw website eruit kan zien?",
-      body: "Stuur je huidige site of vertel kort wat je doet. Je krijgt een echte demo van je homepage, gratis en zonder verplichtingen.",
+      title: "Curious what your website could look like?",
+      body: "Send me your current site or tell me briefly what you do. You get a real demo of your homepage, free and with no obligation.",
     },
   },
 
