@@ -56,6 +56,7 @@ export const pages = {
         selfManaged: "Zelf te beheren",
         friendly: "Gebruiksvriendelijk",
         professional: "Professionele indruk",
+        code: { fast: "// snelle laadtijd", clean: "// schone code", perf: "// betere prestaties" },
       },
     },
     pijlers: { title: "Drie dingen die ik voor je regel." },

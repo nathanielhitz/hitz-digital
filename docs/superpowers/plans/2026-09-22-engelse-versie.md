@@ -1432,6 +1432,7 @@ export const pages = {
         selfManaged: "Zelf te beheren",
         friendly: "Gebruiksvriendelijk",
         professional: "Professionele indruk",
+        code: { fast: "// snelle laadtijd", clean: "// schone code", perf: "// betere prestaties" },
       },
     },
     pijlers: { title: "Drie dingen die ik voor je regel." },
@@ -2067,6 +2068,9 @@ Maak van `const HERO_HTML = \`…\`;` een functie: `function heroHtml(c: HeroCop
 | `Zelf te beheren` | `${esc(c.chips.selfManaged)}` |
 | `Gebruiksvriendelijk` (2×) | `${esc(c.chips.friendly)}` |
 | `Professionele indruk` | `${esc(c.chips.professional)}` |
+| `// snelle laadtijd` | `${esc(c.chips.code.fast)}` |
+| `// schone code` | `${esc(c.chips.code.clean)}` |
+| `// betere prestaties` | `${esc(c.chips.code.perf)}` |
 
 De mock-site op het laptopscherm (`Diensten`, `Werk`, `Contact`, `Bel direct`, `Offerte aanvragen`, `Bekijk diensten`, `Verspaning zonder stilstand.`) blijft ongewijzigd: dat is klantcontent van een Nederlandse klant en in beide talen realistisch.
 
@@ -4429,7 +4433,7 @@ const contact = (voor?: AanvraagKeuze) => `${href(L, "contact")}${voor ? `?voor=
 const mailBody = [
   "Hi Nathaniel,",
   "",
-  "- What I need you for (website / hosting / help): ",
+  "- What I need help with (website / hosting / tech help): ",
   "- My current website (or: I don't have one yet): ",
   "- What kind of business I run, and where: ",
   "",
@@ -4469,7 +4473,7 @@ export const ui: UiDict = {
   theme: { toLight: "Switch to light theme", toDark: "Switch to dark theme", light: "Light theme", dark: "Dark theme" },
   lang: { nl: "Nederlands", en: "English", switchTo: { nl: "Schakel naar Nederlands", en: "Switch to English" } },
   footer: {
-    tagline: "Everything around your website. One point of contact.",
+    tagline: "Everything to do with your website. One point of contact.",
     place: `${site.city}, the Netherlands`,
     services: "Services",
     more: "More",
@@ -4489,16 +4493,16 @@ export const ui: UiDict = {
   },
   crumbs: { aria: "Breadcrumb", home: "Home" },
   cta,
-  ctaBand: { orCall: "Or call", reply: "Reply within one working day, no obligation." },
+  ctaBand: { orCall: "Or call", reply: "I reply within one working day, no obligation." },
   fab: { label: "Got a question?", aria: "Got a question? Send me a WhatsApp message" },
-  stickyBar: { aria: "Direct contact", call: "Call", whatsapp: "WhatsApp" },
+  stickyBar: { aria: "Quick contact", call: "Call", whatsapp: "WhatsApp" },
   mailto: `mailto:${site.email}?subject=${encodeURIComponent("Enquiry via hitzdigital.nl")}&body=${encodeURIComponent(mailBody)}`,
   form: {
-    legend: "What can I help you with?",
+    legend: "What do you need me for?",
     choices: {
       website: { label: "New website", submit: "Request your free demo" },
       hosting: { label: "Hosting & domain", submit: "Request hosting" },
-      hulp: { label: "I'm stuck", submit: "Request help" },
+      hulp: { label: "Stuck on something", submit: "Request help" },
       anders: { label: "Something else", submit: "Send" },
     },
     name: "Name",
@@ -4508,22 +4512,22 @@ export const ui: UiDict = {
     website: "Your website, if you have one",
     websitePlaceholder: "https://… or: no site yet",
     company: "What kind of business do you run, and where?",
-    companyPlaceholder: "e.g. a painting company in Rotterdam",
-    message: "What's going on?",
+    companyPlaceholder: "e.g. a painter and decorator in Rotterdam",
+    message: "What's the situation?",
     messagePlaceholder: "Short is fine.",
     sending: "Sending…",
-    privacy: "See privacy policy",
+    privacy: "Read the privacy policy",
     privacyHref: href(L, "privacy"),
     ok: "Done! Your enquiry has been sent. I'll reply within one working day.",
-    failed: "Sending didn't work. Feel free to email me directly at",
+    failed: "That didn't send. Email me directly at",
     errors: {
-      name: "Please enter your name, so I know who to call or email back.",
+      name: "Please enter your name, so I know who I'm calling or emailing back.",
       email: "Please enter an email address I can reach you on.",
     },
-    packageInterest: "I'm interested in the {pakket} plan.",
+    packageInterest: "I'm interested in {pakket}.",
     /** Nette pakketnamen voor `{pakket}`; onbekende ids vallen terug op de id met hoofdletter. */
     packageNames: { online: "Online", onderhoud: "Maintenance", webshop: "Webshop", "computer-apk": "Computer check-up", "website-apk": "Website check-up" },
-    mailtoSubject: "Enquiry: {voor} via hitzdigital.nl",
+    mailtoSubject: "Enquiry via hitzdigital.nl: {voor}",
     mailtoFields: { voor: "Regarding", naam: "Name", email: "Email", telefoon: "Phone", website: "Website", bedrijf: "Business and location" },
   },
   notFound: {
@@ -4544,7 +4548,7 @@ export const ui: UiDict = {
       },
       {
         name: "Hosting, domain and maintenance",
-        description: "Domain, hosting, business email and small changes in one monthly fee. Cancel monthly.",
+        description: "Domain, hosting, business email and small changes in one monthly fee. Cancel any time.",
       },
       {
         name: "Computer and website help",
@@ -4553,7 +4557,7 @@ export const ui: UiDict = {
       },
     ],
   },
-  workCard: { viewCase: "View the case", tags: { demo: "Demo", eigen: "Own project" } },
+  workCard: { viewCase: "View the project", tags: { demo: "Demo", eigen: "Own project" } },
   plan: { mostChosen: "Most popular", perMonthShort: "/mo", choose: (name: string) => `Choose ${name}` },
   faq: { eyebrow: "Frequently asked", title: "Questions I often get." },
   voorNa: { before: "Before", after: "After", aria: "Compare before and after" },
@@ -4586,12 +4590,12 @@ git commit -m "EN: site-schil (nav, footer, formulier, 404, schema)"
 
 ```tsx
 // Bovenin het bestand, bij de andere accentkoppen (de helpers `star`/`accented` staan er al, uit de NL-kopie):
-const homeH1 = { pre: "Everything around your ", accent: "website", post: ". One point of contact." };
+const homeH1 = { pre: "Everything to do with your ", accent: "website", post: ". One point of contact." };
 
   home: {
     meta: {
       title: "Websites, hosting and tech help for small businesses | HitzDigital",
-      description: `I build websites for small businesses, keep them online and help when your computer or site lets you down. One person, short lines, based in the Netherlands and working with clients here and abroad. Websites from ${websiteFrom}, hosting from ${euro(online.monthly)} a month, all incl. VAT.`,
+      description: `Websites and hosting for small businesses, kept online and looked after. Based in the Netherlands, working with clients here and abroad. Websites from ${websiteFrom}, hosting from ${euro(online.monthly)} a month, all incl. VAT.`,
     },
     og: {
       title: star(homeH1),
@@ -4600,7 +4604,7 @@ const homeH1 = { pre: "Everything around your ", accent: "website", post: ". One
     },
     hero: {
       h1: homeH1,
-      sub: "Websites, hosting and tech help for small businesses. One person, based in the Netherlands, working with clients here and abroad. I build your site, keep it online and step in the moment something breaks.",
+      sub: "Websites, hosting and tech help for small businesses. Based in the Netherlands, working with clients here and abroad. I build your site, keep it online and step in the moment something breaks.",
       primary: "See what I do",
       secondary: "Get in touch",
       chips: {
@@ -4612,13 +4616,14 @@ const homeH1 = { pre: "Everything around your ", accent: "website", post: ". One
         selfManaged: "Easy to manage yourself",
         friendly: "User-friendly",
         professional: "Professional impression",
+        code: { fast: "// fast loading", clean: "// clean code", perf: "// better performance" },
       },
     },
     pijlers: { title: "Three things I take care of for you." },
     zoWerkIk: { title: "Clear upfront. No surprises afterwards." },
     werk: {
       eyebrow: "Work",
-      teaserTitle: "Businesses that went before you.",
+      teaserTitle: "Businesses I've already built for.",
       all: "All my work",
     },
     contact: {
@@ -4647,7 +4652,7 @@ const homeH1 = { pre: "Everything around your ", accent: "website", post: ". One
       id: "hosting",
       n: "02",
       title: "Hosting & domains",
-      body: "Domain, hosting, email and one small change per month in one fee. Cancel monthly.",
+      body: "Domain, hosting, email and one small change per month in one monthly fee. Cancel any time.",
       price: `From ${euro(online.monthly)} a month`,
       href: href(L, "hosting"),
     },
@@ -4656,7 +4661,7 @@ const homeH1 = { pre: "Everything around your ", accent: "website", post: ". One
       n: "03",
       title: "Help",
       body: "Computer, email, domain or website: I fix it and explain it. Usually remote, via screen sharing, wherever you are.",
-      price: `${euro(pricing.hulp.quarter)} per quarter hour · ${guaranteeLine}`,
+      price: `${euro(pricing.hulp.quarter)} per 15 minutes · ${guaranteeLine}`,
       href: href(L, "hulp"),
     },
   ],
@@ -4667,16 +4672,16 @@ const homeH1 = { pre: "Everything around your ", accent: "website", post: ". One
     { title: "Yours, and it stays that way", body: "Your website and domain are registered in your name. No lock-in, no being stuck with me." },
     {
       title: "Clear pricing upfront",
-      body: `Websites from ${euro(pricing.website.from)}, hosting from ${euro(online.monthly)} a month, maintenance ${euro(onderhoud.monthly)} a month, help ${euro(pricing.hulp.quarter)} per quarter hour. All incl. VAT, no small print.`,
+      body: `Websites from ${euro(pricing.website.from)}, hosting from ${euro(online.monthly)} a month, maintenance ${euro(onderhoud.monthly)} a month, help ${euro(pricing.hulp.quarter)} per 15 minutes. All incl. VAT, no small print.`,
     },
-    { title: "Cancel monthly", body: "Hosting included. Your domain simply runs until the end of the year it's registered for." },
+    { title: "Cancel any time", body: "That includes the hosting. Your domain just runs to the end of the year it's registered for." },
     { title: "One message is enough", body: "No account manager, no ticket system. You message or call me, and I reply myself." },
   ],
 
   over: {
-    title: "One person. Short lines. No hassle.",
-    body: "I'm Nathaniel, from Puttershoek in the Netherlands. I run HitzDigital on my own, for small businesses here and abroad. I build your website, keep it online and step in the moment your computer or email lets you down. No big agency with templates, but one person you can simply message.",
-    facts: ["One point of contact", "Clear agreements", "Based in the Netherlands"],
+    title: "One person. Straight answers. No hassle.",
+    body: "I'm Nathaniel, from Puttershoek in the Netherlands. I run HitzDigital on my own, for small businesses here and abroad. I build your website, keep it online and step in the moment your computer or email lets you down. Not a big agency working from templates, just one person you can message directly.",
+    facts: ["One point of contact", "Everything agreed upfront", "Based in the Netherlands"],
     portraitAlt: "Nathaniel, founder of HitzDigital",
   },
 ```
@@ -4731,7 +4736,7 @@ const websitesH1 = { pre: "A website that instantly feels more ", accent: "profe
     price: {
       title: (from: string) => `A complete website from ${from}.`,
       lead: (note: string, monthly: string) =>
-        `Incl. VAT. ${note} Want me to keep it online too? Hosting & maintenance is ${monthly} a month, including your domain and one small change per month. Cancel monthly.`,
+        `Incl. VAT. ${note} Want me to keep it online too? Hosting & maintenance is ${monthly} a month, including your domain and one small change per month. Cancel any time.`,
       moreHosting: "More about hosting",
       card: {
         name: "Website",
@@ -4747,7 +4752,7 @@ const websitesH1 = { pre: "A website that instantly feels more ", accent: "profe
       title: "From dated to polished.",
       lead: (title: string, branche: string, plaats: string) =>
         `${title}, a ${branche.toLowerCase()} in ${plaats}. Drag the handle to compare the old and the new site, exactly as your customer sees them on their phone.`,
-      link: "Read the full case",
+      link: "Read the full story",
     },
     ctaBand: {
       title: "Curious what your website could look like?",
@@ -4834,17 +4839,17 @@ const hostingH1 = { pre: "Stay online, ", accent: "without the hassle", post: ".
   hosting: {
     meta: {
       title: "Website hosting, domain and maintenance | HitzDigital",
-      description: `Hosting from ${euro(online.monthly)} a month, or maintenance with domain and one small change per month for ${euro(onderhoud.monthly)}. Cancel monthly, all incl. VAT. I handle the switch from your current host.`,
+      description: `Hosting from ${euro(online.monthly)} a month, or maintenance with domain and one small change per month for ${euro(onderhoud.monthly)}. Cancel any time, all incl. VAT. I handle the switch from your current host.`,
     },
     og: {
       title: star(hostingH1),
       kicker: "Hosting & domains",
-      sub: "Domain, hosting, email and one small change per month in one fee. Cancel monthly.",
+      sub: "Domain, hosting, email and one small change per month in one monthly fee. Cancel any time.",
     },
     crumb: "Hosting & domains",
     hero: {
       title: accented(hostingH1),
-      lead: "Domain, hosting, email and one small change per month in one fee. Cancel monthly. And if anything comes up, you message me. No ticket system.",
+      lead: "Domain, hosting, email and one small change per month in one monthly fee. Cancel any time. And if anything comes up, you message me. No ticket system.",
       primary: "Choose your plan",
       secondary: "Switching? I'll handle it",
       asideLabel: "Always included",
@@ -4852,7 +4857,7 @@ const hostingH1 = { pre: "Stay online, ", accent: "without the hassle", post: ".
     packages: {
       title: "Two plans, one monthly fee.",
       lead: (mailOne: string) =>
-        `All prices incl. 21% VAT, cancel monthly. Pay monthly or yearly, whichever you prefer. A business mailbox on your own domain can be added to either plan, from ${mailOne} a month extra.`,
+        `All prices incl. 21% VAT, cancel any time. Pay monthly or yearly, whichever you prefer. A business mailbox on your own domain can be added to either plan, from ${mailOne} a month extra.`,
       everyPlan: "With either plan.",
       tierPerMonth: (label: string) => `${label}, per month`,
     },
@@ -4888,7 +4893,7 @@ const hostingH1 = { pre: "Stay online, ", accent: "without the hassle", post: ".
     "Updates and security",
     "Monitoring: I notice when your site goes down",
     "Domain in your name",
-    "Cancel monthly",
+    "Cancel any time",
   ],
   overstappen: [
     { n: "01", title: "You give me access", body: "To your current hosting or domain. Not sure where that is? We'll figure it out together." },
@@ -4896,7 +4901,7 @@ const hostingH1 = { pre: "Stay online, ", accent: "without the hassle", post: ".
     { n: "03", title: "Nothing goes offline", body: "Only once everything runs and works with me does the domain switch over. Your email keeps arriving as usual." },
   ],
   hostingFaq: [
-    { q: "What counts as a small change?", a: "Changing a text, photo, price or opening time. Something that's done within a quarter of an hour. A new page or design work falls outside it; I'm happy to do that, but at my quarter-hour rate. Unused time expires at the end of the month." },
+    { q: "What counts as a small change?", a: "Changing a text, photo, price or opening time. Something that's done within 15 minutes. A new page or design work falls outside it; I'm happy to do that, but at my standard rate. Unused time expires at the end of the month." },
     { q: "What if I want to stop?", a: "You cancel per month, with no notice period of months. Your domain runs until the end of the year it's registered for; after that you can renew it or take it to another provider. Your site and your domain are and remain yours." },
     { q: "Does my domain stay mine?", a: "Yes. I register it in your name and with your details. I manage it for you, but you're the owner. If you ever want to leave, you simply take the domain with you." },
     { q: "How fast do you respond to an outage?", a: "I get an alert myself when your site goes down and usually get straight on it. If you notice something odd, message or call me; you don't need to open a ticket." },
@@ -4908,7 +4913,7 @@ const hostingH1 = { pre: "Stay online, ", accent: "without the hassle", post: ".
       name: "Online",
       summary: "Hosting of your website only.",
       includes: ["SSL certificate", "Daily backups", "Updates", "Monitoring"],
-      excludes: ["Domain name (separately, from €15 a year)", "Changes (at quarter-hour rate)"],
+      excludes: ["Domain name (separately, from €15 a year)", "Changes (at my standard rate)"],
       fairUse: undefined,
     },
     onderhoud: {
@@ -4967,12 +4972,12 @@ const hulpH1 = { pre: "Stuck? I'll take a look ", accent: "right away", post: ".
   hulp: {
     meta: {
       title: "Computer and website help, remote or on-site | HitzDigital",
-      description: `Stuck? I'll take a look right away. Help with your computer, email, domain, network or website: remote via screen sharing wherever you are, on-site in the Hoeksche Waard area. ${quarter} per quarter hour incl. VAT. No fix? No fee.`,
+      description: `Stuck? I'll take a look right away. Help with your computer, email, domain, network or website: remote via screen sharing wherever you are, on-site in the Hoeksche Waard area. ${quarter} per 15 minutes incl. VAT. No fix? No fee.`,
     },
     og: {
       title: star(hulpH1),
       kicker: "Computer and website help",
-      sub: `${quarter} per quarter hour incl. VAT. Remote wherever you are, on-site in the Hoeksche Waard. No fix? No fee.`,
+      sub: `${quarter} per 15 minutes incl. VAT. Remote wherever you are, on-site in the Hoeksche Waard. No fix? No fee.`,
     },
     crumb: "Help",
     hero: {
@@ -4981,7 +4986,7 @@ const hulpH1 = { pre: "Stuck? I'll take a look ", accent: "right away", post: ".
       aside: {
         rate: "Rate",
         vat: "incl. VAT",
-        perQuarter: "per quarter hour",
+        perQuarter: "per 15 minutes",
         guaranteeBody: "We agree upfront what the problem is. If I don't fix it, it costs you nothing.",
       },
     },
@@ -5000,7 +5005,7 @@ const hulpH1 = { pre: "Stuck? I'll take a look ", accent: "right away", post: ".
         },
       ],
       plan: (title: string) => `Book a ${title}`,
-      card: (quarters: number, price: string, validity: string) => `Need help more often? Prepaid card: ${quarters} quarter hours for ${price}, ${validity}.`,
+      card: (quarters: number, price: string, validity: string) => `Need help more often? Prepaid card: ${quarters} blocks of 15 minutes for ${price}, ${validity}.`,
     },
     help: {
       eyebrow: "What I help with",
@@ -5011,22 +5016,22 @@ const hulpH1 = { pre: "Stuck? I'll take a look ", accent: "right away", post: ".
     how: {
       title: "Call, share your screen, sorted.",
       homeLead: "Stuck at home?",
-      homeBody: (quarter: string) => `I also help private individuals in the Hoeksche Waard area, at the same rate: ${quarter} per quarter hour, incl. VAT.`,
+      homeBody: (quarter: string) => `I also help private individuals in the Hoeksche Waard area, at the same rate: ${quarter} per 15 minutes, incl. VAT.`,
     },
     ctaBand: { title: "Stuck right now?", body: "Call or message me and I'll take a look straight away. Prefer to send a message first? Tell me briefly what's going on." },
     schema: {
       name: "Computer and website help",
       serviceType: "Computer support and website support",
-      perQuarter: "Help per quarter hour",
-      unit: "quarter hour",
-      card: (quarters: number) => `Prepaid card, ${quarters} quarter hours`,
+      perQuarter: "Help per 15 minutes",
+      unit: "15 minutes",
+      card: (quarters: number) => `Prepaid card, ${quarters} blocks of 15 minutes`,
     },
   },
 ```
 
 - [ ] **Step 2: Hulp-blokken in `lib/i18n/en/services.ts`**
 
-Vertaal bovenin ook de const: `const guaranteeLine = "No fix? No fee.";`. Die staat al in `pijlers[2].price` (`${euro(pricing.hulp.quarter)} per quarter hour · ${guaranteeLine}`), zodat de zin één keer per taal bestaat.
+Vertaal bovenin ook de const: `const guaranteeLine = "No fix? No fee.";`. Die staat al in `pijlers[2].price` (`${euro(pricing.hulp.quarter)} per 15 minutes · ${guaranteeLine}`), zodat de zin één keer per taal bestaat.
 
 ```ts
   hulpHelp: [
@@ -5047,7 +5052,7 @@ Vertaal bovenin ook de const: `const guaranteeLine = "No fix? No fee.";`. Die st
   hulpStappen: [
     { n: "01", title: "You call or message", body: "Tell me briefly what's going wrong. A photo of the screen already helps." },
     { n: "02", title: "I take a look right away", body: "Via screen sharing, usually started within fifteen minutes. Need me on-site in my region? Then I'll come by." },
-    { n: "03", title: "You only pay for the time it takes", body: "Per quarter hour, incl. VAT. And nothing if it doesn't work out." },
+    { n: "03", title: "You only pay for the time it takes", body: "Per 15 minutes, incl. VAT. And nothing if it doesn't work out." },
   ],
   hulpFaq: [
     { q: "Do you come on-site?", a: "Yes, in the Hoeksche Waard area (near Rotterdam), without call-out charges. Most problems are solved faster remotely, so I try that first. On-site I charge per half hour, with a minimum of one hour." },
@@ -5056,10 +5061,10 @@ Vertaal bovenin ook de const: `const guaranteeLine = "No fix? No fee.";`. Die st
     { q: "How does remote help work?", a: "You open a link I send you, and I see your screen while we talk. You stay in control and can end it at any time. Nothing is left behind on your computer." },
     { q: "What if it doesn't work out?", a: "Then you pay nothing for that help. We agree upfront what the problem is; if I don't fix it, it costs you nothing. That doesn't apply to the check-ups, explanations and advice, or when the cause is beyond my reach and I've told you so." },
     { q: "Do you also help with my phone or tablet?", a: "Yes. Setting up email, transferring photos, setting up a new phone, tidying up and securing it: it's all part of it." },
-    { q: "Do you help private individuals too?", a: `Yes, in the Hoeksche Waard area, at the same rate: ${euro(pricing.hulp.quarter)} per quarter hour incl. VAT. Businesses come first when it's busy, but you're welcome.` },
+    { q: "Do you help private individuals too?", a: `Yes, in the Hoeksche Waard area, at the same rate: ${euro(pricing.hulp.quarter)} per 15 minutes incl. VAT. Businesses come first when it's busy, but you're welcome.` },
   ],
   hulpTarief: {
-    billing: "Remote per quarter hour; on-site per half hour, minimum one hour.",
+    billing: "Remote per 15 minutes; on-site per half hour, minimum one hour.",
     travel: "No call-out charges in the Hoeksche Waard area.",
     cardValidity: "valid for 12 months",
     guarantee: {
@@ -5097,7 +5102,7 @@ git commit -m "EN: help"
   werk: {
     meta: {
       title: "Work: websites for small businesses | HitzDigital",
-      description: "Examples of websites I've built: for a metalworking company, a painting company, a care professional and more. Click through to the cases.",
+      description: "Examples of websites I've built: for a metalworking company, a painting company, a care professional and more. Click through to the projects.",
     },
     og: {
       title: "Examples of my *work*.",
@@ -5249,7 +5254,7 @@ git commit -m "EN: work en cases"
     about: {
       place: (founder: string, city: string) => `${founder} · ${city}, the Netherlands`,
       kvk: (kvk: string) => `Chamber of Commerce (KvK) ${kvk}`,
-      reply: "Reply within one working day. Remote, or on-site in my region.",
+      reply: "I reply within one working day. Remote, or on-site in my region.",
     },
     faqTitle: "Quick questions",
     schemaName: "Contact HitzDigital",

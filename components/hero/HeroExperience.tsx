@@ -144,11 +144,11 @@ function heroHtml(c: HeroCopy, contactHref: string): string {
 
           <div class="hd-flayer" data-k="code" aria-hidden="true" role="presentation" style="position:absolute;left:300px;top:320px;width:262px;height:124px;opacity:0;will-change:transform,opacity">
             <div style="width:100%;height:100%;border-radius:12px;border:1px solid var(--line);background:color-mix(in srgb,var(--glass) 90%,transparent);backdrop-filter:blur(10px);box-shadow:0 24px 56px -26px color-mix(in srgb,var(--shadow-ink) 85%,transparent);padding:14px 16px;font-family:ui-monospace,Menlo,monospace;font-size:10.5px;line-height:1.7;color:var(--code-fg)">
-              <div style="color:var(--code-comment)">// snelle laadtijd</div>
+              <div style="color:var(--code-comment)">${esc(c.chips.code.fast)}</div>
               <div><span style="color:var(--accent-br)">&lt;section</span> <span style="color:var(--device-muted)">class</span>=<span style="color:var(--warm)">"hero"</span><span style="color:var(--accent-br)">&gt;</span></div>
               <div style="padding-left:14px">build<span style="color:var(--device-muted)">(</span><span style="color:var(--accent-dp)">layout</span><span style="color:var(--device-muted)">)</span></div>
-              <div style="padding-left:14px">render<span style="color:var(--device-muted)">(</span><span style="color:var(--warm)">site</span><span style="color:var(--device-muted)">)</span> <span style="color:var(--code-comment)">// schone code</span></div>
-              <div><span style="color:var(--accent-br)">&lt;/section&gt;</span> <span style="color:var(--code-comment)">// betere prestaties</span></div>
+              <div style="padding-left:14px">render<span style="color:var(--device-muted)">(</span><span style="color:var(--warm)">site</span><span style="color:var(--device-muted)">)</span> <span style="color:var(--code-comment)">${esc(c.chips.code.clean)}</span></div>
+              <div><span style="color:var(--accent-br)">&lt;/section&gt;</span> <span style="color:var(--code-comment)">${esc(c.chips.code.perf)}</span></div>
             </div>
           </div>
 

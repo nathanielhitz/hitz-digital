@@ -23,7 +23,7 @@ export const services: ServicesDict = {
       id: "hosting" as const,
       n: "02",
       title: "Hosting & domains",
-      body: "Domain, hosting, email and one small change per month in one fee. Cancel monthly.",
+      body: "Domain, hosting, email and one small change per month in one monthly fee. Cancel any time.",
       price: `From ${euro(online.monthly)} a month`,
       href: href(L, "hosting"),
     },
@@ -32,7 +32,7 @@ export const services: ServicesDict = {
       n: "03",
       title: "Help",
       body: "Computer, email, domain or website: I fix it and explain it. Usually remote, via screen sharing, wherever you are.",
-      price: `${euro(pricing.hulp.quarter)} per quarter hour · ${guaranteeLine}`,
+      price: `${euro(pricing.hulp.quarter)} per 15 minutes · ${guaranteeLine}`,
       href: href(L, "hulp"),
     },
   ],
@@ -55,16 +55,16 @@ export const services: ServicesDict = {
     { title: "Yours, and it stays that way", body: "Your website and domain are registered in your name. No lock-in, no being stuck with me." },
     {
       title: "Clear pricing upfront",
-      body: `Websites from ${euro(pricing.website.from)}, hosting from ${euro(online.monthly)} a month, maintenance ${euro(onderhoud.monthly)} a month, help ${euro(pricing.hulp.quarter)} per quarter hour. All incl. VAT, no small print.`,
+      body: `Websites from ${euro(pricing.website.from)}, hosting from ${euro(online.monthly)} a month, maintenance ${euro(onderhoud.monthly)} a month, help ${euro(pricing.hulp.quarter)} per 15 minutes. All incl. VAT, no small print.`,
     },
-    { title: "Cancel monthly", body: "Hosting included. Your domain simply runs until the end of the year it's registered for." },
+    { title: "Cancel any time", body: "That includes the hosting. Your domain just runs to the end of the year it's registered for." },
     { title: "One message is enough", body: "No account manager, no ticket system. You message or call me, and I reply myself." },
   ],
 
   over: {
-    title: "One person. Short lines. No hassle.",
-    body: "I'm Nathaniel, from Puttershoek in the Netherlands. I run HitzDigital on my own, for small businesses here and abroad. I build your website, keep it online and step in the moment your computer or email lets you down. No big agency with templates, but one person you can simply message.",
-    facts: ["One point of contact", "Clear agreements", "Based in the Netherlands"],
+    title: "One person. Straight answers. No hassle.",
+    body: "I'm Nathaniel, from Puttershoek in the Netherlands. I run HitzDigital on my own, for small businesses here and abroad. I build your website, keep it online and step in the moment your computer or email lets you down. Not a big agency working from templates, just one person you can message directly.",
+    facts: ["One point of contact", "Everything agreed upfront", "Based in the Netherlands"],
     portraitAlt: "Nathaniel, founder of HitzDigital",
   },
 
@@ -104,7 +104,7 @@ export const services: ServicesDict = {
     "Updates and security",
     "Monitoring: I notice when your site goes down",
     "Domain in your name",
-    "Cancel monthly",
+    "Cancel any time",
   ],
   overstappen: [
     { n: "01", title: "You give me access", body: "To your current hosting or domain. Not sure where that is? We'll figure it out together." },
@@ -112,7 +112,7 @@ export const services: ServicesDict = {
     { n: "03", title: "Nothing goes offline", body: "Only once everything runs and works with me does the domain switch over. Your email keeps arriving as usual." },
   ],
   hostingFaq: [
-    { q: "What counts as a small change?", a: "Changing a text, photo, price or opening time. Something that's done within a quarter of an hour. A new page or design work falls outside it; I'm happy to do that, but at my quarter-hour rate. Unused time expires at the end of the month." },
+    { q: "What counts as a small change?", a: "Changing a text, photo, price or opening time. Something that's done within 15 minutes. A new page or design work falls outside it; I'm happy to do that, but at my standard rate. Unused time expires at the end of the month." },
     { q: "What if I want to stop?", a: "You cancel per month, with no notice period of months. Your domain runs until the end of the year it's registered for; after that you can renew it or take it to another provider. Your site and your domain are and remain yours." },
     { q: "Does my domain stay mine?", a: "Yes. I register it in your name and with your details. I manage it for you, but you're the owner. If you ever want to leave, you simply take the domain with you." },
     { q: "How fast do you respond to an outage?", a: "I get an alert myself when your site goes down and usually get straight on it. If you notice something odd, message or call me; you don't need to open a ticket." },
@@ -125,7 +125,7 @@ export const services: ServicesDict = {
       name: "Online",
       summary: "Hosting of your website only.",
       includes: ["SSL certificate", "Daily backups", "Updates", "Monitoring"],
-      excludes: [`Domain name (separately, from ${euro(nlDomain.yearly)} a year)`, "Changes (at quarter-hour rate)"],
+      excludes: [`Domain name (separately, from ${euro(nlDomain.yearly)} a year)`, "Changes (at my standard rate)"],
       fairUse: undefined as string | undefined,
     },
     onderhoud: {
@@ -172,7 +172,7 @@ export const services: ServicesDict = {
   hulpStappen: [
     { n: "01", title: "You call or message", body: "Tell me briefly what's going wrong. A photo of the screen already helps." },
     { n: "02", title: "I take a look right away", body: "Via screen sharing, usually started within fifteen minutes. Need me on-site in my region? Then I'll come by." },
-    { n: "03", title: "You only pay for the time it takes", body: "Per quarter hour, incl. VAT. And nothing if it doesn't work out." },
+    { n: "03", title: "You only pay for the time it takes", body: "Per 15 minutes, incl. VAT. And nothing if it doesn't work out." },
   ],
   hulpFaq: [
     { q: "Do you come on-site?", a: "Yes, in the Hoeksche Waard area (near Rotterdam), without call-out charges. Most problems are solved faster remotely, so I try that first. On-site I charge per half hour, with a minimum of one hour." },
@@ -181,10 +181,10 @@ export const services: ServicesDict = {
     { q: "How does remote help work?", a: "You open a link I send you, and I see your screen while we talk. You stay in control and can end it at any time. Nothing is left behind on your computer." },
     { q: "What if it doesn't work out?", a: "Then you pay nothing for that help. We agree upfront what the problem is; if I don't fix it, it costs you nothing. That doesn't apply to the check-ups, explanations and advice, or when the cause is beyond my reach and I've told you so." },
     { q: "Do you also help with my phone or tablet?", a: "Yes. Setting up email, transferring photos, setting up a new phone, tidying up and securing it: it's all part of it." },
-    { q: "Do you help private individuals too?", a: `Yes, in the Hoeksche Waard area, at the same rate: ${euro(pricing.hulp.quarter)} per quarter hour incl. VAT. Businesses come first when it's busy, but you're welcome.` },
+    { q: "Do you help private individuals too?", a: `Yes, in the Hoeksche Waard area, at the same rate: ${euro(pricing.hulp.quarter)} per 15 minutes incl. VAT. Businesses come first when it's busy, but you're welcome.` },
   ],
   hulpTarief: {
-    billing: "Remote per quarter hour; on-site per half hour, minimum one hour.",
+    billing: "Remote per 15 minutes; on-site per half hour, minimum one hour.",
     travel: "No call-out charges in the Hoeksche Waard area.",
     cardValidity: "valid for 12 months",
     guarantee: {
