@@ -32,10 +32,10 @@ export function TermsBody() {
       <h2>1. Who and what for</h2>
       <p>
         These terms apply to everything HitzDigital ({site.founder}, {site.city}
-        {site.kvk ? `, Chamber of Commerce (KvK) ${site.kvk}` : ""}) does for you: building and renewing websites,
+        {site.kvk ? `, Chamber of Commerce (KvK) ${site.kvk}` : ""}) does for you: building and revamping websites,
         hosting, domains and maintenance, and computer and website help. On-site help is available in the Hoeksche
-        Waard area only; everything else I do remotely, for clients in the Netherlands and abroad. By giving me a
-        job or taking out a plan you agree to these terms. Anything we agree differently we put in writing (an
+        Waard area only; everything else I do remotely, for clients in the Netherlands and abroad. By hiring me or
+        taking out a plan you agree to these terms. Anything we agree differently we put in writing (an
         email or a message counts as writing too).
       </p>
 
@@ -50,7 +50,7 @@ export function TermsBody() {
         After the demo we agree a fixed price for the complete website (from {euro(pricing.website.from)} incl.
         VAT). That price is fixed, unless you want something extra while I&apos;m building; we discuss that first.
         You supply copy and photos, or I arrange them in consultation with you. The site is finished when it is
-        live on your domain and you have approved it. You pay on delivery, within 14 days of the invoice.
+        live on your domain and you have approved it. You pay after delivery, within 14 days of the invoice.
       </p>
       <h3>Ownership</h3>
       <p>
@@ -69,14 +69,14 @@ export function TermsBody() {
       <p>
         One business mailbox costs {euro(tierPrice("one"))} a month; two to five mailboxes together{" "}
         {euro(tierPrice("multi"))} a month. Each mailbox has {mailbox.quotaGb} GB of storage; if it fills
-        up, we discuss clearing it out or adding storage. More than five mailboxes we agree separately.
+        up, we discuss clearing it out or adding storage. For more than five mailboxes we agree something separately.
       </p>
       <h3>Small changes</h3>
       <p>
         Maintenance{webshop ? " and Webshop" : ""} includes one small change per month (up to 15 minutes).
         A small change is, for example, adjusting a text, photo, price or opening time. New pages,
-        design work or features fall outside it and I do those at my standard rate ({euro(pricing.hulp.quarter)} per
-        15 minutes, incl. VAT). Unused time expires at the end of the month and doesn&apos;t carry over.
+        design work or features fall outside it and I do those at {euro(pricing.hulp.quarter)} per 15 minutes, incl.
+        VAT. Unused time expires at the end of the month and doesn&apos;t carry over.
       </p>
       <h3>Paying</h3>
       <p>
@@ -88,10 +88,11 @@ export function TermsBody() {
       </p>
       <h3>Cancelling</h3>
       <p>
-        You can cancel any time, by email or message, up to the last day of the month. The plan then stops.
+        You can cancel any time, by email or message, up to the last day of the month; the plan then ends at the end
+        of that month.
         Your domain is registered per year and runs until the end of that year; you can then renew it
-        (separately, {euro(pricing.domains.table[0].yearly)} a year for .nl) or take it to another party. I
-        help with the move and give you an export of your website if you want one.
+        (separately, {euro(pricing.domains.table[0].yearly)} a year for .nl) or take it to another provider. I help
+        with the move and give you an export of your website if you want one.
       </p>
       {webshop && (
         <>
@@ -107,21 +108,21 @@ export function TermsBody() {
       )}
       <h3>Availability and backups</h3>
       <p>
-        I do my best to keep your site online at all times and I make daily backups. Outages at
-        data centres, registrars or external services I can&apos;t rule out; I fix them as quickly as possible, but
+        I do my best to keep your site online at all times and I make daily backups. I can&apos;t rule out outages at
+        data centres, registrars or external services; I fix them as quickly as possible, but
         I don&apos;t guarantee a percentage of uptime. If there&apos;s a problem, message or call me.
       </p>
 
       <h2>4. Computer and website help</h2>
       <p>
         Help costs {euro(pricing.hulp.quarter)} per 15 minutes, incl. VAT. Remotely I charge per 15 minutes, on-site
-        per half hour with a minimum of one hour. Within the Hoeksche Waard area I charge no call-out charges. A
+        per half hour with a minimum of one hour. There&apos;s no call-out charge within the Hoeksche Waard area. A
         prepaid card of {pricing.hulp.card.quarters} blocks of 15 minutes costs {euro(pricing.hulp.card.price)} and is{" "}
         {services.hulpTarief.cardValidity}. The Computer check-up and Website check-up cost {euro(pricing.hulp.apk.computer)} each.
       </p>
-      <h3>Not fixed, then you pay nothing</h3>
+      <h3>No fix, no fee</h3>
       <p>
-        Upfront we name together what the problem is. If I don&apos;t fix it, you pay nothing for that help. This
+        We agree up front what the problem is. If I don&apos;t fix it, you pay nothing for that help. This
         doesn&apos;t apply to the check-ups, explanations, training and advice (I always deliver those), and not when the cause lies
         beyond my reach (broken hardware or an outage at your provider, for instance), I have told you so
         and you still want me to keep looking.
@@ -143,7 +144,7 @@ export function TermsBody() {
       <h2>6. Liability</h2>
       <p>
         I do my work carefully. If something does go wrong, my liability is limited to the amount
-        you paid me for that service in the three months before. I am not liable for
+        you paid me for that service in the three months beforehand. I am not liable for
         consequential loss, such as lost revenue, or for problems caused by third-party services (hosting data centre,
         registrar, Shopify, email providers). This limit doesn&apos;t apply in cases of intent or gross negligence.
       </p>

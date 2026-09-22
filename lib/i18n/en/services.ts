@@ -52,9 +52,9 @@ export const services: ServicesDict = {
   ],
 
   zoWerkIk: [
-    { title: "Yours, and it stays that way", body: "Your website and domain are registered in your name. No lock-in, no being stuck with me." },
+    { title: "Yours, and it stays that way", body: "Your website and domain are registered in your name. No lock-in. You're never stuck with me." },
     {
-      title: "Clear pricing upfront",
+      title: "Clear pricing up front",
       body: `Websites from ${euro(pricing.website.from)}, hosting from ${euro(online.monthly)} a month, maintenance ${euro(onderhoud.monthly)} a month, help ${euro(pricing.hulp.quarter)} per 15 minutes. All incl. VAT, no small print.`,
     },
     { title: "Cancel any time", body: "That includes the hosting. Your domain just runs to the end of the year it's registered for." },
@@ -63,8 +63,8 @@ export const services: ServicesDict = {
 
   over: {
     title: "One person. Straight answers. No hassle.",
-    body: "I'm Nathaniel, from Puttershoek in the Netherlands. I run HitzDigital on my own, for small businesses here and abroad. I build your website, keep it online and step in the moment your computer or email lets you down. Not a big agency working from templates, just one person you can message directly.",
-    facts: ["One point of contact", "Everything agreed upfront", "Based in the Netherlands"],
+    body: "I'm Nathaniel, from Puttershoek in the Netherlands. I run HitzDigital on my own, for small businesses here and abroad. I build your website, keep it online and step in the moment your computer or email lets you down. Not a big agency working from templates. Just one person you can message directly.",
+    facts: ["One point of contact", "Everything agreed up front", "Based in the Netherlands"],
     portraitAlt: "Nathaniel, founder of HitzDigital",
   },
 
@@ -81,7 +81,7 @@ export const services: ServicesDict = {
   websiteInbegrepen: [
     "Designed for your phone, because that's where your customers look",
     "Fast, even on a slow connection",
-    "Findable in Google for your service and your area",
+    "Easy to find on Google for your service and your area",
     "Edit copy, photos and prices yourself",
     "Copy and photos taken care of, or you supply them",
     "Domain in your name",
@@ -112,12 +112,12 @@ export const services: ServicesDict = {
     { n: "03", title: "Nothing goes offline", body: "Only once everything runs and works with me does the domain switch over. Your email keeps arriving as usual." },
   ],
   hostingFaq: [
-    { q: "What counts as a small change?", a: "Changing a text, photo, price or opening time. Something that's done within 15 minutes. A new page or design work falls outside it; I'm happy to do that, but at my standard rate. Unused time expires at the end of the month." },
+    { q: "What counts as a small change?", a: `Changing a text, photo, price or opening time. Something that's done within 15 minutes. A new page or design work falls outside it; I'm happy to do that, but at ${euro(pricing.hulp.quarter)} per 15 minutes. Unused time expires at the end of the month.` },
     { q: "What if I want to stop?", a: "You cancel per month, with no notice period of months. Your domain runs until the end of the year it's registered for; after that you can renew it or take it to another provider. Your site and your domain are and remain yours." },
     { q: "Does my domain stay mine?", a: "Yes. I register it in your name and with your details. I manage it for you, but you're the owner. If you ever want to leave, you simply take the domain with you." },
     { q: "How fast do you respond to an outage?", a: "I get an alert myself when your site goes down and usually get straight on it. If you notice something odd, message or call me; you don't need to open a ticket." },
     { q: "Can I host my old WordPress site with you?", a: "Yes. Even if I didn't build the site, I can take over hosting, domain and email. I'll first take a quick look at whether the site is technically healthy." },
-    { q: "Do I pay monthly or yearly?", a: "Whichever you prefer. Yearly is my preference: one invoice, done. If you cancel partway through, you get the remaining full months back. You pay by bank transfer, direct debit or iDEAL and always receive a proper invoice with VAT. All prices are incl. 21% VAT; VAT may differ for businesses outside the Netherlands." },
+    { q: "Do I pay monthly or yearly?", a: "Whichever you prefer. Yearly is my preference: one invoice, done. If you cancel partway through, you get the remaining full months back. You pay by direct debit or iDEAL and always receive a proper invoice with VAT. All prices are incl. 21% VAT; VAT may differ for businesses outside the Netherlands." },
   ],
   /** Labels per pakket-id uit lib/pricing.ts. */
   plans: {
@@ -125,13 +125,13 @@ export const services: ServicesDict = {
       name: "Online",
       summary: "Hosting of your website only.",
       includes: ["SSL certificate", "Daily backups", "Updates", "Monitoring"],
-      excludes: [`Domain name (separately, from ${euro(nlDomain.yearly)} a year)`, "Changes (at my standard rate)"],
+      excludes: [`Domain name (separately, from ${euro(nlDomain.yearly)} a year)`, `Changes (${euro(pricing.hulp.quarter)} per 15 minutes)`],
       fairUse: undefined as string | undefined,
     },
     onderhoud: {
       name: "Maintenance",
-      summary: "Hosting, your domain and one small change per month.",
-      includes: ["Everything in Online", "Domain in your name", "1 small change per month (up to 15 minutes)", "Yearly check on speed and copy"],
+      summary: "Hosting, your .nl domain and one small change per month.",
+      includes: ["Everything in Online", ".nl domain in your name (other extensions on request)", "1 small change per month (up to 15 minutes)", "Yearly check on speed and copy"],
       excludes: [] as string[],
       fairUse: "A small change is, for example, a text, photo, price or opening time. No new pages or design work. Unused time expires." as string | undefined,
     },
@@ -158,7 +158,7 @@ export const services: ServicesDict = {
     { title: "Email, domain and hosting", body: "Setting up business email, switching providers, DNS, an expired domain." },
     { title: "Your website, even if I didn't build it", body: "WordPress fixes, updates, a form that doesn't work, a slow site." },
     { title: "Google Business Profile, Maps and reviews", body: "Easy to find, with correct opening hours, photos and a link to your site." },
-    { title: "Your workplace", body: "Setting up, cleaning up and speeding up your laptop or PC, backup and security." },
+    { title: "Your computer setup", body: "Setting up, cleaning up and speeding up your laptop or PC, backup and security." },
     { title: "Printers, wifi, phone and tablet", body: "Everything that needs to work together with your email and your site." },
     { title: "Office network with TP-Link Omada", body: "Wifi access points, guest network and management, neatly set up and explained." },
     { title: "Light hardware check and cleaning", body: "Dust out, ventilation checked, disk and memory tested. On-site only." },
@@ -171,7 +171,7 @@ export const services: ServicesDict = {
   ],
   hulpStappen: [
     { n: "01", title: "You call or message", body: "Tell me briefly what's going wrong. A photo of the screen already helps." },
-    { n: "02", title: "I take a look right away", body: "Via screen sharing, usually started within fifteen minutes. Need me on-site in my region? Then I'll come by." },
+    { n: "02", title: "I take a look right away", body: "Via screen sharing, usually within 15 minutes. Need me on-site in the Hoeksche Waard area? Then I'll come to you." },
     { n: "03", title: "You only pay for the time it takes", body: "Per 15 minutes, incl. VAT. And nothing if it doesn't work out." },
   ],
   hulpFaq: [
@@ -179,7 +179,7 @@ export const services: ServicesDict = {
     { q: "Do you help clients outside the Netherlands?", a: "Yes, remotely. Screen sharing works the same from London or Dublin as from Rotterdam. We agree a time that suits your time zone, and you pay the same rate." },
     { q: "How fast can you help?", a: "Remotely often the same day, sometimes straight away. On-site usually within a few working days." },
     { q: "How does remote help work?", a: "You open a link I send you, and I see your screen while we talk. You stay in control and can end it at any time. Nothing is left behind on your computer." },
-    { q: "What if it doesn't work out?", a: "Then you pay nothing for that help. We agree upfront what the problem is; if I don't fix it, it costs you nothing. That doesn't apply to the check-ups, explanations and advice, or when the cause is beyond my reach and I've told you so." },
+    { q: "What if it doesn't work out?", a: "Then you pay nothing for that help. We agree up front what the problem is; if I don't fix it, it costs you nothing. That doesn't apply to the check-ups, explanations and advice, or when the cause is beyond my reach and I've told you so." },
     { q: "Do you also help with my phone or tablet?", a: "Yes. Setting up email, transferring photos, setting up a new phone, tidying up and securing it: it's all part of it." },
     { q: "Do you help private individuals too?", a: `Yes, in the Hoeksche Waard area, at the same rate: ${euro(pricing.hulp.quarter)} per 15 minutes incl. VAT. Businesses come first when it's busy, but you're welcome.` },
   ],
@@ -190,7 +190,7 @@ export const services: ServicesDict = {
     guarantee: {
       line: guaranteeLine,
       conditions: [
-        "Applies per problem we name together upfront.",
+        "Applies per problem we name together up front.",
         "Not for the check-ups, explanations and advice; I always deliver those.",
         "Not when the cause is beyond my reach (broken hardware, an outage at your provider) and I've told you so.",
       ],

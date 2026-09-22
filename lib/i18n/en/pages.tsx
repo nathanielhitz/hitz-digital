@@ -54,14 +54,14 @@ export const pages: PagesDict = {
         seo: "SEO-ready",
         structure: "Clear structure",
         modern: "Modern look",
-        selfManaged: "Easy to manage yourself",
+        selfManaged: "Manage it yourself",
         friendly: "User-friendly",
         professional: "Professional impression",
         code: { fast: "// fast loading", clean: "// clean code", perf: "// better performance" },
       },
     },
     pijlers: { title: "Three things I take care of for you." },
-    zoWerkIk: { title: "Clear upfront. No surprises afterwards." },
+    zoWerkIk: { title: "Clear up front. No surprises afterwards." },
     werk: {
       eyebrow: "Work",
       teaserTitle: "Businesses I've already built for.",
@@ -90,27 +90,27 @@ export const pages: PagesDict = {
     werkwijzeTitle: "A better website in three steps.",
     hero: {
       title: accented(websitesH1),
-      lead: "For cafés, painters, installers, landscapers and other hands-on businesses, wherever you're based. You see a real demo of your own site first. Then you decide.",
+      lead: "For cafés, painters and decorators, plumbers and heating engineers, landscape gardeners and other hands-on businesses, wherever you're based. You see a real demo of your own site first. Then you decide.",
       secondary: "See my work",
-      asideAlt: "Website of Mourits Schilderwerken on desktop",
+      asideAlt: "The Mourits Schilderwerken website on desktop",
     },
     options: { title: "Two starting points, one approach." },
     included: {
       title: "Everything a good site needs.",
-      lead: (from: string) => `No loose extras or surprises afterwards. This comes as standard, even with a site from ${from}.`,
+      lead: (from: string) => `No optional extras or surprises later. This comes as standard, even with a site from ${from}.`,
     },
     price: {
       title: (from: string) => `A complete website from ${from}.`,
       lead: (note: string, monthly: string) =>
-        `Incl. VAT. ${note} Want me to keep it online too? Hosting & maintenance is ${monthly} a month, including your domain and one small change per month. Cancel any time.`,
+        `Incl. VAT. ${note} Want me to keep it online too? Hosting & maintenance is ${monthly} a month, including your .nl domain and one small change per month. Cancel any time.`,
       moreHosting: "More about hosting",
       card: {
         name: "Website",
         from: (from: string) => `from ${from}`,
-        bullets: ["Free demo of your homepage upfront", "Complete site, on your own domain", "Copy and photos taken care of", "Easy to edit yourself"],
+        bullets: ["Free demo of your homepage up front", "Complete site, on your own domain", "Copy and photos taken care of", "Easy to edit yourself"],
         hostingRow: "Hosting & maintenance",
         perMonth: (amount: string) => `${amount} a month`,
-        vat: "All prices incl. 21% VAT. VAT may differ for businesses outside the Netherlands.",
+        vat: "All prices incl. 21% VAT. VAT may differ outside the Netherlands.",
       },
     },
     voorNa: {
@@ -147,7 +147,7 @@ export const pages: PagesDict = {
     packages: {
       title: "Two plans, one monthly fee.",
       lead: (mailOne: string) =>
-        `All prices incl. 21% VAT, cancel any time. Pay monthly or yearly, whichever you prefer. A business mailbox on your own domain can be added to either plan, from ${mailOne} a month extra.`,
+        `All prices incl. 21% VAT, cancel any time. Pay monthly or yearly, whichever you prefer. A business mailbox on your own domain can be added to either plan, from ${mailOne} a month extra. VAT may differ outside the Netherlands.`,
       everyPlan: "With either plan.",
       tierPerMonth: (label: string) => `${label}, per month`,
     },
@@ -159,7 +159,7 @@ export const pages: PagesDict = {
       p2: (one: string, multi: string, gb: number, more: string) =>
         `Business email on your own domain (you@yourbusiness.com) is ${one} a month for one mailbox and ${multi} a month for two to five mailboxes together, each with ${gb} GB of storage, calendar and spam filter, working on your phone and laptop. ${more}`,
       rowDomain: "domain, per year",
-      note: "Incl. 21% VAT. Other extensions on request. VAT may differ for businesses outside the Netherlands.",
+      note: "Incl. 21% VAT. Other extensions on request. VAT may differ outside the Netherlands.",
     },
     switch: {
       title: "Leaving your current host? I'll handle it.",
@@ -185,12 +185,12 @@ export const pages: PagesDict = {
     crumb: "Help",
     hero: {
       title: accented(hulpH1),
-      lead: "For small businesses, and for home users too. Your laptop, email, domain, network or website: I fix it and explain it in plain language. Usually remote via screen sharing, started within fifteen minutes. Need me on-site? In the Hoeksche Waard area, I'll come to you.",
+      lead: "For small businesses, and for home users too. Your laptop, email, domain, network or website: I fix it and explain it in plain language. Mostly remote via screen sharing, usually within 15 minutes. Need me on-site? In the Hoeksche Waard area, I'll come to you.",
       aside: {
         rate: "Rate",
         vat: "incl. VAT",
         perQuarter: "per 15 minutes",
-        guaranteeBody: "We agree upfront what the problem is. If I don't fix it, it costs you nothing.",
+        guaranteeBody: "We agree up front what the problem is. If I don't fix it, it costs you nothing.",
       },
     },
     apk: {
@@ -253,11 +253,11 @@ export const pages: PagesDict = {
   },
 
   case: {
-    metaTitle: (title: string, branche: string, plaats: string) => `Website for ${title}, ${branche.toLowerCase()} in ${plaats} | HitzDigital`,
+    metaTitle: (title: string, branche: string, plaats: string) => `Website for ${title}, a ${branche.toLowerCase()} in ${plaats} | HitzDigital`,
     ogTitle: (title: string) => `Website for *${title}*`,
     ogFallback: { title: "Work by HitzDigital", kicker: "Work" },
     viewSite: "Visit the site",
-    desktopAlt: (title: string) => `Website of ${title} on desktop`,
+    desktopAlt: (title: string) => `The ${title} website on desktop`,
     situation: "Situation",
     approach: "Approach",
     result: "Result",

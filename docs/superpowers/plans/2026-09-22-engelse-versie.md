@@ -4447,7 +4447,7 @@ const cta = {
   demoLang: { label: "Request your free demo", href: contact("website") },
   hosting: { label: "Request hosting", href: contact("hosting") },
   hulp: { label: "Request help", href: contact("hulp") },
-  whatsapp: "Message me on WhatsApp",
+  whatsapp: "WhatsApp me",
   call: "Call",
 };
 
@@ -4498,7 +4498,7 @@ export const ui: UiDict = {
   stickyBar: { aria: "Quick contact", call: "Call", whatsapp: "WhatsApp" },
   mailto: `mailto:${site.email}?subject=${encodeURIComponent("Enquiry via hitzdigital.nl")}&body=${encodeURIComponent(mailBody)}`,
   form: {
-    legend: "What do you need me for?",
+    legend: "What can I help you with?",
     choices: {
       website: { label: "New website", submit: "Request your free demo" },
       hosting: { label: "Hosting & domain", submit: "Request hosting" },
@@ -4524,7 +4524,7 @@ export const ui: UiDict = {
       name: "Please enter your name, so I know who I'm calling or emailing back.",
       email: "Please enter an email address I can reach you on.",
     },
-    packageInterest: "I'm interested in {pakket}.",
+    packageInterest: "I'm interested in the {pakket} option.",
     /** Nette pakketnamen voor `{pakket}`; onbekende ids vallen terug op de id met hoofdletter. */
     packageNames: { online: "Online", onderhoud: "Maintenance", webshop: "Webshop", "computer-apk": "Computer check-up", "website-apk": "Website check-up" },
     mailtoSubject: "Enquiry via hitzdigital.nl: {voor}",
@@ -4558,7 +4558,7 @@ export const ui: UiDict = {
     ],
   },
   workCard: { viewCase: "View the project", tags: { demo: "Demo", eigen: "Own project" } },
-  plan: { mostChosen: "Most popular", perMonthShort: "/mo", choose: (name: string) => `Choose ${name}` },
+  plan: { mostChosen: "Most popular", perMonthShort: "/month", choose: (name: string) => `Choose ${name}` },
   faq: { eyebrow: "Frequently asked", title: "Questions I often get." },
   voorNa: { before: "Before", after: "After", aria: "Compare before and after" },
 };
@@ -4613,14 +4613,14 @@ const homeH1 = { pre: "Everything to do with your ", accent: "website", post: ".
         seo: "SEO-ready",
         structure: "Clear structure",
         modern: "Modern look",
-        selfManaged: "Easy to manage yourself",
+        selfManaged: "Manage it yourself",
         friendly: "User-friendly",
         professional: "Professional impression",
         code: { fast: "// fast loading", clean: "// clean code", perf: "// better performance" },
       },
     },
     pijlers: { title: "Three things I take care of for you." },
-    zoWerkIk: { title: "Clear upfront. No surprises afterwards." },
+    zoWerkIk: { title: "Clear up front. No surprises afterwards." },
     werk: {
       eyebrow: "Work",
       teaserTitle: "Businesses I've already built for.",
@@ -4669,9 +4669,9 @@ const homeH1 = { pre: "Everything to do with your ", accent: "website", post: ".
 
 ```ts
   zoWerkIk: [
-    { title: "Yours, and it stays that way", body: "Your website and domain are registered in your name. No lock-in, no being stuck with me." },
+    { title: "Yours, and it stays that way", body: "Your website and domain are registered in your name. No lock-in. You're never stuck with me." },
     {
-      title: "Clear pricing upfront",
+      title: "Clear pricing up front",
       body: `Websites from ${euro(pricing.website.from)}, hosting from ${euro(online.monthly)} a month, maintenance ${euro(onderhoud.monthly)} a month, help ${euro(pricing.hulp.quarter)} per 15 minutes. All incl. VAT, no small print.`,
     },
     { title: "Cancel any time", body: "That includes the hosting. Your domain just runs to the end of the year it's registered for." },
@@ -4680,8 +4680,8 @@ const homeH1 = { pre: "Everything to do with your ", accent: "website", post: ".
 
   over: {
     title: "One person. Straight answers. No hassle.",
-    body: "I'm Nathaniel, from Puttershoek in the Netherlands. I run HitzDigital on my own, for small businesses here and abroad. I build your website, keep it online and step in the moment your computer or email lets you down. Not a big agency working from templates, just one person you can message directly.",
-    facts: ["One point of contact", "Everything agreed upfront", "Based in the Netherlands"],
+    body: "I'm Nathaniel, from Puttershoek in the Netherlands. I run HitzDigital on my own, for small businesses here and abroad. I build your website, keep it online and step in the moment your computer or email lets you down. Not a big agency working from templates. Just one person you can message directly.",
+    facts: ["One point of contact", "Everything agreed up front", "Based in the Netherlands"],
     portraitAlt: "Nathaniel, founder of HitzDigital",
   },
 ```
@@ -4724,27 +4724,27 @@ const websitesH1 = { pre: "A website that instantly feels more ", accent: "profe
     werkwijzeTitle: "A better website in three steps.",
     hero: {
       title: accented(websitesH1),
-      lead: "For cafés, painters, installers, landscapers and other hands-on businesses, wherever you're based. You see a real demo of your own site first. Then you decide.",
+      lead: "For cafés, painters and decorators, plumbers and heating engineers, landscape gardeners and other hands-on businesses, wherever you're based. You see a real demo of your own site first. Then you decide.",
       secondary: "See my work",
-      asideAlt: "Website of Mourits Schilderwerken on desktop",
+      asideAlt: "The Mourits Schilderwerken website on desktop",
     },
     options: { title: "Two starting points, one approach." },
     included: {
       title: "Everything a good site needs.",
-      lead: (from: string) => `No loose extras or surprises afterwards. This comes as standard, even with a site from ${from}.`,
+      lead: (from: string) => `No optional extras or surprises later. This comes as standard, even with a site from ${from}.`,
     },
     price: {
       title: (from: string) => `A complete website from ${from}.`,
       lead: (note: string, monthly: string) =>
-        `Incl. VAT. ${note} Want me to keep it online too? Hosting & maintenance is ${monthly} a month, including your domain and one small change per month. Cancel any time.`,
+        `Incl. VAT. ${note} Want me to keep it online too? Hosting & maintenance is ${monthly} a month, including your .nl domain and one small change per month. Cancel any time.`,
       moreHosting: "More about hosting",
       card: {
         name: "Website",
         from: (from: string) => `from ${from}`,
-        bullets: ["Free demo of your homepage upfront", "Complete site, on your own domain", "Copy and photos taken care of", "Easy to edit yourself"],
+        bullets: ["Free demo of your homepage up front", "Complete site, on your own domain", "Copy and photos taken care of", "Easy to edit yourself"],
         hostingRow: "Hosting & maintenance",
         perMonth: (amount: string) => `${amount} a month`,
-        vat: "All prices incl. 21% VAT. VAT may differ for businesses outside the Netherlands.",
+        vat: "All prices incl. 21% VAT. VAT may differ outside the Netherlands.",
       },
     },
     voorNa: {
@@ -4793,7 +4793,7 @@ const websitesH1 = { pre: "A website that instantly feels more ", accent: "profe
   websiteInbegrepen: [
     "Designed for your phone, because that's where your customers look",
     "Fast, even on a slow connection",
-    "Findable in Google for your service and your area",
+    "Easy to find on Google for your service and your area",
     "Edit copy, photos and prices yourself",
     "Copy and photos taken care of, or you supply them",
     "Domain in your name",
@@ -4857,7 +4857,7 @@ const hostingH1 = { pre: "Stay online, ", accent: "without the hassle", post: ".
     packages: {
       title: "Two plans, one monthly fee.",
       lead: (mailOne: string) =>
-        `All prices incl. 21% VAT, cancel any time. Pay monthly or yearly, whichever you prefer. A business mailbox on your own domain can be added to either plan, from ${mailOne} a month extra.`,
+        `All prices incl. 21% VAT, cancel any time. Pay monthly or yearly, whichever you prefer. A business mailbox on your own domain can be added to either plan, from ${mailOne} a month extra. VAT may differ outside the Netherlands.`,
       everyPlan: "With either plan.",
       tierPerMonth: (label: string) => `${label}, per month`,
     },
@@ -4869,7 +4869,7 @@ const hostingH1 = { pre: "Stay online, ", accent: "without the hassle", post: ".
       p2: (one: string, multi: string, gb: number, more: string) =>
         `Business email on your own domain (you@yourbusiness.com) is ${one} a month for one mailbox and ${multi} a month for two to five mailboxes together, each with ${gb} GB of storage, calendar and spam filter, working on your phone and laptop. ${more}`,
       rowDomain: "domain, per year",
-      note: "Incl. 21% VAT. Other extensions on request. VAT may differ for businesses outside the Netherlands.",
+      note: "Incl. 21% VAT. Other extensions on request. VAT may differ outside the Netherlands.",
     },
     switch: {
       title: "Leaving your current host? I'll handle it.",
@@ -4901,25 +4901,25 @@ const hostingH1 = { pre: "Stay online, ", accent: "without the hassle", post: ".
     { n: "03", title: "Nothing goes offline", body: "Only once everything runs and works with me does the domain switch over. Your email keeps arriving as usual." },
   ],
   hostingFaq: [
-    { q: "What counts as a small change?", a: "Changing a text, photo, price or opening time. Something that's done within 15 minutes. A new page or design work falls outside it; I'm happy to do that, but at my standard rate. Unused time expires at the end of the month." },
+    { q: "What counts as a small change?", a: `Changing a text, photo, price or opening time. Something that's done within 15 minutes. A new page or design work falls outside it; I'm happy to do that, but at ${euro(pricing.hulp.quarter)} per 15 minutes. Unused time expires at the end of the month.` },
     { q: "What if I want to stop?", a: "You cancel per month, with no notice period of months. Your domain runs until the end of the year it's registered for; after that you can renew it or take it to another provider. Your site and your domain are and remain yours." },
     { q: "Does my domain stay mine?", a: "Yes. I register it in your name and with your details. I manage it for you, but you're the owner. If you ever want to leave, you simply take the domain with you." },
     { q: "How fast do you respond to an outage?", a: "I get an alert myself when your site goes down and usually get straight on it. If you notice something odd, message or call me; you don't need to open a ticket." },
     { q: "Can I host my old WordPress site with you?", a: "Yes. Even if I didn't build the site, I can take over hosting, domain and email. I'll first take a quick look at whether the site is technically healthy." },
-    { q: "Do I pay monthly or yearly?", a: "Whichever you prefer. Yearly is my preference: one invoice, done. If you cancel partway through, you get the remaining full months back. You pay by bank transfer, direct debit or iDEAL and always receive a proper invoice with VAT. All prices are incl. 21% VAT; VAT may differ for businesses outside the Netherlands." },
+    { q: "Do I pay monthly or yearly?", a: "Whichever you prefer. Yearly is my preference: one invoice, done. If you cancel partway through, you get the remaining full months back. You pay by direct debit or iDEAL and always receive a proper invoice with VAT. All prices are incl. 21% VAT; VAT may differ for businesses outside the Netherlands." },
   ],
   plans: {
     online: {
       name: "Online",
       summary: "Hosting of your website only.",
       includes: ["SSL certificate", "Daily backups", "Updates", "Monitoring"],
-      excludes: ["Domain name (separately, from €15 a year)", "Changes (at my standard rate)"],
+      excludes: ["Domain name (separately, from €15 a year)", `Changes (${euro(pricing.hulp.quarter)} per 15 minutes)`],
       fairUse: undefined,
     },
     onderhoud: {
       name: "Maintenance",
-      summary: "Hosting, your domain and one small change per month.",
-      includes: ["Everything in Online", "Domain in your name", "1 small change per month (up to 15 minutes)", "Yearly check on speed and copy"],
+      summary: "Hosting, your .nl domain and one small change per month.",
+      includes: ["Everything in Online", ".nl domain in your name (other extensions on request)", "1 small change per month (up to 15 minutes)", "Yearly check on speed and copy"],
       excludes: [],
       fairUse: "A small change is, for example, a text, photo, price or opening time. No new pages or design work. Unused time expires.",
     },
@@ -4982,12 +4982,12 @@ const hulpH1 = { pre: "Stuck? I'll take a look ", accent: "right away", post: ".
     crumb: "Help",
     hero: {
       title: accented(hulpH1),
-      lead: "For small businesses, and for home users too. Your laptop, email, domain, network or website: I fix it and explain it in plain language. Usually remote via screen sharing, started within fifteen minutes. Need me on-site? In the Hoeksche Waard area, I'll come to you.",
+      lead: "For small businesses, and for home users too. Your laptop, email, domain, network or website: I fix it and explain it in plain language. Mostly remote via screen sharing, usually within 15 minutes. Need me on-site? In the Hoeksche Waard area, I'll come to you.",
       aside: {
         rate: "Rate",
         vat: "incl. VAT",
         perQuarter: "per 15 minutes",
-        guaranteeBody: "We agree upfront what the problem is. If I don't fix it, it costs you nothing.",
+        guaranteeBody: "We agree up front what the problem is. If I don't fix it, it costs you nothing.",
       },
     },
     apk: {
@@ -5038,7 +5038,7 @@ Vertaal bovenin ook de const: `const guaranteeLine = "No fix? No fee.";`. Die st
     { title: "Email, domain and hosting", body: "Setting up business email, switching providers, DNS, an expired domain." },
     { title: "Your website, even if I didn't build it", body: "WordPress fixes, updates, a form that doesn't work, a slow site." },
     { title: "Google Business Profile, Maps and reviews", body: "Easy to find, with correct opening hours, photos and a link to your site." },
-    { title: "Your workplace", body: "Setting up, cleaning up and speeding up your laptop or PC, backup and security." },
+    { title: "Your computer setup", body: "Setting up, cleaning up and speeding up your laptop or PC, backup and security." },
     { title: "Printers, wifi, phone and tablet", body: "Everything that needs to work together with your email and your site." },
     { title: "Office network with TP-Link Omada", body: "Wifi access points, guest network and management, neatly set up and explained." },
     { title: "Light hardware check and cleaning", body: "Dust out, ventilation checked, disk and memory tested. On-site only." },
@@ -5051,7 +5051,7 @@ Vertaal bovenin ook de const: `const guaranteeLine = "No fix? No fee.";`. Die st
   ],
   hulpStappen: [
     { n: "01", title: "You call or message", body: "Tell me briefly what's going wrong. A photo of the screen already helps." },
-    { n: "02", title: "I take a look right away", body: "Via screen sharing, usually started within fifteen minutes. Need me on-site in my region? Then I'll come by." },
+    { n: "02", title: "I take a look right away", body: "Via screen sharing, usually within 15 minutes. Need me on-site in the Hoeksche Waard area? Then I'll come to you." },
     { n: "03", title: "You only pay for the time it takes", body: "Per 15 minutes, incl. VAT. And nothing if it doesn't work out." },
   ],
   hulpFaq: [
@@ -5059,7 +5059,7 @@ Vertaal bovenin ook de const: `const guaranteeLine = "No fix? No fee.";`. Die st
     { q: "Do you help clients outside the Netherlands?", a: "Yes, remotely. Screen sharing works the same from London or Dublin as from Rotterdam. We agree a time that suits your time zone, and you pay the same rate." },
     { q: "How fast can you help?", a: "Remotely often the same day, sometimes straight away. On-site usually within a few working days." },
     { q: "How does remote help work?", a: "You open a link I send you, and I see your screen while we talk. You stay in control and can end it at any time. Nothing is left behind on your computer." },
-    { q: "What if it doesn't work out?", a: "Then you pay nothing for that help. We agree upfront what the problem is; if I don't fix it, it costs you nothing. That doesn't apply to the check-ups, explanations and advice, or when the cause is beyond my reach and I've told you so." },
+    { q: "What if it doesn't work out?", a: "Then you pay nothing for that help. We agree up front what the problem is; if I don't fix it, it costs you nothing. That doesn't apply to the check-ups, explanations and advice, or when the cause is beyond my reach and I've told you so." },
     { q: "Do you also help with my phone or tablet?", a: "Yes. Setting up email, transferring photos, setting up a new phone, tidying up and securing it: it's all part of it." },
     { q: "Do you help private individuals too?", a: `Yes, in the Hoeksche Waard area, at the same rate: ${euro(pricing.hulp.quarter)} per 15 minutes incl. VAT. Businesses come first when it's busy, but you're welcome.` },
   ],
@@ -5070,7 +5070,7 @@ Vertaal bovenin ook de const: `const guaranteeLine = "No fix? No fee.";`. Die st
     guarantee: {
       line: "No fix? No fee.",
       conditions: [
-        "Applies per problem we name together upfront.",
+        "Applies per problem we name together up front.",
         "Not for the check-ups, explanations and advice; I always deliver those.",
         "Not when the cause is beyond my reach (broken hardware, an outage at your provider) and I've told you so.",
       ],
@@ -5121,11 +5121,11 @@ git commit -m "EN: help"
   },
 
   case: {
-    metaTitle: (title: string, branche: string, plaats: string) => `Website for ${title}, ${branche.toLowerCase()} in ${plaats} | HitzDigital`,
+    metaTitle: (title: string, branche: string, plaats: string) => `Website for ${title}, a ${branche.toLowerCase()} in ${plaats} | HitzDigital`,
     ogTitle: (title: string) => `Website for *${title}*`,
     ogFallback: { title: "Work by HitzDigital", kicker: "Work" },
     viewSite: "Visit the site",
-    desktopAlt: (title: string) => `Website of ${title} on desktop`,
+    desktopAlt: (title: string) => `The ${title} website on desktop`,
     situation: "Situation",
     approach: "Approach",
     result: "Result",
@@ -5146,25 +5146,25 @@ import type { WorkDict } from "../nl/work";
 
 export const work: WorkDict = {
   items: {
-    "volmer-techniek": { meta: "Metalworking · Puttershoek", alt: "Website of Volmer Techniek on mobile" },
-    "mourits-schilderwerken": { meta: "Painting company · Klaaswaal", alt: "Website of Mourits Schilderwerken on mobile" },
-    "monster-zorg": { meta: "Freelance care professional · Gouda", alt: "Website of Monster Zorg on mobile" },
-    "youniek-art": { meta: "Photography portfolio", alt: "Website of Youniek Art on mobile" },
-    lesbosreizen: { meta: "Travel guide to Lesbos", alt: "Website of LesbosReizen on mobile" },
+    "volmer-techniek": { meta: "Metalworking · Puttershoek", alt: "The Volmer Techniek website on mobile" },
+    "mourits-schilderwerken": { meta: "Painting company · Klaaswaal", alt: "The Mourits Schilderwerken website on mobile" },
+    "monster-zorg": { meta: "Freelance care professional · Gouda", alt: "The Monster Zorg website on mobile" },
+    "youniek-art": { meta: "Photography portfolio", alt: "The Youniek Art website on mobile" },
+    lesbosreizen: { meta: "Travel guide to Lesbos", alt: "The LesbosReizen website on mobile" },
     "cafe-centrum": { meta: "Local café · Hoeksche Waard", alt: "Demo website for Café 't Centrum on mobile" },
-    opgietingen: { meta: "Calendar of sauna aufguss events", alt: "Opgietingen.nl on mobile" },
+    opgietingen: { meta: "Calendar of sauna aufguss (steam-infusion) events", alt: "Opgietingen.nl on mobile" },
     festivaldiscounter: { meta: "Comparing festival tickets", alt: "Festivaldiscounter on mobile" },
   },
   cases: {
     "volmer-techniek": {
-      branche: "Metalworking",
+      branche: "Metalworking company",
       intro: "A bilingual website for a machining company that works on-site and in its own workshop, with a quote form, project gallery and service area.",
       situatie:
-        "Volmer Techniek B.V. from Puttershoek machines, repairs and builds machinery, on-site at the customer and in its own workshop. The old website was a standard WordPress site with an off-the-shelf theme. For a company that also works outside the Netherlands, the site had to work in two languages and present the six disciplines clearly side by side.",
+        "Volmer Techniek B.V. from Puttershoek carries out machining and repairs and builds machinery, on-site at the customer's premises and in its own workshop. The old website was a standard WordPress site with an off-the-shelf theme. For a company that also works outside the Netherlands, the site had to work in two languages and present the six disciplines clearly side by side.",
       aanpak: [
         "Six services, each with its own block: on-site machining, workshop machining, industrial repairs, machine building and custom work, retrofit, preventive maintenance.",
         "Dutch and English with a language switch, so international customers get the same site.",
-        "A five-step way of working and a quote form with request type, next to a button to call directly.",
+        "A five-step process and a quote form with request type, next to a button to call directly.",
         "Project gallery with real photos of the work and a map of the service area.",
         "Certifications (VCA, Koninklijke Metaalunie) and 24/7 availability clearly in view.",
       ],
@@ -5190,7 +5190,7 @@ export const work: WorkDict = {
       resultaat: [
         "Site on its own domain mouritsschilderwerken.nl, with contact form, landline and mobile number in one place.",
         "On mobile you call with one tap; on desktop the advice request is always in view.",
-        "Findable by service and by place: every service has its own page, and the service area is written out.",
+        "Easy to find by service and by place: every service has its own page, and the service area is written out.",
       ],
       voorNaAlt: { voor: "The old website of Mourits Schilderwerken on mobile", na: "The new website of Mourits Schilderwerken on mobile" },
       quote: undefined,
@@ -5201,7 +5201,7 @@ export const work: WorkDict = {
       situatie:
         "Jarno Monster works as an applied psychologist and care professional with over eight years of experience in supported living, and takes on freelance assignments with care organisations. There was no website yet. Clients needed to see quickly what he does, what his background is and how to reach him.",
       aanpak: [
-        "One page with a clear order: who is Jarno, what he offers, what experience he has, why Monster Zorg, and contact.",
+        "One page with a clear running order: who is Jarno, what he offers, what experience he has, why Monster Zorg, and contact.",
         "A timeline from 2016 to now that shows his career at a glance.",
         "Calling and LinkedIn directly from the navigation; no detours.",
         "Warm, light design with a real portrait instead of stock imagery.",
@@ -5318,6 +5318,7 @@ const privacyLead = "I think it matters that you know what I do with your data. 
 Vertaal de body van `lib/i18n/nl/legal-privacy.tsx` alinea voor alinea, met deze harde regels:
 
 - Structuur identiek: dezelfde volgorde van `<h2>`, `<p>`, `<ul>`/`<li>` en `<strong>`. Geen alinea weglaten of toevoegen.
+- Bovenaan de body dezelfde vertaal-disclaimer als bij de voorwaarden: `<p><strong>This is a translation for convenience.</strong> The Dutch version, <a href={href("nl", "privacy")}>Privacybeleid</a>, is the binding one.</p>`.
 - Alle interpolaties (`{site.founder}`, `{site.city}`, `{site.kvk …}`, `{site.email}`) en alle `<a href=…>` blijven staan; de link naar de voorwaarden is `href(L, "voorwaarden")` met `L = "en"`.
 - Koppen, in deze volgorde: "Who is responsible for your data?", "What data do I keep about you?", "Why do I use your data?", "Who do I share your data with?", "How long do I keep your data?", "Websites I host for you", "Where is your data stored?", "How do I protect your data?", "Are decisions about you made by computers alone?", "Cookies", "Your privacy rights", "Questions or complaints?", "Changes to this policy", "Who am I?".
 - Termen: AVG → "the GDPR (the EU General Data Protection Regulation)" bij de eerste vermelding, daarna "the GDPR"; "Autoriteit Persoonsgegevens" blijft staan met de toevoeging "(the Dutch data protection authority)"; "verwerkersovereenkomst" → "data processing agreement"; "eenmanszaak" → "sole proprietorship"; "KvK-nummer" → "Chamber of Commerce (KvK) number".

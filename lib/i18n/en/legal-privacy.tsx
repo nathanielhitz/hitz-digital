@@ -8,6 +8,11 @@ export function PrivacyBody() {
   return (
     <>
       <p>
+        <strong>This is a translation for convenience.</strong> The Dutch version,{" "}
+        <a href={href("nl", "privacy")}>Privacybeleid</a>, is the binding one.
+      </p>
+
+      <p>
         HitzDigital builds and hosts websites for small businesses in the Netherlands and abroad, and helps with
         computer problems. That involves personal data: yours when you get in touch, and your visitors&rsquo; if I
         host your website. I handle it carefully and keep as little as possible. I follow the GDPR (the EU General
@@ -47,7 +52,7 @@ export function PrivacyBody() {
           cookies and without storing IP addresses. Dull, but useful for keeping the site fast and working.
         </li>
       </ul>
-      <p>Sensitive data, such as about your health or beliefs, I don&rsquo;t ask for and don&rsquo;t want.</p>
+      <p>I don&rsquo;t ask for sensitive data, such as health or religious beliefs, and I don&rsquo;t want it.</p>
 
       <h2>Why do I use your data?</h2>
       <ul>
@@ -66,10 +71,10 @@ export function PrivacyBody() {
       <h2>Who do I share your data with?</h2>
       <p>With as few parties as possible, and only where it&rsquo;s needed.</p>
       <p>
-        <strong>My helpers.</strong> These are parties that work for me: the party that hosts this website, the
-        service that sends the contact form to me as an email, the party that hosts my business email and my
-        accounting package. I have agreements with all of them: they may only use your data to work for me, and
-        they process it within the EU. Want to know exactly which parties those are? Send me an email at{" "}
+        <strong>The suppliers I use.</strong> These are the suppliers that work for me: the provider that hosts this
+        website, the service that sends the contact form to me as an email, the provider that hosts my business email
+        and my accounting package. I have agreements with all of them: they may only use your data to work for me, and
+        they process it within the EU. Want to know exactly which suppliers those are? Send me an email at{" "}
         <a href={`mailto:${site.email}`}>{site.email}</a>.
       </p>
       <p>
@@ -106,7 +111,7 @@ export function PrivacyBody() {
       <p>What that means in practice:</p>
       <ul>
         <li>I only use that data to keep your site and email working. Nothing else.</li>
-        <li>I don&rsquo;t share it with anyone, apart from the hosting party your site runs on.</li>
+        <li>I don&rsquo;t share it with anyone, apart from the hosting provider your site runs on.</li>
         <li>The servers are in the Netherlands. Everything is sent encrypted and backed up daily.</li>
         <li>If you stop, or if you ask me to, I delete the data.</li>
       </ul>
@@ -145,9 +150,9 @@ export function PrivacyBody() {
       <ul>
         <li><strong>See</strong> what I have stored about you.</li>
         <li><strong>Correct</strong> anything that isn&rsquo;t right.</li>
-        <li><strong>Have deleted</strong> what I hold about you (apart from what I have to keep by law).</li>
+        <li><strong>Ask me to delete</strong> what I hold about you (apart from what I have to keep by law).</li>
         <li><strong>Restrict</strong> what I may do with it.</li>
-        <li><strong>Take it</strong> to another party (data portability).</li>
+        <li><strong>Take it</strong> to another provider (data portability).</li>
         <li><strong>Object</strong> if there&rsquo;s something you disagree with.</li>
       </ul>
       <p>

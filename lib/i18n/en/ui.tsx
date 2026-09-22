@@ -24,7 +24,7 @@ const cta = {
   demoLang: { label: "Request your free demo", href: contact("website") },
   hosting: { label: "Request hosting", href: contact("hosting") },
   hulp: { label: "Request help", href: contact("hulp") },
-  whatsapp: "Message me on WhatsApp",
+  whatsapp: "WhatsApp me",
   call: "Call",
 };
 
@@ -87,7 +87,7 @@ export const ui: UiDict = {
   stickyBar: { aria: "Quick contact", call: "Call", whatsapp: "WhatsApp" },
   mailto: `mailto:${site.email}?subject=${encodeURIComponent("Enquiry via hitzdigital.nl")}&body=${encodeURIComponent(mailBody)}`,
   form: {
-    legend: "What do you need me for?",
+    legend: "What can I help you with?",
     choices: {
       website: { label: "New website", submit: "Request your free demo" },
       hosting: { label: "Hosting & domain", submit: "Request hosting" },
@@ -114,7 +114,7 @@ export const ui: UiDict = {
       email: "Please enter an email address I can reach you on.",
     },
     /** Alleen strings: dit blok gaat als prop naar een client-component. `{pakket}` en `{voor}` worden in de component vervangen. */
-    packageInterest: "I'm interested in {pakket}.",
+    packageInterest: "I'm interested in the {pakket} option.",
     /** Nette pakketnamen voor `{pakket}`; onbekende ids vallen terug op de id met hoofdletter. */
     packageNames: { online: "Online", onderhoud: "Maintenance", webshop: "Webshop", "computer-apk": "Computer check-up", "website-apk": "Website check-up" },
     mailtoSubject: "Enquiry via hitzdigital.nl: {voor}",
@@ -148,7 +148,7 @@ export const ui: UiDict = {
     ],
   },
   workCard: { viewCase: "View the project", tags: { demo: "Demo", eigen: "Own project" } },
-  plan: { mostChosen: "Most popular", perMonthShort: "/mo", choose: (name: string) => `Choose ${name}` },
+  plan: { mostChosen: "Most popular", perMonthShort: "/month", choose: (name: string) => `Choose ${name}` },
   faq: { eyebrow: "Frequently asked", title: "Questions I often get." },
   voorNa: { before: "Before", after: "After", aria: "Compare before and after" },
 };
