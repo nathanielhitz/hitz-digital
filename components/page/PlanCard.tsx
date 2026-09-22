@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/Button";
-import { euro } from "@/lib/pricing";
+import { euro, type PlanId } from "@/lib/pricing";
 
-type PlanNumbers = { id: string; monthly: number; featured: boolean };
+type PlanNumbers = { id: PlanId; monthly: number; featured: boolean };
 export type PlanCopy = { name: string; summary: string; includes: readonly string[]; excludes: readonly string[]; fairUse?: string };
 export type PlanLabels = { mostChosen: string; perMonthShort: string; choose: (name: string) => string };
 

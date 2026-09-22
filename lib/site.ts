@@ -26,7 +26,10 @@ export const site = {
 
 export type SchemaTexts = { description: string; offers: { name: string; description: string }[] };
 
-/** ProfessionalService / lokale-dienstverlener schema; alleen gevulde velden worden meegestuurd. */
+/**
+ * ProfessionalService / lokale-dienstverlener schema; alleen gevulde velden worden meegestuurd.
+ * `lang` is gereserveerd voor de Engelse `areaServed`-tekst (Task 31); nu bepaalt alleen `isLive("en")` welke talen erin staan.
+ */
 export function professionalServiceSchema(lang: Lang, t: SchemaTexts) {
   const area = site.serviceArea.length ? site.serviceArea.map((name) => ({ "@type": "Place", name })) : undefined;
   const schema: Record<string, unknown> = {

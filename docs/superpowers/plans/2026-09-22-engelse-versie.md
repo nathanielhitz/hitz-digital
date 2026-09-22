@@ -673,6 +673,8 @@ export const ui = {
     },
     /** Alleen strings: dit blok gaat als prop naar een client-component. `{pakket}` en `{voor}` worden in de component vervangen. */
     packageInterest: "Ik heb interesse in het pakket {pakket}.",
+    /** Nette pakketnamen voor `{pakket}`; onbekende ids vallen terug op de id met hoofdletter. */
+    packageNames: { online: "Online", onderhoud: "Onderhoud", webshop: "Webshop", "computer-apk": "Computer APK", "website-apk": "Website APK" },
     mailtoSubject: "Aanvraag {voor} via hitzdigital.nl",
     mailtoFields: { voor: "Waarvoor", naam: "Naam", email: "E-mail", telefoon: "Telefoon", website: "Website", bedrijf: "Bedrijf en plaats" },
   },
@@ -1667,7 +1669,7 @@ export const pages = {
       title: "Privacybeleid | HitzDigital",
       description: "Wat HitzDigital met je gegevens doet, in gewone taal: welke gegevens ik bewaar, waarom, hoe lang, met wie ik ze deel en welke rechten je hebt.",
     },
-    og: { title: "Privacybeleid", kicker: "Privacy", sub: privacyLead },
+    og: { title: "*Privacybeleid*", kicker: "Privacy", sub: privacyLead },
     crumb: "Privacy",
     title: "Privacybeleid",
     lead: privacyLead,
@@ -1681,7 +1683,7 @@ export const pages = {
       title: "Algemene voorwaarden | HitzDigital",
       description: "De afspraken van HitzDigital in gewone taal: websites, hosting en onderhoud, computer- en websitehulp, betalen, opzeggen en eigendom.",
     },
-    og: { title: "Algemene voorwaarden", kicker: "Voorwaarden", sub: voorwaardenLead },
+    og: { title: "Algemene *voorwaarden*", kicker: "Voorwaarden", sub: voorwaardenLead },
     crumb: "Voorwaarden",
     title: "Algemene voorwaarden",
     lead: voorwaardenLead,
@@ -3382,6 +3384,7 @@ export function AanvraagForm({ lang, t, initial = "website", canSend = false }: 
   const [errors, setErrors] = useState<Errors>({});
   const formRef = useRef<HTMLFormElement>(null);
   const packageInterest = t.packageInterest;
+  const packageNames = t.packageNames;
 
   useEffect(() => {
     setOpened(Date.now());
@@ -3390,12 +3393,15 @@ export function AanvraagForm({ lang, t, initial = "website", canSend = false }: 
       const v = raw.match(/[?&]voor=([a-z]+)/)?.[1];
       if (isAanvraagKeuze(v)) setVoor(v);
       const pk = raw.match(/[?&]pakket=([a-z-]+)/)?.[1];
-      if (pk) setBericht((cur) => cur || packageInterest.replace("{pakket}", `${pk.charAt(0).toUpperCase()}${pk.slice(1)}`));
+      if (pk) {
+        const naam = packageNames[pk as keyof typeof packageNames] ?? `${pk.charAt(0).toUpperCase()}${pk.slice(1)}`;
+        setBericht((cur) => cur || packageInterest.replace("{pakket}", naam));
+      }
     };
     apply();
     window.addEventListener("hashchange", apply);
     return () => window.removeEventListener("hashchange", apply);
-  }, [packageInterest]);
+  }, [packageInterest, packageNames]);
 
   const keuze = t.choices[voor];
 
@@ -3702,7 +3708,7 @@ export default async function ContactPage({ params }: LangParams) {
 
 - [ ] **Step 5: Typecheck, bouw, test het formulier, commit**
 
-Run: `npx tsc --noEmit && npm run build`. In `npm run dev`: open `/contact?voor=hosting&pakket=onderhoud` → keuze "Hosting & domein" staat aan en het bericht bevat "Ik heb interesse in het pakket Onderhoud."; open `/hulp`, klik "Plan een Computer APK" → bericht "Ik heb interesse in het pakket Computer-apk.". Verstuur één testaanvraag (met `RESEND_API_KEY` in `.env.local`) en controleer dat de mail binnenkomt met onderwerp `Aanvraag nieuwe website via hitzdigital.nl: <naam>` en zonder `[EN]`.
+Run: `npx tsc --noEmit && npm run build`. In `npm run dev`: open `/contact?voor=hosting&pakket=onderhoud` → keuze "Hosting & domein" staat aan en het bericht bevat "Ik heb interesse in het pakket Onderhoud."; open `/hulp`, klik "Plan een Computer APK" → bericht "Ik heb interesse in het pakket Computer APK.". Verstuur één testaanvraag (met `RESEND_API_KEY` in `.env.local`) en controleer dat de mail binnenkomt met onderwerp `Aanvraag nieuwe website via hitzdigital.nl: <naam>` en zonder `[EN]`.
 
 ```bash
 git add -A
@@ -4263,7 +4269,7 @@ Run: `npm run test:unit` — Expected: deze test faalt (`languages` is nog `unde
 export const locales: readonly Lang[] = ["nl", "en"];
 ```
 
-Run: `npm run test:unit` — Expected: alles slaagt (`ℹ pass 16`).
+Run: `npm run test:unit` — Expected: alles slaagt (`ℹ pass 17`).
 
 - [ ] **Step 3: EN-skelet als kopie van NL**
 
@@ -4287,17 +4293,18 @@ Pas per bestand de kop aan zodat EN het NL-type krijgt (de inhoud blijft in deze
 `lib/i18n/index.ts` (volledig):
 
 ```ts
-import { defaultLang, type Lang } from "./paths";
+import type { Lang } from "./paths";
 import * as nl from "./nl";
 import * as en from "./en";
 
 /** Vorm van een compleet woordenboek: afgeleid van het Nederlands (de bron). */
 export type Dict = typeof nl;
 
-const dicts: Partial<Record<Lang, Dict>> = { nl, en };
+/** Beschikbare woordenboeken. Het Nederlands is er altijd en dient als terugval. */
+const dicts: Partial<Record<Lang, Dict>> & { nl: Dict } = { nl, en };
 
 export function getDict(lang: Lang): Dict {
-  return dicts[lang] ?? (dicts[defaultLang] as Dict);
+  return dicts[lang] ?? dicts.nl;
 }
 ```
 
@@ -4358,10 +4365,10 @@ test("support bestaat alleen in NL: /en/support → 301 /support", async () => {
   assert.equal(location(await get("/en/support/e-mail-instellingen")), "/support/e-mail-instellingen");
 });
 
-test("onbekend EN-pad: 404 met lang=en; /fr: 404", async () => {
-  const res = await get("/en/does-not-exist");
-  assert.equal(res.status, 404);
-  assert.match(await res.text(), /<html[^>]*\blang="en"/);
+test("onbekend EN-pad en onbekende taal geven 404", async () => {
+  // De 404 rendert in Next's foutdocument zonder <html lang>; NotFoundView kiest de taal client-side.
+  assert.equal((await get("/en/does-not-exist")).status, 404);
+  assert.equal((await get("/en/help/extra")).status, 404);
   assert.equal((await get("/fr")).status, 404);
 });
 
@@ -4383,7 +4390,7 @@ npm start &
 npm run test:e2e
 kill %1
 ```
-Expected: build toont routes voor `/nl/...` én `/en/...`; e2e `ℹ pass 9`, `ℹ fail 0`. De sitemap bevat nu voor elke route beide talen met `xhtml:link`-alternates (Engelse tekst is nog Nederlands, dat is de bedoeling van dit skelet).
+Expected: build toont routes voor `/nl/...` én `/en/...`; e2e `ℹ pass 10`, `ℹ fail 0`. De sitemap bevat nu voor elke route beide talen met `xhtml:link`-alternates (Engelse tekst is nog Nederlands, dat is de bedoeling van dit skelet).
 
 ```bash
 git add -A
@@ -4504,6 +4511,8 @@ export const ui: UiDict = {
       email: "Please enter an email address I can reach you on.",
     },
     packageInterest: "I'm interested in the {pakket} plan.",
+    /** Nette pakketnamen voor `{pakket}`; onbekende ids vallen terug op de id met hoofdletter. */
+    packageNames: { online: "Online", onderhoud: "Maintenance", webshop: "Webshop", "computer-apk": "Computer check-up", "website-apk": "Website check-up" },
     mailtoSubject: "Enquiry: {voor} via hitzdigital.nl",
     mailtoFields: { voor: "Regarding", naam: "Name", email: "Email", telefoon: "Phone", website: "Website", bedrijf: "Business and location" },
   },
@@ -4542,7 +4551,7 @@ export const ui: UiDict = {
 
 - [ ] **Step 2: e2e: Engelse 404-tekst**
 
-In de test `onbekend EN-pad: 404 met lang=en; /fr: 404` voeg toe: `assert.match(html, /This page doesn't exist/);` (lees eerst `const html = await res.text();` en gebruik die voor beide asserts).
+In de 404-test geen tekstcontrole toevoegen: het foutdocument bevat de teksten van beide talen in de RSC-payload, dus tekst onderscheidt de taal niet.
 
 - [ ] **Step 3: Typecheck, bouw, nalezen, commit**
 
@@ -5270,7 +5279,7 @@ git commit -m "EN: contact"
       title: "Privacy policy | HitzDigital",
       description: "What HitzDigital does with your data, in plain language: what I keep, why, for how long, who I share it with and what your rights are.",
     },
-    og: { title: "Privacy policy", kicker: "Privacy", sub: privacyLead },
+    og: { title: "*Privacy policy*", kicker: "Privacy", sub: privacyLead },
     crumb: "Privacy",
     title: "Privacy policy",
     lead: privacyLead,
@@ -5323,7 +5332,7 @@ git commit -m "EN: privacy policy"
       title: "Terms and conditions | HitzDigital",
       description: "HitzDigital's terms in plain language: websites, hosting and maintenance, computer and website help, payment, cancellation and ownership.",
     },
-    og: { title: "Terms and conditions", kicker: "Terms", sub: voorwaardenLead },
+    og: { title: "Terms and *conditions*", kicker: "Terms", sub: voorwaardenLead },
     crumb: "Terms",
     title: "Terms and conditions",
     lead: voorwaardenLead,

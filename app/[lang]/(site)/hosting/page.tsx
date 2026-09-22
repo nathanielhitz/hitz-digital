@@ -26,7 +26,7 @@ export default async function HostingPage({ params }: LangParams) {
   const { pages, services, ui } = getDict(lang);
   const t = pages.hosting;
   const mailbox = pricing.addons.find((a) => a.id === "mailbox")!;
-  const tierPrice = (id: "one" | "multi") => mailbox.tiers.find((t) => t.id === id)!.monthly;
+  const tierPrice = (id: "one" | "multi") => mailbox.tiers.find((tier) => tier.id === id)!.monthly;
   const tiers = [
     { id: "one", label: services.mailbox.tiers.one, monthly: tierPrice("one") },
     { id: "multi", label: services.mailbox.tiers.multi, monthly: tierPrice("multi") },

@@ -4,8 +4,8 @@
  */
 export type Lang = "nl" | "en";
 
-/** Talen die live zijn. Fase 1: alleen nl. Task 18 zet en erbij. */
-export const locales: readonly Lang[] = ["nl"];
+/** Talen die live zijn. */
+export const locales: readonly Lang[] = ["nl", "en"];
 export const defaultLang: Lang = "nl";
 
 export function isLang(x: unknown): x is Lang {

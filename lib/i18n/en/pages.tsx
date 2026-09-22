@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { pricing, euro } from "@/lib/pricing";
+import type { PagesDict } from "../nl/pages";
 
 const accent = (word: string): ReactNode => <em className="hd-accent-word not-italic text-accent">{word}</em>;
 
@@ -30,7 +31,7 @@ const privacyLead = "Ik vind het belangrijk dat je weet wat ik met jouw gegevens
 const voorwaardenLead = "Geen kleine lettertjes, maar wel duidelijke afspraken. Dit is wat je van mij kunt verwachten en wat ik van jou verwacht.";
 
 /** Copy per pagina: metadata, OG-afbeelding, hero, secties, CTA-band. */
-export const pages = {
+export const pages: PagesDict = {
   home: {
     meta: {
       title: "Websites, hosting en computerhulp in de Hoeksche Waard | HitzDigital",
@@ -316,5 +317,3 @@ export const pages = {
     updated: "26 augustus 2026",
   },
 };
-
-export type PagesDict = typeof pages;

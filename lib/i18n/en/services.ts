@@ -1,14 +1,15 @@
-import { pricing, euro, type PlanId } from "@/lib/pricing";
+import { pricing, euro } from "@/lib/pricing";
 import { href } from "../paths";
+import type { ServicesDict } from "../nl/services";
 
-const L = "nl" as const;
+const L = "en" as const;
 const online = pricing.hosting.find((h) => h.id === "online")!;
 const onderhoud = pricing.hosting.find((h) => h.id === "onderhoud")!;
 const nlDomain = pricing.domains.table.find((d) => d.tld === ".nl")!;
 const guaranteeLine = "Niet opgelost? Dan betaal je niets.";
 
 /** Dienst-teksten: pijlers, lijsten, FAQ's, pakket- en tarieflabels. Getallen komen uit lib/pricing.ts. */
-export const services = {
+export const services: ServicesDict = {
   pijlers: [
     {
       id: "websites" as const,
@@ -141,7 +142,7 @@ export const services = {
       excludes: [] as string[],
       fairUse: "Een kleine wijziging is bijvoorbeeld een product, prijs, foto of tekst. Geen nieuwe pagina's of ontwerpwerk. Ongebruikte tijd vervalt." as string | undefined,
     },
-  } satisfies Record<PlanId, { name: string; summary: string; includes: string[]; excludes: string[]; fairUse: string | undefined }>,
+  },
   mailbox: {
     name: "Zakelijke mailbox",
     summary: "Op je eigen domein.",
@@ -201,5 +202,3 @@ export const services = {
     { q: "Is een demo echt gratis?", a: "Ja. Je krijgt een echte, werkende voorproef van je homepage. Bevalt hij niet, dan stopt het daar, zonder kosten." },
   ],
 };
-
-export type ServicesDict = typeof services;

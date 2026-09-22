@@ -1,9 +1,9 @@
 import { site } from "@/lib/site";
-import { href, type CtaKind } from "../paths";
+import { href } from "../paths";
 import type { AanvraagKeuze } from "@/lib/aanvraag";
-import type { WorkTag } from "@/lib/work";
+import type { UiDict } from "../nl/ui";
 
-const L = "nl" as const;
+const L = "en" as const;
 const contact = (voor?: AanvraagKeuze) => `${href(L, "contact")}${voor ? `?voor=${voor}` : ""}`;
 
 /** mailto met onderwerp + korte invul-template, zodat elke mail met context binnenkomt. */
@@ -29,7 +29,7 @@ const cta = {
 };
 
 /** Alle tekst van de site-schil (nav, footer, formulier, 404, schema). Nederlands is de bron; en/ui.tsx krijgt `typeof ui`. */
-export const ui = {
+export const ui: UiDict = {
   skipLink: "Naar inhoud",
   nav: {
     aria: "Hoofdnavigatie",
@@ -47,7 +47,7 @@ export const ui = {
     themeRow: "Weergave",
     langRow: "Taal",
     /** Header-knop per soort (spec §4). Fase 1 gebruikt alleen `demo`. */
-    cta: { demo: cta.demo.label, hosting: cta.hosting.label, hulp: cta.hulp.label, contact: "Contact" } satisfies Record<CtaKind, string>,
+    cta: { demo: cta.demo.label, hosting: cta.hosting.label, hulp: cta.hulp.label, contact: "Contact" },
   },
   theme: {
     toLight: "Schakel naar licht thema",
@@ -93,7 +93,7 @@ export const ui = {
       hosting: { label: "Hosting & domein", submit: "Vraag hosting aan" },
       hulp: { label: "Ik zit vast", submit: "Vraag hulp aan" },
       anders: { label: "Iets anders", submit: "Verstuur" },
-    } satisfies Record<AanvraagKeuze, { label: string; submit: string }>,
+    },
     name: "Naam",
     email: "E-mailadres",
     required: "(verplicht)",
@@ -144,9 +144,7 @@ export const ui = {
       },
     ],
   },
-  workCard: { viewCase: "Bekijk de case", tags: { demo: "Demo", eigen: "Eigen project" } satisfies Record<WorkTag, string> },
+  workCard: { viewCase: "Bekijk de case", tags: { demo: "Demo", eigen: "Eigen project" } },
   plan: { mostChosen: "Meest gekozen", perMonthShort: "/mnd", choose: (name: string) => `Kies ${name}` },
   faq: { eyebrow: "Veelgestelde vragen", title: "Wat mensen me vaak vragen." },
 };
-
-export type UiDict = typeof ui;

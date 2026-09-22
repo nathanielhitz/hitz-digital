@@ -68,3 +68,42 @@ test("paden buiten de padkaart geven 404, ook als de middleware ze overslaat", a
   }
   for (const p of ["/icon", "/apple-icon"]) assert.equal((await get(p)).status, 200, p);
 });
+
+const EN_PAGES = ["/en", "/en/websites", "/en/hosting", "/en/help", "/en/work", "/en/work/volmer-techniek", "/en/contact", "/en/privacy", "/en/terms"];
+
+test("EN-pagina's: 200 en <html lang=en>", async () => {
+  for (const p of EN_PAGES) {
+    const res = await get(p);
+    assert.equal(res.status, 200, p);
+    assert.match(await res.text(), /<html[^>]*\blang="en"/, p);
+  }
+});
+
+test("interne slug onder /en → 301 naar de Engelse slug", async () => {
+  for (const [from, to] of [["/en/hulp", "/en/help"], ["/en/werk/volmer-techniek", "/en/work/volmer-techniek"], ["/en/voorwaarden", "/en/terms"]]) {
+    const res = await get(from);
+    assert.equal(res.status, 301, from);
+    assert.equal(location(res), to, from);
+  }
+});
+
+test("support bestaat alleen in NL: /en/support → 301 /support", async () => {
+  assert.equal(location(await get("/en/support")), "/support");
+  assert.equal(location(await get("/en/support/e-mail-instellingen")), "/support/e-mail-instellingen");
+});
+
+test("onbekend EN-pad en onbekende taal geven 404", async () => {
+  // De 404 rendert in Next's foutdocument zonder <html lang>; NotFoundView kiest de taal client-side.
+  assert.equal((await get("/en/does-not-exist")).status, 404);
+  assert.equal((await get("/en/help/extra")).status, 404);
+  assert.equal((await get("/fr")).status, 404);
+});
+
+test("diepe links redirecten nooit op taal", async () => {
+  const nl = await get("/websites", { headers: { "accept-language": "en-GB,en;q=0.9" } });
+  assert.equal(nl.status, 200);
+  assert.match(await nl.text(), /<html[^>]*\blang="nl"/);
+  const en = await get("/en/websites", { headers: { "accept-language": "nl-NL,nl;q=0.9" } });
+  assert.equal(en.status, 200);
+  assert.match(await en.text(), /<html[^>]*\blang="en"/);
+});

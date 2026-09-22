@@ -92,6 +92,15 @@ test("alternatesFor: alleen canonical zolang EN niet live is of geen tegenhanger
   assert.equal(a.languages, undefined);
 });
 
+test("alternatesFor: hreflang zodra EN live is", () => {
+  const a = alternatesFor("nl", "hulp");
+  assert.deepEqual(a, { canonical: "/hulp", languages: { nl: "/hulp", en: "/en/help", "x-default": "/hulp" } });
+  const b = alternatesFor("en", "werk", "monster-zorg");
+  assert.equal(b.canonical, "/en/work/monster-zorg");
+  assert.equal(b.languages?.["x-default"], "/werk/monster-zorg");
+  assert.deepEqual(alternatesFor("nl", "support", "x"), { canonical: "/support/x" });
+});
+
 test("ogLocale en isLang", () => {
   assert.equal(ogLocale("nl"), "nl_NL");
   assert.equal(ogLocale("en"), "en_GB");
