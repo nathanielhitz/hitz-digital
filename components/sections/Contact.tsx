@@ -30,7 +30,7 @@ export async function Contact({ lang }: { lang: Lang }) {
           <p className="mx-auto mb-[38px] max-w-[520px] text-[17px] leading-[1.6] text-muted">
             {t.lead}
           </p>
-          <AanvraagForm canSend={sendable} />
+          <AanvraagForm lang={lang} t={ui.form} canSend={sendable} />
           <div className="mt-6 text-center text-[13.5px] leading-[2.1] text-faint">
             {t.direct}{" "}
             <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="inline-block py-0.5 text-muted underline">
