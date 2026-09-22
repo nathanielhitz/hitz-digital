@@ -23,7 +23,7 @@ const accented = (h: Accented): ReactNode => (
 
 const homeH1 = { pre: "Everything around your ", accent: "website", post: ". One point of contact." };
 const websitesH1 = { pre: "A website that instantly feels more ", accent: "professional", post: "." };
-const hostingH1 = { pre: "Online blijven, ", accent: "zonder gedoe", post: "." };
+const hostingH1 = { pre: "Stay online, ", accent: "without the hassle", post: "." };
 const hulpH1 = { pre: "Vastgelopen? Ik kijk ", accent: "direct", post: " mee." };
 
 /** Lead van de juridische pagina's: staat zowel in de hero als op de OG-afbeelding. */
@@ -127,48 +127,48 @@ export const pages: PagesDict = {
 
   hosting: {
     meta: {
-      title: "Hosting, domein en onderhoud voor je website | HitzDigital",
-      description: `Hosting vanaf ${euro(online.monthly)} per maand, onderhoud met domein en een kleine wijziging per maand voor ${euro(onderhoud.monthly)}. Maandelijks opzegbaar, alles incl. btw. Overstappen regel ik.`,
+      title: "Website hosting, domain and maintenance | HitzDigital",
+      description: `Hosting from ${euro(online.monthly)} a month, or maintenance with domain and one small change per month for ${euro(onderhoud.monthly)}. Cancel monthly, all incl. VAT. I handle the switch from your current host.`,
     },
     og: {
       title: star(hostingH1),
-      kicker: "Hosting & domeinen",
-      sub: "Domein, hosting, e-mail en een kleine wijziging per maand in één bedrag. Maandelijks opzegbaar.",
+      kicker: "Hosting & domains",
+      sub: "Domain, hosting, email and one small change per month in one fee. Cancel monthly.",
     },
-    crumb: "Hosting & domeinen",
+    crumb: "Hosting & domains",
     hero: {
       title: accented(hostingH1),
-      lead: "Domein, hosting, e-mail en een kleine wijziging per maand in één bedrag. Maandelijks opzegbaar. En als er iets is, app je mij, geen ticketsysteem.",
-      primary: "Kies je pakket",
-      secondary: "Overstappen? Ik regel het",
-      asideLabel: "Zit er altijd bij",
+      lead: "Domain, hosting, email and one small change per month in one fee. Cancel monthly. And if anything comes up, you message me. No ticket system.",
+      primary: "Choose your plan",
+      secondary: "Switching? I'll handle it",
+      asideLabel: "Always included",
     },
     packages: {
-      title: "Twee pakketten, één maandbedrag.",
+      title: "Two plans, one monthly fee.",
       lead: (mailOne: string) =>
-        `Alle prijzen incl. 21% btw en maandelijks opzegbaar. Betalen per maand of per jaar, wat jij prettig vindt. Een zakelijke mailbox op je eigen domein kan bij elk pakket, vanaf ${mailOne} per maand extra.`,
-      everyPlan: "Bij elk pakket.",
-      tierPerMonth: (label: string) => `${label}, per maand`,
+        `All prices incl. 21% VAT, cancel monthly. Pay monthly or yearly, whichever you prefer. A business mailbox on your own domain can be added to either plan, from ${mailOne} a month extra.`,
+      everyPlan: "With either plan.",
+      tierPerMonth: (label: string) => `${label}, per month`,
     },
     domain: {
-      eyebrow: "Domeinnaam & e-mail",
-      title: "Je domein op jouw naam.",
+      eyebrow: "Domain name & email",
+      title: "Your domain, in your name.",
       p1: (included: string, other: string) =>
-        `${included} Kies je alleen hosting, dan registreer of verleng ik je .nl-domein los. Ik beheer het, jij blijft de eigenaar. ${other}`,
+        `${included} If you choose hosting only, I register or renew your domain separately. I manage it, you remain the owner. ${other}`,
       p2: (one: string, multi: string, gb: number, more: string) =>
-        `Zakelijke e-mail op je eigen domein (jij@jouwbedrijf.nl) is ${one} per maand voor één mailbox en ${multi} per maand voor twee tot vijf mailboxen samen, elk met ${gb} GB opslag, agenda en spamfilter, werkend op je telefoon en laptop. ${more}`,
-      rowDomain: "domein, per jaar",
-      note: "Incl. 21% btw. Andere extensies op aanvraag.",
+        `Business email on your own domain (you@yourbusiness.com) is ${one} a month for one mailbox and ${multi} a month for two to five mailboxes together, each with ${gb} GB of storage, calendar and spam filter, working on your phone and laptop. ${more}`,
+      rowDomain: "domain, per year",
+      note: "Incl. 21% VAT. Other extensions on request. VAT may differ for businesses outside the Netherlands.",
     },
     switch: {
-      title: "Weg bij je huidige hoster? Ik regel het.",
-      lead: "Ook als je site niet door mij gebouwd is. Je hoeft zelf niets over te zetten en er ligt niets uit.",
+      title: "Leaving your current host? I'll handle it.",
+      lead: "Even if I didn't build your site. You don't have to move anything yourself, and nothing goes offline.",
     },
     ctaBand: {
-      title: "Zeker weten dat je site gewoon werkt?",
-      body: "Vertel kort waar je site en domein nu staan. Ik laat je weten wat het wordt en regel de overstap.",
+      title: "Want to be sure your site just works?",
+      body: "Tell me briefly where your site and domain are hosted now. I'll let you know what it comes to and handle the switch.",
     },
-    schema: { name: "Hosting, domein en onderhoud", serviceType: "Webhosting en websiteonderhoud", unit: "maand" },
+    schema: { name: "Hosting, domain and maintenance", serviceType: "Web hosting and website maintenance", unit: "month" },
   },
 
   hulp: {
