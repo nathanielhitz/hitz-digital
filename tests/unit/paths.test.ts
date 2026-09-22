@@ -1,0 +1,100 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import {
+  href, parsePublic, internalPath, redirectForEn, counterpart, ctaFor, alternatesFor, ogLocale, isLang, langOf,
+} from "../../lib/i18n/paths.ts";
+
+test("href: NL zonder prefix, EN met /en en Engelse slug", () => {
+  assert.equal(href("nl", "home"), "/");
+  assert.equal(href("en", "home"), "/en");
+  assert.equal(href("nl", "hulp"), "/hulp");
+  assert.equal(href("en", "hulp"), "/en/help");
+  assert.equal(href("en", "voorwaarden"), "/en/terms");
+  assert.equal(href("en", "werk", "mourits-schilderwerken"), "/en/work/mourits-schilderwerken");
+  assert.equal(href("nl", "contact"), "/contact");
+});
+
+test("href: support bestaat alleen in NL", () => {
+  assert.equal(href("en", "support"), "/support");
+  assert.equal(href("en", "support", "e-mail-instellen-iphone"), "/support/e-mail-instellen-iphone");
+});
+
+test("parsePublic: bekende paden", () => {
+  assert.deepEqual(parsePublic("/"), { lang: "nl", key: "home" });
+  assert.deepEqual(parsePublic("/en"), { lang: "en", key: "home" });
+  assert.deepEqual(parsePublic("/en/"), { lang: "en", key: "home" });
+  assert.deepEqual(parsePublic("/hulp"), { lang: "nl", key: "hulp" });
+  assert.deepEqual(parsePublic("/en/help"), { lang: "en", key: "hulp" });
+  assert.deepEqual(parsePublic("/werk/volmer-techniek"), { lang: "nl", key: "werk", slug: "volmer-techniek" });
+  assert.deepEqual(parsePublic("/en/work/volmer-techniek?x=1#y"), { lang: "en", key: "werk", slug: "volmer-techniek" });
+  assert.deepEqual(parsePublic("/support/e-mail-instellingen"), { lang: "nl", key: "support", slug: "e-mail-instellingen" });
+});
+
+test("parsePublic: onbekende paden geven null", () => {
+  assert.equal(parsePublic("/en/hulp"), null); // interne slug is niet publiek in EN
+  assert.equal(parsePublic("/foo"), null);
+  assert.equal(parsePublic("/websites/extra"), null); // niet-dynamische route met slug
+  assert.equal(parsePublic("/en/support"), null); // support heeft geen EN
+});
+
+test("internalPath: mapnaam blijft Nederlands", () => {
+  assert.equal(internalPath({ lang: "nl", key: "home" }), "/nl");
+  assert.equal(internalPath({ lang: "en", key: "home" }), "/en");
+  assert.equal(internalPath({ lang: "en", key: "hulp" }), "/en/hulp");
+  assert.equal(internalPath({ lang: "en", key: "werk", slug: "x" }), "/en/werk/x");
+  assert.equal(internalPath({ lang: "nl", key: "voorwaarden" }), "/nl/voorwaarden");
+});
+
+test("redirectForEn: interne slug en support onder /en", () => {
+  assert.equal(redirectForEn("/en/hulp"), "/en/help");
+  assert.equal(redirectForEn("/en/werk/volmer-techniek"), "/en/work/volmer-techniek");
+  assert.equal(redirectForEn("/en/voorwaarden"), "/en/terms");
+  assert.equal(redirectForEn("/en/support"), "/support");
+  assert.equal(redirectForEn("/en/support/e-mail-instellingen"), "/support/e-mail-instellingen");
+  assert.equal(redirectForEn("/en/websites"), null); // gelijke slug: geen redirect
+  assert.equal(redirectForEn("/en/help"), null);
+  assert.equal(redirectForEn("/en"), null);
+  assert.equal(redirectForEn("/en/onbekend"), null);
+});
+
+test("counterpart: tegenhanger van de huidige pagina", () => {
+  assert.equal(counterpart("/hulp", "en"), "/en/help");
+  assert.equal(counterpart("/en/help", "nl"), "/hulp");
+  assert.equal(counterpart("/", "en"), "/en");
+  assert.equal(counterpart("/en", "nl"), "/");
+  assert.equal(counterpart("/werk/monster-zorg", "en"), "/en/work/monster-zorg");
+  assert.equal(counterpart("/support/e-mail-instellingen", "en"), "/en"); // geen tegenhanger → EN home
+  assert.equal(counterpart("/bestaat-niet", "en"), "/en");
+});
+
+test("ctaFor: header-knop per route", () => {
+  assert.equal(ctaFor("/"), "demo");
+  assert.equal(ctaFor("/en"), "demo");
+  assert.equal(ctaFor("/websites"), "demo");
+  assert.equal(ctaFor("/werk"), "demo");
+  assert.equal(ctaFor("/en/work/volmer-techniek"), "demo");
+  assert.equal(ctaFor("/hosting"), "hosting");
+  assert.equal(ctaFor("/en/help"), "hulp");
+  assert.equal(ctaFor("/privacy"), "contact");
+  assert.equal(ctaFor("/en/terms"), "contact");
+  assert.equal(ctaFor("/support"), "contact");
+  assert.equal(ctaFor("/onbekend"), "contact");
+  assert.equal(ctaFor("/contact"), null);
+  assert.equal(ctaFor("/en/contact"), null);
+});
+
+test("alternatesFor: alleen canonical zolang EN niet live is of geen tegenhanger heeft", () => {
+  const a = alternatesFor("nl", "support");
+  assert.equal(a.canonical, "/support");
+  assert.equal(a.languages, undefined);
+});
+
+test("ogLocale en isLang", () => {
+  assert.equal(ogLocale("nl"), "nl_NL");
+  assert.equal(ogLocale("en"), "en_GB");
+  assert.equal(isLang("en"), true);
+  assert.equal(isLang("fr"), false);
+  assert.equal(isLang(undefined), false);
+  assert.equal(langOf("en"), "en");
+  assert.equal(langOf("fr"), "nl");
+});
