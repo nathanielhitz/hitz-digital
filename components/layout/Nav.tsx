@@ -1,20 +1,24 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
+import { track } from "@vercel/analytics";
 import { Button } from "@/components/ui/Button";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { ThemeSwitch, type ThemeLabels } from "@/components/ui/ThemeSwitch";
 import { LangSwitch, type LangSwitchLabels } from "@/components/ui/LangSwitch";
 import { cn } from "@/lib/cn";
-import { href, type Lang } from "@/lib/i18n/paths";
+import { ctaFor, href, publicPath, type CtaKind, type Lang } from "@/lib/i18n/paths";
 
 export type NavLabels = { aria: string; homeAria: string; menuOpen: string; menuClose: string; menu: string; themeRow: string; langRow: string };
 
 type Props = {
   lang: Lang;
   links: { label: string; href: string }[];
-  /** Header-knop (desktop rechts, mobiel onderin het menu). Fase 3 maakt dit contextueel. */
-  cta: { label: string; href: string };
+  /** Labels per knopsoort; welke soort geldt, volgt uit de pathname (padkaart). */
+  ctaLabels: Record<CtaKind, string>;
+  /** Contactpagina in deze taal; `?voor=` wordt hier achter gezet. */
+  contactHref: string;
   labels: NavLabels;
   theme: ThemeLabels;
   langLabels: LangSwitchLabels;
@@ -25,12 +29,24 @@ type Props = {
  * IntersectionObserver-sentinel (geen scroll-listener). Onder 901px: hamburger
  * + fullscreen menu met focus-beheer, Escape en scroll-lock.
  */
-export function Nav({ lang, links, cta, labels, theme, langLabels }: Props) {
+export function Nav({ lang, links, ctaLabels, contactHref, labels, theme, langLabels }: Props) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const firstRender = useRef(true);
+
+  // publicPath: de middleware herschrijft, dus usePathname() geeft /nl/hosting in plaats van /hosting.
+  const pathname = publicPath(usePathname() ?? "/");
+  const kind = ctaFor(pathname);
+  const cta = kind
+    ? { kind, label: ctaLabels[kind], href: kind === "contact" ? contactHref : `${contactHref}?voor=${kind === "demo" ? "website" : kind}` }
+    : null;
+  const onCta = () => {
+    try {
+      track("nav_cta", { cta: kind ?? "", lang, path: pathname });
+    } catch {}
+  };
 
   useEffect(() => {
     const sentinel = document.createElement("div");
@@ -104,12 +120,15 @@ export function Nav({ lang, links, cta, labels, theme, langLabels }: Props) {
             ))}
             <LangSwitch lang={lang} labels={langLabels} variant="text" />
             <ThemeSwitch labels={theme} />
-            <a
-              href={cta.href}
-              className="inline-flex items-center gap-2 rounded-full border border-line px-[17px] py-[9px] font-medium text-ink transition-[border-color,background-color] duration-[250ms] hover:border-accent/55 hover:bg-accent/12"
-            >
-              {cta.label}
-            </a>
+            {cta && (
+              <a
+                href={cta.href}
+                onClick={onCta}
+                className="inline-flex items-center gap-2 rounded-full border border-line px-[17px] py-[9px] font-medium text-ink transition-[border-color,background-color] duration-[250ms] hover:border-accent/55 hover:bg-accent/12"
+              >
+                {cta.label}
+              </a>
+            )}
           </div>
 
           <button
@@ -171,9 +190,18 @@ export function Nav({ lang, links, cta, labels, theme, langLabels }: Props) {
             <LangSwitch lang={lang} labels={langLabels} variant="segment" />
           </div>
         </div>
-        <Button href={cta.href} className="w-full py-4 text-[16px]" onClick={close}>
-          {cta.label}
-        </Button>
+        {cta && (
+          <Button
+            href={cta.href}
+            className="w-full py-4 text-[16px]"
+            onClick={() => {
+              onCta();
+              close();
+            }}
+          >
+            {cta.label}
+          </Button>
+        )}
       </div>
     </>
   );

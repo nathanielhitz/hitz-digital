@@ -1,7 +1,7 @@
 import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
 import { getDict } from "@/lib/i18n";
-import { langOf, type LangParams } from "@/lib/i18n/paths";
+import { href, langOf, type LangParams } from "@/lib/i18n/paths";
 
 /**
  * Gedeelde site-schil: skip-link, navigatie en footer voor alle publieke pagina's.
@@ -18,7 +18,7 @@ export default async function SiteLayout({ children, params }: Readonly<{ childr
       >
         {ui.skipLink}
       </a>
-      <Nav lang={lang} links={ui.nav.links} cta={{ label: ui.nav.cta.demo, href: ui.cta.demo.href }} labels={ui.nav} theme={ui.theme} langLabels={ui.lang} />
+      <Nav lang={lang} links={ui.nav.links} ctaLabels={ui.nav.cta} contactHref={href(lang, "contact")} labels={ui.nav} theme={ui.theme} langLabels={ui.lang} />
       {children}
       <Footer lang={lang} />
     </>

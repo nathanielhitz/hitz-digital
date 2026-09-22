@@ -5629,8 +5629,11 @@ test("header-knop volgt de pagina (spec §4)", async () => {
     const re = new RegExp(`href="${href.replace("?", "\\?")}"[^>]*>\\s*${label}`);
     assert.match(h, re, path);
   }
+  // De taalschakelaar (Task 28) linkt op de contactpagina zelf ook naar /contact resp. /en/contact;
+  // die valt buiten de vraag "staat er een knop?" en wordt er eerst uitgeknipt.
+  const withoutLangSwitch = (h) => h.replace(/<a [^>]*hrefLang="[a-z]{2}"[^>]*>.*?<\/a>/g, "");
   for (const path of ["/contact", "/en/contact"]) {
-    const h = header(await (await get(path)).text());
+    const h = withoutLangSwitch(header(await (await get(path)).text()));
     assert.doesNotMatch(h, /href="\/(en\/)?contact/, `${path}: geen knop`);
   }
 });
