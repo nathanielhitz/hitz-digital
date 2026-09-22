@@ -28,7 +28,7 @@ const hulpH1 = { pre: "Stuck? I'll take a look ", accent: "right away", post: ".
 
 /** Lead van de juridische pagina's: staat zowel in de hero als op de OG-afbeelding. */
 const privacyLead = "I think it matters that you know what I do with your data. This page explains how I handle it.";
-const voorwaardenLead = "Geen kleine lettertjes, maar wel duidelijke afspraken. Dit is wat je van mij kunt verwachten en wat ik van jou verwacht.";
+const voorwaardenLead = "No small print, but clear agreements. This is what you can expect from me, and what I expect from you.";
 
 /** Copy per pagina: metadata, OG-afbeelding, hero, secties, CTA-band. */
 export const pages: PagesDict = {
@@ -306,14 +306,14 @@ export const pages: PagesDict = {
 
   voorwaarden: {
     meta: {
-      title: "Algemene voorwaarden | HitzDigital",
-      description: "De afspraken van HitzDigital in gewone taal: websites, hosting en onderhoud, computer- en websitehulp, betalen, opzeggen en eigendom.",
+      title: "Terms and conditions | HitzDigital",
+      description: "HitzDigital's terms in plain language: websites, hosting and maintenance, computer and website help, payment, cancellation and ownership.",
     },
-    og: { title: "Algemene *voorwaarden*", kicker: "Voorwaarden", sub: voorwaardenLead },
-    crumb: "Voorwaarden",
-    title: "Algemene voorwaarden",
+    og: { title: "Terms and *conditions*", kicker: "Terms", sub: voorwaardenLead },
+    crumb: "Terms",
+    title: "Terms and conditions",
     lead: voorwaardenLead,
-    updatedLine: (updated: string) => `Laatst bijgewerkt: ${updated}`,
-    updated: "26 augustus 2026",
+    updatedLine: (updated: string) => `Last updated: ${updated}`,
+    updated: "26 August 2026",
   },
 };
