@@ -11,7 +11,8 @@ import { work } from "@/lib/work";
 
 /** Homepage: teaser met de klanten + link naar /werk. Elders: volledige grid. */
 export function Werk({ lang, teaser = false }: { lang: Lang; teaser?: boolean }) {
-  const t = getDict(lang).pages.home.werk;
+  const { pages, ui, work: w } = getDict(lang);
+  const t = pages.home.werk;
   const list = teaser ? work.filter((w) => w.client) : work;
   return (
     <Section id="werk" padding={teaser ? "large" : "default"}>
@@ -36,7 +37,14 @@ export function Werk({ lang, teaser = false }: { lang: Lang; teaser?: boolean })
           <div className="grid grid-cols-1 gap-[22px] min-[561px]:grid-cols-2 min-[901px]:grid-cols-3">
             {list.map((item, i) => (
               // Teaser op één kolom: twee tegels, de derde staat achter "Al mijn werk".
-              <WerkCard key={item.slug} item={item} className={teaser && i >= 2 ? "max-[560px]:hidden" : undefined} />
+              <WerkCard
+                key={item.slug}
+                item={item}
+                lang={lang}
+                text={w.items[item.slug]}
+                labels={ui.workCard}
+                className={teaser && i >= 2 ? "max-[560px]:hidden" : undefined}
+              />
             ))}
           </div>
         </Reveal>

@@ -6,48 +6,36 @@ import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Reveal } from "@/components/ui/Reveal";
 import { WerkCard } from "@/components/sections/WerkCard";
-import { cta } from "@/lib/content";
+import { getDict } from "@/lib/i18n";
+import { pageMetadata } from "@/lib/i18n/meta";
+import { langOf, type LangParams } from "@/lib/i18n/paths";
 import { work } from "@/lib/work";
 
-const title = "Werk: websites voor ondernemers in de Hoeksche Waard | HitzDigital";
-const description =
-  "Voorbeelden van websites die ik gebouwd heb: voor een metaalbedrijf, een schildersbedrijf, een zorgverlener en meer. Klik door naar de cases.";
+export async function generateMetadata({ params }: LangParams): Promise<Metadata> {
+  const lang = langOf((await params).lang);
+  return pageMetadata(lang, "werk", getDict(lang).pages.werk.meta);
+}
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: "/werk" },
-  openGraph: { title, description, url: "/werk", type: "website" },
-};
-
-export default function WerkPage() {
+export default async function WerkPage({ params }: LangParams) {
+  const lang = langOf((await params).lang);
+  const { pages, ui, work: w } = getDict(lang);
+  const t = pages.werk;
   return (
     <main id="main" className="relative z-[2] bg-deep">
-      <PageHero
-        lang="nl"
-        crumbs={[{ label: "Werk" }]}
-        title="Voorbeelden van mijn werk."
-        lead="Geen sjablonen, geen stockfoto's. Sites die ik gebouwd heb voor bedrijven in de regio, en een paar eigen projecten. Bij de klanten lees je hoe het ging."
-      />
+      <PageHero lang={lang} crumbs={[{ label: t.crumb }]} title={t.hero.title} lead={t.hero.lead} />
       <Section id="cases" className="pt-0 border-t-0">
         <Container>
           <Reveal>
             <div className="grid grid-cols-1 gap-[22px] min-[561px]:grid-cols-2 min-[901px]:grid-cols-3">
               {work.map((item) => (
-                <WerkCard key={item.slug} item={item} />
+                <WerkCard key={item.slug} item={item} lang={lang} text={w.items[item.slug]} labels={ui.workCard} />
               ))}
             </div>
           </Reveal>
         </Container>
       </Section>
-      <CtaBand
-        lang="nl"
-        title="Wil je dit ook voor jouw bedrijf?"
-        body="Stuur je huidige site of vertel kort wat je doet. Je krijgt een echte demo van je homepage, gratis en zonder verplichtingen."
-        label={cta.demoLang.label}
-        href={cta.demoLang.href}
-      />
-      <WhatsAppFab afterId="cases" untilId="cta" label="Heb je een vraag?" aria="Heb je een vraag? Stuur een WhatsApp" />
+      <CtaBand lang={lang} title={t.ctaBand.title} body={t.ctaBand.body} label={ui.cta.demoLang.label} href={ui.cta.demoLang.href} />
+      <WhatsAppFab afterId="cases" untilId="cta" label={ui.fab.label} aria={ui.fab.aria} />
     </main>
   );
 }

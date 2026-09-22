@@ -12,76 +12,61 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Reveal } from "@/components/ui/Reveal";
 import { BeforeAfterSlider } from "@/components/mock/BeforeAfterSlider";
-import { cta } from "@/lib/content";
+import { getDict } from "@/lib/i18n";
+import { pageMetadata } from "@/lib/i18n/meta";
+import { href, langOf, type LangParams } from "@/lib/i18n/paths";
 import { pricing, euro } from "@/lib/pricing";
-import { pijlers, websiteOpties, websiteInbegrepen, websiteFaq } from "@/lib/services";
 import { cases } from "@/lib/work";
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 
-const title = "Website laten maken in de Hoeksche Waard | HitzDigital";
-const description =
-  "Een moderne website voor je bedrijf, vanaf €250 incl. btw. Je ziet eerst een gratis demo van je eigen homepage, daarna beslis je. Voor vakbedrijven en horeca in de Hoeksche Waard.";
+export async function generateMetadata({ params }: LangParams): Promise<Metadata> {
+  const lang = langOf((await params).lang);
+  return pageMetadata(lang, "websites", getDict(lang).pages.websites.meta);
+}
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: "/websites" },
-  openGraph: { title, description, url: "/websites", type: "website" },
-};
-
-export default function WebsitesPage() {
-  const hosting = pijlers.find((p) => p.id === "hosting")!;
+export default async function WebsitesPage({ params }: LangParams) {
+  const lang = langOf((await params).lang);
+  const { pages, services, ui, work: w } = getDict(lang);
+  const t = pages.websites;
   const onderhoud = pricing.hosting.find((h) => h.id === "onderhoud")!;
   const voorNa = cases.find((c) => c.voorNa);
+  const voorNaCopy = voorNa ? w.cases[voorNa.slug] : undefined;
 
   return (
     <main id="main" className="relative z-[2] bg-deep">
       <PageHero
-        lang="nl"
-        crumbs={[{ label: "Websites" }]}
-        title={
-          <>
-            Een website die direct <em className="hd-accent-word not-italic text-accent">professioneler</em> voelt.
-          </>
-        }
-        lead="Voor cafés, schilders, installateurs, hoveniers en andere vakbedrijven in de Hoeksche Waard. Je ziet eerst een echte demo van je eigen site. Daarna beslis je."
+        lang={lang}
+        crumbs={[{ label: t.crumb }]}
+        title={t.hero.title}
+        lead={t.hero.lead}
         actions={
           <>
-            <Button href={cta.demoLang.href}>{cta.demoLang.label}</Button>
-            <Button href="/werk" variant="ghost">
-              Bekijk mijn werk
+            <Button href={ui.cta.demoLang.href}>{ui.cta.demoLang.label}</Button>
+            <Button href={href(lang, "werk")} variant="ghost">
+              {t.hero.secondary}
             </Button>
           </>
         }
         aside={
           <div className="relative aspect-[16/10] overflow-hidden rounded-2xl border border-line shadow-card">
-            <Image
-              src="/images/werk/mourits-desktop.webp"
-              alt="Website van Mourits Schilderwerken op desktop"
-              fill
-              priority
-              sizes="(max-width: 900px) 100vw, 45vw"
-              className="object-cover object-top"
-            />
+            <Image src="/images/werk/mourits-desktop.webp" alt={t.hero.asideAlt} fill priority sizes="(max-width: 900px) 100vw, 45vw" className="object-cover object-top" />
           </div>
         }
       />
 
-      <Werkwijze />
+      <Werkwijze lang={lang} />
 
       <Section id="nieuw-of-vernieuwen">
         <Container>
           <Reveal>
-            <SectionTitle className="mb-[54px] max-w-[720px]">Twee vertrekpunten, één aanpak.</SectionTitle>
+            <SectionTitle className="mb-[54px] max-w-[720px]">{t.options.title}</SectionTitle>
           </Reveal>
           <div className="grid grid-cols-1 gap-[18px] min-[901px]:grid-cols-2">
-            {websiteOpties.map((o, i) => (
+            {services.websiteOpties.map((o, i) => (
               <Reveal key={o.title} delay={i * 80}>
                 <div className="flex h-full flex-col rounded-2xl border border-line bg-panel p-[clamp(24px,2.6vw,34px)]">
                   <span className="mb-[16px] block font-mono text-[12px] leading-none text-accent">0{i + 1}</span>
-                  <h3 className="mb-[10px] font-display text-[clamp(22px,2.2vw,26px)] font-semibold tracking-[-0.02em]">
-                    {o.title}
-                  </h3>
+                  <h3 className="mb-[10px] font-display text-[clamp(22px,2.2vw,26px)] font-semibold tracking-[-0.02em]">{o.title}</h3>
                   <p className="text-[15px] leading-[1.6] text-muted">{o.body}</p>
                 </div>
               </Reveal>
@@ -94,15 +79,12 @@ export default function WebsitesPage() {
         <Container>
           <Reveal className="grid grid-cols-1 gap-12 min-[901px]:grid-cols-[0.9fr_1.1fr]">
             <div>
-              <SectionTitle className="max-w-[14ch]">Alles wat een goede site nodig heeft.</SectionTitle>
-              <p className="mt-6 max-w-[42ch] text-[16px] leading-[1.65] text-muted">
-                Geen losse opties of verrassingen achteraf. Dit zit er standaard bij, ook bij een site vanaf{" "}
-                {euro(pricing.website.from)}.
-              </p>
+              <SectionTitle className="max-w-[14ch]">{t.included.title}</SectionTitle>
+              <p className="mt-6 max-w-[42ch] text-[16px] leading-[1.65] text-muted">{t.included.lead(euro(pricing.website.from))}</p>
             </div>
             {/* Opsomming zonder kaders: een kader staat op deze site voor iets wat je kunt kopen of kiezen. */}
             <ul className="grid grid-cols-1 gap-x-8 gap-y-4 self-center text-[15px] leading-[1.55] min-[561px]:grid-cols-2">
-              {websiteInbegrepen.map((x) => (
+              {services.websiteInbegrepen.map((x) => (
                 <li key={x} className="flex items-start gap-3">
                   <span className="mt-[8px] h-[7px] w-[7px] flex-none rounded-full bg-accent" aria-hidden />
                   {x}
@@ -117,65 +99,49 @@ export default function WebsitesPage() {
         <Container>
           <Reveal className="grid grid-cols-1 items-center gap-12 min-[901px]:grid-cols-[1fr_1fr]">
             <div>
-              <SectionTitle className="max-w-[16ch]">Een complete website vanaf {euro(pricing.website.from)}.</SectionTitle>
-              <p className="mt-6 max-w-[46ch] text-[16px] leading-[1.65] text-muted">
-                Incl. btw. {pricing.website.note} Wil je dat ik hem ook online houd? Hosting & onderhoud is{" "}
-                {euro(onderhoud.monthly)} per maand, inclusief je .nl-domein en een kleine wijziging per maand.
-                Maandelijks opzegbaar.
-              </p>
+              <SectionTitle className="max-w-[16ch]">{t.price.title(euro(pricing.website.from))}</SectionTitle>
+              <p className="mt-6 max-w-[46ch] text-[16px] leading-[1.65] text-muted">{t.price.lead(services.websiteNote, euro(onderhoud.monthly))}</p>
               <div className="mt-8 flex flex-wrap gap-[14px]">
-                <Button href={cta.demoLang.href}>{cta.demoLang.label}</Button>
-                <Button href={hosting.live ? hosting.href : "/#pijlers"} variant="ghost">
-                  Meer over hosting
+                <Button href={ui.cta.demoLang.href}>{ui.cta.demoLang.label}</Button>
+                <Button href={href(lang, "hosting")} variant="ghost">
+                  {t.price.moreHosting}
                 </Button>
               </div>
             </div>
             <div className="rounded-2xl border border-line bg-panel p-[clamp(24px,2.6vw,34px)]">
               <div className="flex items-baseline justify-between border-b border-line pb-4">
-                <span className="font-display text-[18px] font-semibold">Website</span>
-                <span className="font-display text-[clamp(26px,2.6vw,32px)] font-semibold tracking-[-0.02em]">
-                  vanaf {euro(pricing.website.from)}
-                </span>
+                <span className="font-display text-[18px] font-semibold">{t.price.card.name}</span>
+                <span className="font-display text-[clamp(26px,2.6vw,32px)] font-semibold tracking-[-0.02em]">{t.price.card.from(euro(pricing.website.from))}</span>
               </div>
               <ul className="mt-4 flex flex-col gap-2 text-[14.5px] text-muted">
-                <li>Gratis demo van je homepage vooraf</li>
-                <li>Complete site, op je eigen domein</li>
-                <li>Teksten en foto&apos;s geregeld</li>
-                <li>Zelf aan te passen</li>
+                {t.price.card.bullets.map((b) => (
+                  <li key={b}>{b}</li>
+                ))}
               </ul>
               <div className="mt-6 flex items-baseline justify-between border-t border-line pt-4 text-[14.5px]">
-                <span className="text-muted">Hosting & onderhoud</span>
-                <span className="text-ink">{euro(onderhoud.monthly)} per maand</span>
+                <span className="text-muted">{t.price.card.hostingRow}</span>
+                <span className="text-ink">{t.price.card.perMonth(euro(onderhoud.monthly))}</span>
               </div>
-              <p className="mt-3 text-[12.5px] text-faint">Alle prijzen incl. 21% btw.</p>
+              <p className="mt-3 text-[12.5px] text-faint">{t.price.card.vat}</p>
             </div>
           </Reveal>
         </Container>
       </Section>
 
-      {voorNa?.voorNa && (
+      {voorNa?.voorNa && voorNaCopy?.voorNaAlt && (
         <Section id="voor-na" variant="base">
           <Container>
             <Reveal className="grid grid-cols-1 items-center gap-12 min-[901px]:grid-cols-[1fr_0.9fr]">
               <div>
-                <Eyebrow>Voor en na</Eyebrow>
-                <SectionTitle className="max-w-[16ch]">Van verouderd naar verzorgd.</SectionTitle>
-                <p className="mt-6 max-w-[46ch] text-[16px] leading-[1.65] text-muted">
-                  {voorNa.title}, {voorNa.branche.toLowerCase()} in {voorNa.plaats}. Sleep de greep om de oude en de nieuwe site te
-                  vergelijken, precies zoals je klant ze op zijn telefoon ziet.
-                </p>
-                <a href={`/werk/${voorNa.slug}`} className="mt-5 inline-flex items-center gap-2 py-1 text-[15px] font-medium text-ink underline-offset-4 hover:underline">
-                  Lees de hele case <ArrowRight size={16} weight="bold" aria-hidden />
+                <Eyebrow>{t.voorNa.eyebrow}</Eyebrow>
+                <SectionTitle className="max-w-[16ch]">{t.voorNa.title}</SectionTitle>
+                <p className="mt-6 max-w-[46ch] text-[16px] leading-[1.65] text-muted">{t.voorNa.lead(voorNa.title, voorNaCopy.branche, voorNa.plaats)}</p>
+                <a href={href(lang, "werk", voorNa.slug)} className="mt-5 inline-flex items-center gap-2 py-1 text-[15px] font-medium text-ink underline-offset-4 hover:underline">
+                  {t.voorNa.link} <ArrowRight size={16} weight="bold" aria-hidden />
                 </a>
               </div>
               <div className="mx-auto w-full max-w-[420px] overflow-hidden rounded-[22px] border border-line shadow-card">
-                <BeforeAfterSlider
-                  beforeSrc={voorNa.voorNa.voor}
-                  afterSrc={voorNa.voorNa.na}
-                  beforeAlt={voorNa.voorNa.voorAlt}
-                  afterAlt={voorNa.voorNa.naAlt}
-                  className="aspect-[3/4]"
-                />
+                <BeforeAfterSlider beforeSrc={voorNa.voorNa.voor} afterSrc={voorNa.voorNa.na} beforeAlt={voorNaCopy.voorNaAlt.voor} afterAlt={voorNaCopy.voorNaAlt.na} className="aspect-[3/4]" />
               </div>
             </Reveal>
           </Container>
@@ -186,22 +152,16 @@ export default function WebsitesPage() {
         <Container>
           <Reveal className="grid grid-cols-1 gap-12 min-[901px]:grid-cols-[0.8fr_1.2fr]">
             <div>
-              <Eyebrow>Veelgestelde vragen</Eyebrow>
-              <SectionTitle className="max-w-[12ch]">Wat mensen me vaak vragen.</SectionTitle>
+              <Eyebrow>{ui.faq.eyebrow}</Eyebrow>
+              <SectionTitle className="max-w-[12ch]">{ui.faq.title}</SectionTitle>
             </div>
-            <FaqList items={websiteFaq} />
+            <FaqList items={services.websiteFaq} />
           </Reveal>
         </Container>
       </Section>
 
-      <CtaBand
-        lang="nl"
-        title="Benieuwd hoe jouw website eruit kan zien?"
-        body="Stuur je huidige site of vertel kort wat je doet. Je krijgt een echte demo van je homepage, gratis en zonder verplichtingen."
-        label={cta.demoLang.label}
-        href={cta.demoLang.href}
-      />
-      <WhatsAppFab afterId="nieuw-of-vernieuwen" untilId="cta" label="Heb je een vraag?" aria="Heb je een vraag? Stuur een WhatsApp" />
+      <CtaBand lang={lang} title={t.ctaBand.title} body={t.ctaBand.body} label={ui.cta.demoLang.label} href={ui.cta.demoLang.href} />
+      <WhatsAppFab afterId="nieuw-of-vernieuwen" untilId="cta" label={ui.fab.label} aria={ui.fab.aria} />
     </main>
   );
 }

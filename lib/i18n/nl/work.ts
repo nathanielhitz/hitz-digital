@@ -1,4 +1,6 @@
-/** Werk-teksten per slug. Sleutels moeten overeenkomen met `work` en `cases` in lib/work.ts (TypeScript bewaakt dat via WorkSlug/CaseSlug in Task 12). */
+import type { WorkSlug, CaseSlug } from "@/lib/work";
+
+/** Werk-teksten per slug. Sleutels moeten overeenkomen met `work` en `cases` in lib/work.ts; het satisfies-blok onderaan bewaakt dat. */
 export const work = {
   items: {
     "volmer-techniek": { meta: "Metaalbewerking · Puttershoek", alt: "Website van Volmer Techniek op mobiel" },
@@ -67,6 +69,9 @@ export const work = {
       quote: undefined as { text: string; author: string } | undefined,
     },
   },
+} satisfies {
+  items: Record<WorkSlug, { meta: string; alt: string }>;
+  cases: Record<CaseSlug, { branche: string; intro: string; situatie: string; aanpak: string[]; resultaat: string[]; voorNaAlt: { voor: string; na: string } | undefined; quote: { text: string; author: string } | undefined }>;
 };
 
 export type WorkDict = typeof work;

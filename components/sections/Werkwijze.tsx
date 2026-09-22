@@ -2,16 +2,18 @@ import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Reveal } from "@/components/ui/Reveal";
-import { werkwijze } from "@/lib/services";
+import { getDict } from "@/lib/i18n";
+import type { Lang } from "@/lib/i18n/paths";
 
-export function Werkwijze() {
+export function Werkwijze({ lang }: { lang: Lang }) {
+  const { pages, services } = getDict(lang);
   return (
     <Section id="werkwijze">
       <Container>
         <Reveal>
-          <SectionTitle className="mb-16 max-w-[720px]">In drie stappen naar een betere website.</SectionTitle>
+          <SectionTitle className="mb-16 max-w-[720px]">{pages.websites.werkwijzeTitle}</SectionTitle>
           <div className="grid grid-cols-1 gap-[clamp(24px,4vw,56px)] min-[901px]:grid-cols-3">
-            {werkwijze.map((s) => (
+            {services.werkwijze.map((s) => (
               <div key={s.n}>
                 <div className="mb-[18px] flex items-center gap-[14px]">
                   <span
