@@ -10,74 +10,74 @@ import { Button } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Reveal } from "@/components/ui/Reveal";
-import { cta, whatsapp, tel, telDisplay } from "@/lib/content";
+import { whatsapp, tel, telDisplay } from "@/lib/content";
+import { getDict } from "@/lib/i18n";
+import { pageMetadata } from "@/lib/i18n/meta";
+import { href, langOf, type LangParams } from "@/lib/i18n/paths";
 import { pricing, euro } from "@/lib/pricing";
-import { hulpHelp, hulpNiet, hulpStappen, hulpFaq } from "@/lib/services";
 import { site } from "@/lib/site";
 
-const title = "Computer- en websitehulp in de Hoeksche Waard | HitzDigital";
-const description =
-  "Vastgelopen? Ik kijk direct mee. Hulp bij computer, e-mail, domein, netwerk of website, op afstand of aan huis in de Hoeksche Waard. €15 per kwartier incl. btw. Niet opgelost? Dan betaal je niets.";
+export async function generateMetadata({ params }: LangParams): Promise<Metadata> {
+  const lang = langOf((await params).lang);
+  return pageMetadata(lang, "hulp", getDict(lang).pages.hulp.meta);
+}
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: "/hulp" },
-  openGraph: { title, description, url: "/hulp", type: "website" },
-};
-
-export default function HulpPage() {
+export default async function HulpPage({ params }: LangParams) {
+  const lang = langOf((await params).lang);
+  const { pages, services, ui } = getDict(lang);
+  const t = pages.hulp;
   const h = pricing.hulp;
+  const tarief = services.hulpTarief;
+  const apkPrijs = { "computer-apk": h.apk.computer, "website-apk": h.apk.website } as const;
+  const apk = (id: "computer-apk" | "website-apk") => t.apk.items.find((a) => a.id === id)!;
   const schema = {
     "@context": "https://schema.org",
     "@type": "Service",
-    name: "Computer- en websitehulp",
-    serviceType: "Computerhulp en websiteondersteuning",
+    name: t.schema.name,
+    serviceType: t.schema.serviceType,
     provider: { "@type": "ProfessionalService", name: site.name, url: site.url },
     areaServed: site.serviceArea.map((name) => ({ "@type": "Place", name })),
-    url: `${site.url}/hulp`,
+    url: `${site.url}${href(lang, "hulp")}`,
     offers: [
-      { "@type": "Offer", name: "Hulp per kwartier", price: h.quarter.toFixed(2), priceCurrency: "EUR", priceSpecification: { "@type": "UnitPriceSpecification", price: h.quarter.toFixed(2), priceCurrency: "EUR", unitText: "kwartier", valueAddedTaxIncluded: true } },
-      { "@type": "Offer", name: "Computer APK", price: h.apk.computer.toFixed(2), priceCurrency: "EUR" },
-      { "@type": "Offer", name: "Website APK", price: h.apk.website.toFixed(2), priceCurrency: "EUR" },
-      { "@type": "Offer", name: `Strippenkaart ${h.card.quarters} kwartier`, price: h.card.price.toFixed(2), priceCurrency: "EUR" },
+      { "@type": "Offer", name: t.schema.perQuarter, price: h.quarter.toFixed(2), priceCurrency: "EUR", priceSpecification: { "@type": "UnitPriceSpecification", price: h.quarter.toFixed(2), priceCurrency: "EUR", unitText: t.schema.unit, valueAddedTaxIncluded: true } },
+      { "@type": "Offer", name: apk("computer-apk").title, price: h.apk.computer.toFixed(2), priceCurrency: "EUR" },
+      { "@type": "Offer", name: apk("website-apk").title, price: h.apk.website.toFixed(2), priceCurrency: "EUR" },
+      { "@type": "Offer", name: t.schema.card(h.card.quarters), price: h.card.price.toFixed(2), priceCurrency: "EUR" },
     ],
   };
 
   return (
     <main id="main" className="relative z-[2] bg-deep">
       <PageHero
-        lang="nl"
-        crumbs={[{ label: "Hulp" }]}
-        title={
-          <>
-            Vastgelopen? Ik kijk <em className="hd-accent-word not-italic text-accent">direct</em> mee.
-          </>
-        }
-        lead="Voor ondernemers in de Hoeksche Waard, en ook gewoon thuis. Je laptop, je mail, je domein, je netwerk of je website: ik los het op, in gewone taal. Meestal op afstand, binnen een kwartier begonnen. Moet ik langskomen? Dan kom ik langs."
+        lang={lang}
+        crumbs={[{ label: t.crumb }]}
+        title={t.hero.title}
+        lead={t.hero.lead}
         actions={
           <>
-            <Button href={tel}>Bel {telDisplay}</Button>
+            <Button href={tel}>
+              {ui.cta.call} {telDisplay}
+            </Button>
             <Button href={whatsapp} variant="ghost" target="_blank" rel="noopener noreferrer">
-              App via WhatsApp
+              {ui.cta.whatsapp}
             </Button>
           </>
         }
         aside={
           <div className="rounded-2xl border border-accent/40 bg-panel p-[clamp(22px,2.4vw,30px)] shadow-card-accent">
             <div className="flex items-baseline justify-between gap-4">
-              <span className="text-[12px] uppercase tracking-[0.14em] text-faint">Tarief</span>
-              <span className="text-[12.5px] text-faint">incl. btw</span>
+              <span className="text-[12px] uppercase tracking-[0.14em] text-faint">{t.hero.aside.rate}</span>
+              <span className="text-[12.5px] text-faint">{t.hero.aside.vat}</span>
             </div>
             <div className="mt-2 font-display text-[clamp(30px,3.2vw,40px)] font-semibold tracking-[-0.03em]">
-              {euro(h.quarter)} <span className="text-[16px] font-normal text-muted">per kwartier</span>
+              {euro(h.quarter)} <span className="text-[16px] font-normal text-muted">{t.hero.aside.perQuarter}</span>
             </div>
-            <p className="mt-3 text-[14.5px] leading-[1.55] text-muted">{h.billing} {h.travel}</p>
+            <p className="mt-3 text-[14.5px] leading-[1.55] text-muted">
+              {tarief.billing} {tarief.travel}
+            </p>
             <div className="mt-5 border-t border-line pt-5">
-              <p className="font-display text-[18px] font-semibold text-ink">{h.guarantee.line}</p>
-              <p className="mt-2 text-[13.5px] leading-[1.55] text-muted">
-                We spreken vooraf af wat het probleem is. Los ik het niet op, dan kost het je niks.
-              </p>
+              <p className="font-display text-[18px] font-semibold text-ink">{tarief.guarantee.line}</p>
+              <p className="mt-2 text-[13.5px] leading-[1.55] text-muted">{t.hero.aside.guaranteeBody}</p>
             </div>
           </div>
         }
@@ -86,33 +86,20 @@ export default function HulpPage() {
       <Section id="apk">
         <Container>
           <Reveal>
-            <SectionTitle className="mb-[54px] max-w-[720px]">Eén vaste prijs, geen verrassingen.</SectionTitle>
+            <SectionTitle className="mb-[54px] max-w-[720px]">{t.apk.title}</SectionTitle>
           </Reveal>
           <div className="grid grid-cols-1 gap-[18px] min-[901px]:grid-cols-2">
-            {[
-              {
-                title: "Computer APK",
-                price: h.apk.computer,
-                body: "Updates en opschonen, virus- en malwarescan, snelheidscheck, back-up en wachtwoorden met tweestapsverificatie gecheckt. Je krijgt een kort lijstje met wat ik gedaan heb en wat je zelf nog kunt doen. Ongeveer 45 minuten, op afstand of aan huis.",
-                href: `${cta.hulp.href}&pakket=computer-apk`,
-              },
-              {
-                title: "Website APK",
-                price: h.apk.website,
-                body: "Snelheid, mobiel, vindbaarheid, SSL, back-ups en verouderde plugins, met een kort rapport in gewone taal. Ook als ik je site niet gebouwd heb. Valt de uitslag tegen? Dan maak ik gratis een demo van hoe het wél kan.",
-                href: `${cta.hulp.href}&pakket=website-apk`,
-              },
-            ].map((a, i) => (
-              <Reveal key={a.title} delay={i * 80}>
+            {t.apk.items.map((a, i) => (
+              <Reveal key={a.id} delay={i * 80}>
                 <div className="flex h-full flex-col rounded-2xl border border-line bg-panel p-[clamp(24px,2.6vw,34px)]">
                   <div className="flex items-baseline justify-between gap-4">
                     <h3 className="font-display text-[clamp(22px,2.2vw,26px)] font-semibold tracking-[-0.02em]">{a.title}</h3>
-                    <span className="font-display text-[clamp(24px,2.4vw,30px)] font-semibold tracking-[-0.02em]">{euro(a.price)}</span>
+                    <span className="font-display text-[clamp(24px,2.4vw,30px)] font-semibold tracking-[-0.02em]">{euro(apkPrijs[a.id as keyof typeof apkPrijs])}</span>
                   </div>
                   <p className="mt-3 text-[15px] leading-[1.6] text-muted">{a.body}</p>
                   <div className="mt-auto pt-6">
-                    <Button href={a.href} variant="ghost">
-                      Plan een {a.title}
+                    <Button href={`${ui.cta.hulp.href}&pakket=${a.id}`} variant="ghost">
+                      {t.apk.plan(a.title)}
                     </Button>
                   </div>
                 </div>
@@ -120,9 +107,7 @@ export default function HulpPage() {
             ))}
           </div>
           <Reveal>
-            <p className="mt-6 text-[14px] text-faint">
-              Vaker hulp nodig? Strippenkaart: {h.card.quarters} kwartier voor {euro(h.card.price)}, {h.card.validity}.
-            </p>
+            <p className="mt-6 text-[14px] text-faint">{t.apk.card(h.card.quarters, euro(h.card.price), tarief.cardValidity)}</p>
           </Reveal>
         </Container>
       </Section>
@@ -130,12 +115,12 @@ export default function HulpPage() {
       <Section id="waar-ik-bij-help" variant="base">
         <Container>
           <Reveal>
-            <Eyebrow>Waar ik bij help</Eyebrow>
-            <SectionTitle className="mb-[54px] max-w-[720px]">Van mailbox tot kantoornetwerk.</SectionTitle>
+            <Eyebrow>{t.help.eyebrow}</Eyebrow>
+            <SectionTitle className="mb-[54px] max-w-[720px]">{t.help.title}</SectionTitle>
           </Reveal>
           {/* Zelfde vorm als "Zo werk ik" op de homepage: punt, kop, één regel. Geen kaders voor een opsomming. */}
           <div className="grid grid-cols-1 gap-x-[clamp(24px,4vw,48px)] gap-y-8 min-[561px]:grid-cols-2">
-            {hulpHelp.map((x, i) => (
+            {services.hulpHelp.map((x, i) => (
               <Reveal key={x.title} delay={(i % 2) * 60} className="flex items-start gap-[14px]">
                 <span className="mt-2 h-[9px] w-[9px] flex-none rounded-full bg-accent shadow-dot" aria-hidden />
                 <div>
@@ -148,14 +133,11 @@ export default function HulpPage() {
           <Reveal>
             <div className="mt-12 grid grid-cols-1 gap-8 rounded-2xl border border-line p-[clamp(22px,2.6vw,34px)] min-[901px]:grid-cols-[0.8fr_1.2fr]">
               <div>
-                <h3 className="font-display text-[20px] font-semibold tracking-[-0.01em]">Wat ik niet doe</h3>
-                <p className="mt-2 text-[14.5px] leading-[1.55] text-muted">
-                  Daar verwijs ik je door naar iemand die dat wél goed doet. Twijfel je of iets erbij hoort? App even, dan
-                  zeg ik eerlijk of ik het kan.
-                </p>
+                <h3 className="font-display text-[20px] font-semibold tracking-[-0.01em]">{t.help.notTitle}</h3>
+                <p className="mt-2 text-[14.5px] leading-[1.55] text-muted">{t.help.notBody}</p>
               </div>
               <ul className="grid grid-cols-1 gap-2.5 self-center text-[14.5px] text-muted min-[561px]:grid-cols-2">
-                {hulpNiet.map((x) => (
+                {services.hulpNiet.map((x) => (
                   <li key={x} className="flex items-start gap-3">
                     <span className="mt-[8px] h-[6px] w-[6px] flex-none rounded-full border border-line" aria-hidden />
                     {x}
@@ -170,9 +152,9 @@ export default function HulpPage() {
       <Section id="hoe-het-werkt">
         <Container>
           <Reveal>
-            <SectionTitle className="mb-14 max-w-[720px]">Bellen, meekijken, opgelost.</SectionTitle>
+            <SectionTitle className="mb-14 max-w-[720px]">{t.how.title}</SectionTitle>
             <div className="grid grid-cols-1 gap-[clamp(24px,4vw,56px)] min-[901px]:grid-cols-3">
-              {hulpStappen.map((s) => (
+              {services.hulpStappen.map((s) => (
                 <div key={s.n}>
                   <div className="mb-[18px] flex items-center gap-[14px]">
                     <span className="h-[11px] w-[11px] rounded-full bg-accent shadow-dot" aria-hidden />
@@ -184,8 +166,9 @@ export default function HulpPage() {
               ))}
             </div>
             <p className="mt-14 max-w-[60ch] text-[15px] leading-[1.65] text-muted">
-              <span className="text-ink">Ook thuis vastgelopen?</span> Ik help ook particulieren in de Hoeksche Waard,
-              tegen hetzelfde tarief: {euro(h.quarter)} per kwartier, incl. btw.
+              <span className="text-ink">{t.how.homeLead}</span>
+              {" "}
+              {t.how.homeBody(euro(h.quarter))}
             </p>
           </Reveal>
         </Container>
@@ -195,23 +178,17 @@ export default function HulpPage() {
         <Container>
           <Reveal className="grid grid-cols-1 gap-12 min-[901px]:grid-cols-[0.8fr_1.2fr]">
             <div>
-              <Eyebrow>Veelgestelde vragen</Eyebrow>
-              <SectionTitle className="max-w-[12ch]">Wat mensen me vaak vragen.</SectionTitle>
+              <Eyebrow>{ui.faq.eyebrow}</Eyebrow>
+              <SectionTitle className="max-w-[12ch]">{ui.faq.title}</SectionTitle>
             </div>
-            <FaqList items={hulpFaq} />
+            <FaqList items={services.hulpFaq} />
           </Reveal>
         </Container>
       </Section>
 
-      <CtaBand
-        lang="nl"
-        title="Zit je nu vast?"
-        body="Bel of app, dan kijk ik direct mee. Liever eerst een bericht? Vertel kort wat er speelt."
-        label={cta.hulp.label}
-        href={cta.hulp.href}
-      />
-      <StickyCallBar afterId="apk" untilId="cta" labels={{ aria: "Direct contact", call: "Bel", whatsapp: "WhatsApp" }} />
-      <WhatsAppFab afterId="apk" untilId="cta" className="max-[900px]:hidden" label="Heb je een vraag?" aria="Heb je een vraag? Stuur een WhatsApp" />
+      <CtaBand lang={lang} title={t.ctaBand.title} body={t.ctaBand.body} label={ui.cta.hulp.label} href={ui.cta.hulp.href} />
+      <StickyCallBar afterId="apk" untilId="cta" labels={ui.stickyBar} />
+      <WhatsAppFab afterId="apk" untilId="cta" className="max-[900px]:hidden" label={ui.fab.label} aria={ui.fab.aria} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
     </main>
   );
