@@ -46,6 +46,7 @@ export const pages = {
       chips: {
         mobile: "Mobielvriendelijk",
         fast: "Snelle laadtijd",
+        seo: "SEO-klaar",
         structure: "Duidelijke structuur",
         modern: "Moderne uitstraling",
         selfManaged: "Zelf te beheren",
@@ -58,9 +59,7 @@ export const pages = {
     werk: {
       eyebrow: "Werk",
       teaserTitle: "Bedrijven die je al voorgingen.",
-      allTitle: "Voorbeelden van mijn werk.",
       all: "Al mijn werk",
-      intro: "Geen sjablonen, geen stockfoto's. Sites die ik gebouwd heb voor bedrijven in de regio, en voor mezelf.",
     },
     contact: {
       eyebrow: "Contact",

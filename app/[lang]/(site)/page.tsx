@@ -24,7 +24,7 @@ export default async function Home({ params }: LangParams) {
       <main id="main" className="hd-after-hero relative z-[2] bg-deep">
         <Pijlers lang={lang} />
         <ZoWerkIk lang={lang} />
-        <Werk lang={lang} teaser />
+        <Werk lang={lang} />
         <Over lang={lang} />
         <Contact lang={lang} />
       </main>

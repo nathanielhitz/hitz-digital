@@ -1419,6 +1419,7 @@ export const pages = {
       chips: {
         mobile: "Mobielvriendelijk",
         fast: "Snelle laadtijd",
+        seo: "SEO-klaar",
         structure: "Duidelijke structuur",
         modern: "Moderne uitstraling",
         selfManaged: "Zelf te beheren",
@@ -1431,9 +1432,7 @@ export const pages = {
     werk: {
       eyebrow: "Werk",
       teaserTitle: "Bedrijven die je al voorgingen.",
-      allTitle: "Voorbeelden van mijn werk.",
       all: "Al mijn werk",
-      intro: "Geen sjablonen, geen stockfoto's. Sites die ik gebouwd heb voor bedrijven in de regio, en voor mezelf.",
     },
     contact: {
       eyebrow: "Contact",
@@ -2010,46 +2009,55 @@ export function pageMetadata(lang: Lang, key: RouteKey, t: Texts, opts: Opts = {
 
 - [ ] **Step 2: Kort de metadata in `app/[lang]/layout.tsx` in**
 
-Verwijder de constanten `title` en `description` en vervang het `metadata`-blok door:
+Verwijder de constanten `title` en `description`, voeg `import { getDict } from "@/lib/i18n";` toe en vervang het `metadata`-blok door een `generateMetadata`:
 
 ```tsx
-export const metadata: Metadata = {
-  metadataBase: new URL(site.url),
-  openGraph: { siteName: site.name, type: "website" },
-  twitter: { card: "summary_large_image" },
-};
+/** Standaardtitel op layout-niveau: de 404 (notFound()) krijgt geen page-metadata, dus zonder deze default
+    rendert /bestaat-niet zonder <title>. Template "%s" laat de titel van elke pagina ongewijzigd door. */
+export async function generateMetadata({ params }: LangParams): Promise<Metadata> {
+  const lang = langOf((await params).lang);
+  return {
+    metadataBase: new URL(site.url),
+    title: { default: getDict(lang).pages.home.meta.title, template: "%s" },
+    openGraph: { siteName: site.name, type: "website" },
+    twitter: { card: "summary_large_image" },
+  };
+}
 ```
+
+De `title.default` hoort hier en niet in `app/[lang]/[...rest]/page.tsx`: Next voert de `generateMetadata` van een page niet uit wanneer die `notFound()` gooit (de not-found-boundary vervangt het hele segment), waardoor de 404 anders zonder `<title>` rendert. `robots: noindex` zet Next zelf al op de 404.
 
 - [ ] **Step 3: Hero-copy als parameter in `components/hero/HeroExperience.tsx`**
 
-Voeg boven `HERO_HTML` toe:
+Voeg boven `HERO_HTML` toe (het type is afgeleid van het woordenboek, zodat het niet met de hand hoeft mee te bewegen; `import type` verdwijnt bij de build, dus de client-bundle groeit er niet van):
 
 ```tsx
-export type HeroCopy = {
-  h1: { pre: string; accent: string; post: string };
-  sub: string;
-  primary: string;
-  secondary: string;
-  chips: { mobile: string; fast: string; structure: string; modern: string; selfManaged: string; friendly: string; professional: string };
-};
+import type { Dict } from "@/lib/i18n";
+
+/** Teksten in de hero; de mock-site op het laptopscherm is klantcontent en blijft ongewijzigd. */
+export type HeroCopy = Dict["pages"]["home"]["hero"];
+
+// Woordenboekteksten zijn platte tekst; `<`, `&` en `"` mogen de template niet breken.
+const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 ```
 
-Maak van `const HERO_HTML = \`…\`;` een functie: `function heroHtml(c: HeroCopy, contactHref: string): string { return \`…\`; }` en vervang in de template **precies** deze stukken:
+Maak van `const HERO_HTML = \`…\`;` een functie: `function heroHtml(c: HeroCopy, contactHref: string): string { return \`…\`; }` en vervang in de template **precies** deze stukken (elke interpolatie loopt door `esc()`; de huidige teksten bevatten geen `<`, `&` of `"`, dus de HTML blijft gelijk):
 
 | Was | Wordt |
 |---|---|
-| `<span style="font-weight:300">Alles rond je </span><em class="hd-accent-word" …>website</em><span style="font-weight:300">. Eén aanspreekpunt.</span>` | `<span style="font-weight:300">${c.h1.pre}</span><em class="hd-accent-word" …>${c.h1.accent}</em><span style="font-weight:300">${c.h1.post}</span>` |
-| `…margin-bottom:36px">Websites, hosting en computerhulp … Eén persoon, korte lijnen.</p>` | `…margin-bottom:36px">${c.sub}</p>` |
-| `…transition:transform .25s,box-shadow .25s,filter .25s">Bekijk wat ik doe` | `…transition:transform .25s,box-shadow .25s,filter .25s">${c.primary}` |
-| `<a href="/contact" class="hd-btn-ghost"` | `<a href="${contactHref}" class="hd-btn-ghost"` |
-| `…transform .25s">Neem contact op</a>` | `…transform .25s">${c.secondary}</a>` |
-| `Mobielvriendelijk` (2×) | `${c.chips.mobile}` |
-| `Snelle laadtijd` | `${c.chips.fast}` |
-| `Duidelijke structuur` (2×) | `${c.chips.structure}` |
-| `Moderne uitstraling` | `${c.chips.modern}` |
-| `Zelf te beheren` | `${c.chips.selfManaged}` |
-| `Gebruiksvriendelijk` (2×) | `${c.chips.friendly}` |
-| `Professionele indruk` | `${c.chips.professional}` |
+| `<span style="font-weight:300">Alles rond je </span><em class="hd-accent-word" …>website</em><span style="font-weight:300">. Eén aanspreekpunt.</span>` | `<span style="font-weight:300">${esc(c.h1.pre)}</span><em class="hd-accent-word" …>${esc(c.h1.accent)}</em><span style="font-weight:300">${esc(c.h1.post)}</span>` |
+| `…margin-bottom:36px">Websites, hosting en computerhulp … Eén persoon, korte lijnen.</p>` | `…margin-bottom:36px">${esc(c.sub)}</p>` |
+| `…transition:transform .25s,box-shadow .25s,filter .25s">Bekijk wat ik doe` | `…transition:transform .25s,box-shadow .25s,filter .25s">${esc(c.primary)}` |
+| `<a href="/contact" class="hd-btn-ghost"` | `<a href="${esc(contactHref)}" class="hd-btn-ghost"` |
+| `…transform .25s">Neem contact op</a>` | `…transform .25s">${esc(c.secondary)}</a>` |
+| `Mobielvriendelijk` (2×) | `${esc(c.chips.mobile)}` |
+| `Snelle laadtijd` | `${esc(c.chips.fast)}` |
+| `SEO-klaar` (2×) | `${esc(c.chips.seo)}` |
+| `Duidelijke structuur` (2×) | `${esc(c.chips.structure)}` |
+| `Moderne uitstraling` | `${esc(c.chips.modern)}` |
+| `Zelf te beheren` | `${esc(c.chips.selfManaged)}` |
+| `Gebruiksvriendelijk` (2×) | `${esc(c.chips.friendly)}` |
+| `Professionele indruk` | `${esc(c.chips.professional)}` |
 
 De mock-site op het laptopscherm (`Diensten`, `Werk`, `Contact`, `Bel direct`, `Offerte aanvragen`, `Bekijk diensten`, `Verspaning zonder stilstand.`) blijft ongewijzigd: dat is klantcontent van een Nederlandse klant en in beide talen realistisch.
 
@@ -2058,15 +2066,17 @@ Vervang de component:
 ```tsx
 export function HeroExperience({ copy, contactHref }: { copy: HeroCopy; contactHref: string }) {
   const rootRef = useRef<HTMLDivElement>(null);
+  const html = heroHtml(copy, contactHref);
+  // Opnieuw initialiseren zodra de HTML wisselt (andere taal): initHero houdt anders verwijzingen naar weggegooide nodes.
   useEffect(() => {
     if (!rootRef.current) return;
     return initHero(rootRef.current);
-  }, []);
-  return <div ref={rootRef} className="relative w-full" dangerouslySetInnerHTML={{ __html: heroHtml(copy, contactHref) }} />;
+  }, [html]);
+  return <div ref={rootRef} className="relative w-full" dangerouslySetInnerHTML={{ __html: html }} />;
 }
 ```
 
-Controle: `grep -c "Mobielvriendelijk\|Snelle laadtijd\|Neem contact op\|Bekijk wat ik doe" components/hero/HeroExperience.tsx` geeft `0`.
+Controle: `grep -c "Mobielvriendelijk\|Snelle laadtijd\|SEO-klaar\|Neem contact op\|Bekijk wat ik doe" components/hero/HeroExperience.tsx` geeft `0`, en `grep -rl "Eén aanspreekpunt" .next/static | wc -l` geeft na de build `0` (het woordenboek blijft uit de client-bundle).
 
 - [ ] **Step 4: Secties krijgen `lang`**
 
@@ -2129,34 +2139,30 @@ import { getDict } from "@/lib/i18n";
 import { href, type Lang } from "@/lib/i18n/paths";
 import { work } from "@/lib/work";
 
-/** Homepage: teaser met de klanten + link naar /werk. Elders: volledige grid. */
-export function Werk({ lang, teaser = false }: { lang: Lang; teaser?: boolean }) {
+/** Homepage-teaser: de klanten + link naar /werk. De volledige grid staat op /werk zelf. */
+export function Werk({ lang }: { lang: Lang }) {
   const t = getDict(lang).pages.home.werk;
-  const list = teaser ? work.filter((w) => w.client) : work;
+  const list = work.filter((w) => w.client);
   return (
-    <Section id="werk" padding={teaser ? "large" : "default"}>
+    <Section id="werk" padding="large">
       <Container>
         <Reveal>
           <div className="mb-[54px] flex flex-wrap items-end justify-between gap-5">
             <div>
               <Eyebrow>{t.eyebrow}</Eyebrow>
-              <SectionTitle className="max-w-[620px]">{teaser ? t.teaserTitle : t.allTitle}</SectionTitle>
+              <SectionTitle className="max-w-[620px]">{t.teaserTitle}</SectionTitle>
             </div>
-            {teaser ? (
-              <a
-                href={href(lang, "werk")}
-                className="inline-flex items-center gap-2 py-1 text-[15px] font-medium text-ink underline-offset-4 hover:underline"
-              >
-                {t.all} <ArrowRight size={16} weight="bold" aria-hidden />
-              </a>
-            ) : (
-              <p className="max-w-[380px] text-[15px] leading-[1.6] text-muted">{t.intro}</p>
-            )}
+            <a
+              href={href(lang, "werk")}
+              className="inline-flex items-center gap-2 py-1 text-[15px] font-medium text-ink underline-offset-4 hover:underline"
+            >
+              {t.all} <ArrowRight size={16} weight="bold" aria-hidden />
+            </a>
           </div>
           <div className="grid grid-cols-1 gap-[22px] min-[561px]:grid-cols-2 min-[901px]:grid-cols-3">
             {list.map((item, i) => (
               // Teaser op één kolom: twee tegels, de derde staat achter "Al mijn werk".
-              <WerkCard key={item.slug} item={item} className={teaser && i >= 2 ? "max-[560px]:hidden" : undefined} />
+              <WerkCard key={item.slug} item={item} className={i >= 2 ? "max-[560px]:hidden" : undefined} />
             ))}
           </div>
         </Reveal>
@@ -2165,7 +2171,7 @@ export function Werk({ lang, teaser = false }: { lang: Lang; teaser?: boolean })
   );
 }
 ```
-(`WerkCard` krijgt zijn `lang` in Task 12; tot dan blijft de huidige `WerkCard` werken met `item.meta`/`item.alt`.)
+(Geen `teaser`-prop: `/werk` rendert zijn eigen grid, dus de niet-teaser-tak was onbereikbaar. `WerkCard` krijgt zijn `lang` in Task 12; tot dan blijft de huidige `WerkCard` werken met `item.meta`/`item.alt`.)
 
 `components/sections/Contact.tsx`: signatuur `export async function Contact({ lang }: { lang: Lang })`, `const t = getDict(lang).pages.home.contact;`, vervang `Contact` (eyebrow) → `{t.eyebrow}`, `Waar kan ik je mee helpen?` → `{t.title}`, de lead-alinea → `{t.lead}`, `Liever direct?{" "}` → `{t.direct}{" "}`, `Bel {telDisplay}` → `{getDict(lang).ui.cta.call} {telDisplay}`, `Bij een storing of spoed: bel.` → `{t.urgent}`. `AanvraagForm` blijft tot Task 13 ongewijzigd.
 
@@ -2198,7 +2204,7 @@ export default async function Home({ params }: LangParams) {
       <main id="main" className="hd-after-hero relative z-[2] bg-deep">
         <Pijlers lang={lang} />
         <ZoWerkIk lang={lang} />
-        <Werk lang={lang} teaser />
+        <Werk lang={lang} />
         <Over lang={lang} />
         <Contact lang={lang} />
       </main>
@@ -2372,10 +2378,10 @@ export function WerkCard({ item, lang, text, labels, className }: { item: WorkIt
 
 - [ ] **Step 4: `components/sections/Werk.tsx`: geef tekst en labels door**
 
-Vervang `const t = getDict(lang).pages.home.werk;` door:
+Vervang `const t = getDict(lang).pages.home.werk;` door (alias `texts`, zodat hij de `w` van de `filter`-callback niet overschaduwt):
 
 ```tsx
-  const { pages, ui, work: w } = getDict(lang);
+  const { pages, ui, work: texts } = getDict(lang);
   const t = pages.home.werk;
 ```
 en de kaart door:
@@ -2385,9 +2391,9 @@ en de kaart door:
                 key={item.slug}
                 item={item}
                 lang={lang}
-                text={w.items[item.slug]}
+                text={texts.items[item.slug]}
                 labels={ui.workCard}
-                className={teaser && i >= 2 ? "max-[560px]:hidden" : undefined}
+                className={i >= 2 ? "max-[560px]:hidden" : undefined}
               />
 ```
 
@@ -4567,6 +4573,7 @@ const homeH1 = { pre: "Everything around your ", accent: "website", post: ". One
       chips: {
         mobile: "Mobile-friendly",
         fast: "Fast loading",
+        seo: "SEO-ready",
         structure: "Clear structure",
         modern: "Modern look",
         selfManaged: "Easy to manage yourself",
@@ -4579,9 +4586,7 @@ const homeH1 = { pre: "Everything around your ", accent: "website", post: ". One
     werk: {
       eyebrow: "Work",
       teaserTitle: "Businesses that went before you.",
-      allTitle: "Examples of my work.",
       all: "All my work",
-      intro: "No templates, no stock photos. Sites I built for real businesses, and for myself.",
     },
     contact: {
       eyebrow: "Contact",

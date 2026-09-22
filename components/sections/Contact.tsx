@@ -10,7 +10,8 @@ import { getDict } from "@/lib/i18n";
 import type { Lang } from "@/lib/i18n/paths";
 
 export async function Contact({ lang }: { lang: Lang }) {
-  const t = getDict(lang).pages.home.contact;
+  const { pages, ui } = getDict(lang);
+  const t = pages.home.contact;
   const sendable = await canSend();
   return (
     <Section id="contact" padding="large" className="overflow-hidden">
@@ -37,7 +38,7 @@ export async function Contact({ lang }: { lang: Lang }) {
             </a>{" "}
             ·{" "}
             <a href={tel} className="inline-block py-0.5 text-muted underline">
-              {getDict(lang).ui.cta.call} {telDisplay}
+              {ui.cta.call} {telDisplay}
             </a>
             <br />
             {t.urgent}

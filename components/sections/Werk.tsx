@@ -9,30 +9,26 @@ import { getDict } from "@/lib/i18n";
 import { href, type Lang } from "@/lib/i18n/paths";
 import { work } from "@/lib/work";
 
-/** Homepage: teaser met de klanten + link naar /werk. Elders: volledige grid. */
-export function Werk({ lang, teaser = false }: { lang: Lang; teaser?: boolean }) {
-  const { pages, ui, work: w } = getDict(lang);
+/** Homepage-teaser: de klanten + link naar /werk. De volledige grid staat op /werk zelf. */
+export function Werk({ lang }: { lang: Lang }) {
+  const { pages, ui, work: texts } = getDict(lang);
   const t = pages.home.werk;
-  const list = teaser ? work.filter((w) => w.client) : work;
+  const list = work.filter((w) => w.client);
   return (
-    <Section id="werk" padding={teaser ? "large" : "default"}>
+    <Section id="werk" padding="large">
       <Container>
         <Reveal>
           <div className="mb-[54px] flex flex-wrap items-end justify-between gap-5">
             <div>
               <Eyebrow>{t.eyebrow}</Eyebrow>
-              <SectionTitle className="max-w-[620px]">{teaser ? t.teaserTitle : t.allTitle}</SectionTitle>
+              <SectionTitle className="max-w-[620px]">{t.teaserTitle}</SectionTitle>
             </div>
-            {teaser ? (
-              <a
-                href={href(lang, "werk")}
-                className="inline-flex items-center gap-2 py-1 text-[15px] font-medium text-ink underline-offset-4 hover:underline"
-              >
-                {t.all} <ArrowRight size={16} weight="bold" aria-hidden />
-              </a>
-            ) : (
-              <p className="max-w-[380px] text-[15px] leading-[1.6] text-muted">{t.intro}</p>
-            )}
+            <a
+              href={href(lang, "werk")}
+              className="inline-flex items-center gap-2 py-1 text-[15px] font-medium text-ink underline-offset-4 hover:underline"
+            >
+              {t.all} <ArrowRight size={16} weight="bold" aria-hidden />
+            </a>
           </div>
           <div className="grid grid-cols-1 gap-[22px] min-[561px]:grid-cols-2 min-[901px]:grid-cols-3">
             {list.map((item, i) => (
@@ -41,9 +37,9 @@ export function Werk({ lang, teaser = false }: { lang: Lang; teaser?: boolean })
                 key={item.slug}
                 item={item}
                 lang={lang}
-                text={w.items[item.slug]}
+                text={texts.items[item.slug]}
                 labels={ui.workCard}
-                className={teaser && i >= 2 ? "max-[560px]:hidden" : undefined}
+                className={i >= 2 ? "max-[560px]:hidden" : undefined}
               />
             ))}
           </div>

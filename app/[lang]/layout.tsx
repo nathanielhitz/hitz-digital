@@ -5,6 +5,7 @@ import { ThemeProvider } from "next-themes";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { site, professionalServiceSchema, websiteSchema, faqPageSchema } from "@/lib/site";
+import { getDict } from "@/lib/i18n";
 import { locales, langOf, type LangParams } from "@/lib/i18n/paths";
 import "../globals.css";
 
@@ -35,11 +36,17 @@ export function generateStaticParams() {
     Zonder dit zou een pad dat de middleware overslaat (bijv. /wp-login.php) als `lang` binnenkomen en de homepage opleveren. */
 export const dynamicParams = false;
 
-export const metadata: Metadata = {
-  metadataBase: new URL(site.url),
-  openGraph: { siteName: site.name, type: "website" },
-  twitter: { card: "summary_large_image" },
-};
+/** Standaardtitel op layout-niveau: de 404 (notFound()) krijgt geen page-metadata, dus zonder deze default
+    rendert /bestaat-niet zonder <title>. Template "%s" laat de titel van elke pagina ongewijzigd door. */
+export async function generateMetadata({ params }: LangParams): Promise<Metadata> {
+  const lang = langOf((await params).lang);
+  return {
+    metadataBase: new URL(site.url),
+    title: { default: getDict(lang).pages.home.meta.title, template: "%s" },
+    openGraph: { siteName: site.name, type: "website" },
+    twitter: { card: "summary_large_image" },
+  };
+}
 
 export default async function LangLayout({ children, params }: Readonly<{ children: React.ReactNode }> & LangParams) {
   const lang = langOf((await params).lang);
