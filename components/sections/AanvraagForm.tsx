@@ -60,7 +60,9 @@ export function AanvraagForm({ lang, t, initial = "website", canSend = false }: 
   const [errors, setErrors] = useState<Errors>({});
   const formRef = useRef<HTMLFormElement>(null);
   const packageInterest = t.packageInterest;
-  const packageNames = t.packageNames;
+  // Pakketnamen via een ref: het object is elke render nieuw en hoort niet in de deps.
+  const namesRef = useRef(t.packageNames);
+  namesRef.current = t.packageNames;
 
   useEffect(() => {
     setOpened(Date.now());
@@ -70,14 +72,17 @@ export function AanvraagForm({ lang, t, initial = "website", canSend = false }: 
       if (isAanvraagKeuze(v)) setVoor(v);
       const pk = raw.match(/[?&]pakket=([a-z-]+)/)?.[1];
       if (pk) {
-        const naam = packageNames[pk as keyof typeof packageNames] ?? `${pk.charAt(0).toUpperCase()}${pk.slice(1)}`;
+        const names = namesRef.current;
+        const naam = Object.hasOwn(names, pk)
+          ? names[pk as keyof typeof names]
+          : `${pk.charAt(0).toUpperCase()}${pk.slice(1)}`;
         setBericht((cur) => cur || packageInterest.replace("{pakket}", naam));
       }
     };
     apply();
     window.addEventListener("hashchange", apply);
     return () => window.removeEventListener("hashchange", apply);
-  }, [packageInterest, packageNames]);
+  }, [packageInterest]);
 
   const keuze = t.choices[voor];
 

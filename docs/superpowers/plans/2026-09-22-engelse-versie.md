@@ -705,6 +705,7 @@ export const ui = {
   workCard: { viewCase: "Bekijk de case", tags: { demo: "Demo", eigen: "Eigen project" } },
   plan: { mostChosen: "Meest gekozen", perMonthShort: "/mnd", choose: (name: string) => `Kies ${name}` },
   faq: { eyebrow: "Veelgestelde vragen", title: "Wat mensen me vaak vragen." },
+  voorNa: { before: "Voor", after: "Na", aria: "Vergelijk voor en na" },
 };
 
 export type UiDict = typeof ui;
@@ -2584,7 +2585,7 @@ export default async function CasePage({ params }: SlugParams) {
                 <p className="mt-6 max-w-[46ch] text-[16px] leading-[1.65] text-muted">{t.voorNa.lead}</p>
               </div>
               <div className="mx-auto w-full max-w-[420px] overflow-hidden rounded-[22px] border border-line shadow-card">
-                <BeforeAfterSlider beforeSrc={c.voorNa.voor} afterSrc={c.voorNa.na} beforeAlt={copy.voorNaAlt.voor} afterAlt={copy.voorNaAlt.na} className="aspect-[3/4]" />
+                <BeforeAfterSlider beforeSrc={c.voorNa.voor} afterSrc={c.voorNa.na} beforeAlt={copy.voorNaAlt.voor} afterAlt={copy.voorNaAlt.na} labels={ui.voorNa} className="aspect-[3/4]" />
               </div>
             </Reveal>
           </Container>
@@ -2786,7 +2787,7 @@ export default async function WebsitesPage({ params }: LangParams) {
                 </a>
               </div>
               <div className="mx-auto w-full max-w-[420px] overflow-hidden rounded-[22px] border border-line shadow-card">
-                <BeforeAfterSlider beforeSrc={voorNa.voorNa.voor} afterSrc={voorNa.voorNa.na} beforeAlt={voorNaCopy.voorNaAlt.voor} afterAlt={voorNaCopy.voorNaAlt.na} className="aspect-[3/4]" />
+                <BeforeAfterSlider beforeSrc={voorNa.voorNa.voor} afterSrc={voorNa.voorNa.na} beforeAlt={voorNaCopy.voorNaAlt.voor} afterAlt={voorNaCopy.voorNaAlt.na} labels={ui.voorNa} className="aspect-[3/4]" />
               </div>
             </Reveal>
           </Container>
@@ -3384,7 +3385,9 @@ export function AanvraagForm({ lang, t, initial = "website", canSend = false }: 
   const [errors, setErrors] = useState<Errors>({});
   const formRef = useRef<HTMLFormElement>(null);
   const packageInterest = t.packageInterest;
-  const packageNames = t.packageNames;
+  // Pakketnamen via een ref: het object is elke render nieuw en hoort niet in de deps.
+  const namesRef = useRef(t.packageNames);
+  namesRef.current = t.packageNames;
 
   useEffect(() => {
     setOpened(Date.now());
@@ -3394,14 +3397,17 @@ export function AanvraagForm({ lang, t, initial = "website", canSend = false }: 
       if (isAanvraagKeuze(v)) setVoor(v);
       const pk = raw.match(/[?&]pakket=([a-z-]+)/)?.[1];
       if (pk) {
-        const naam = packageNames[pk as keyof typeof packageNames] ?? `${pk.charAt(0).toUpperCase()}${pk.slice(1)}`;
+        const names = namesRef.current;
+        const naam = Object.hasOwn(names, pk)
+          ? names[pk as keyof typeof names]
+          : `${pk.charAt(0).toUpperCase()}${pk.slice(1)}`;
         setBericht((cur) => cur || packageInterest.replace("{pakket}", naam));
       }
     };
     apply();
     window.addEventListener("hashchange", apply);
     return () => window.removeEventListener("hashchange", apply);
-  }, [packageInterest, packageNames]);
+  }, [packageInterest]);
 
   const keuze = t.choices[voor];
 
@@ -4233,7 +4239,7 @@ Meld Nathaniel: build groen, unit + e2e groen, screenshots identiek aan `main`, 
 
 # Fase 2 — Engelse woordenboeken en copy
 
-Vormafspraken uit de review van Task 6/7: bedragen altijd via `pricing`/`euro`, accentkoppen één keer als `{ pre, accent, post }` met `star()`/`accented()`, technische ids met `as const`, geen scheidingstekens of voorloopspaties in strings, `nav.cta` afgeleid van `cta`, geen `kicker`.
+Vormafspraken uit de review van Task 6/7: bedragen altijd via `pricing`/`euro`, accentkoppen één keer als `{ pre, accent, post }` met `star()`/`accented()`, technische ids met `as const`, geen scheidingstekens of voorloopspaties in strings, `nav.cta` afgeleid van `cta`, geen `kicker`, `guaranteeLine` één keer per taal.
 
 Doel: na Task 27 bestaat de complete Engelse site onder `/en/…`, door Nathaniel per pagina nagelezen. Nog zonder taalschakelaar en zonder automatische detectie (fase 3).
 
@@ -4329,9 +4335,9 @@ import { isLive, parsePublic, internalPath, redirectForEn } from "@/lib/i18n/pat
       url.pathname = target;
       return NextResponse.redirect(url, 301);
     }
-    // Regel 6: publieke EN-slug → interne route. Onbekend pad blijft staan; de catch-all geeft een Engelse 404.
+    // Regel 6: publieke EN-slug → interne route. Onbekend pad blijft staan; de catch-all geeft een 404; NotFoundView kiest client-side Engels.
     const parsed = parsePublic(pathname);
-    return rewrite(req, parsed ? internalPath(parsed) : pathname);
+    return parsed ? rewrite(req, internalPath(parsed)) : NextResponse.next();
   }
 ```
 
@@ -4361,8 +4367,12 @@ test("interne slug onder /en → 301 naar de Engelse slug", async () => {
 });
 
 test("support bestaat alleen in NL: /en/support → 301 /support", async () => {
-  assert.equal(location(await get("/en/support")), "/support");
-  assert.equal(location(await get("/en/support/e-mail-instellingen")), "/support/e-mail-instellingen");
+  const root = await get("/en/support");
+  assert.equal(root.status, 301);
+  assert.equal(location(root), "/support");
+  const deep = await get("/en/support/e-mail-instellingen");
+  assert.equal(deep.status, 301);
+  assert.equal(location(deep), "/support/e-mail-instellingen");
 });
 
 test("onbekend EN-pad en onbekende taal geven 404", async () => {
@@ -4546,6 +4556,7 @@ export const ui: UiDict = {
   workCard: { viewCase: "View the case", tags: { demo: "Demo", eigen: "Own project" } },
   plan: { mostChosen: "Most popular", perMonthShort: "/mo", choose: (name: string) => `Choose ${name}` },
   faq: { eyebrow: "Frequently asked", title: "Questions I often get." },
+  voorNa: { before: "Before", after: "After", aria: "Compare before and after" },
 };
 ```
 
@@ -4645,7 +4656,7 @@ const homeH1 = { pre: "Everything around your ", accent: "website", post: ". One
       n: "03",
       title: "Help",
       body: "Computer, email, domain or website: I fix it and explain it. Usually remote, via screen sharing, wherever you are.",
-      price: `${euro(pricing.hulp.quarter)} per quarter hour · No fix, no fee.`,
+      price: `${euro(pricing.hulp.quarter)} per quarter hour · ${guaranteeLine}`,
       href: href(L, "hulp"),
     },
   ],
@@ -4956,12 +4967,12 @@ const hulpH1 = { pre: "Stuck? I'll take a look ", accent: "right away", post: ".
   hulp: {
     meta: {
       title: "Computer and website help, remote or on-site | HitzDigital",
-      description: `Stuck? I'll take a look right away. Help with your computer, email, domain, network or website: remote via screen sharing wherever you are, on-site in the Hoeksche Waard area. ${quarter} per quarter hour incl. VAT. No fix, no fee.`,
+      description: `Stuck? I'll take a look right away. Help with your computer, email, domain, network or website: remote via screen sharing wherever you are, on-site in the Hoeksche Waard area. ${quarter} per quarter hour incl. VAT. No fix? No fee.`,
     },
     og: {
       title: star(hulpH1),
       kicker: "Computer and website help",
-      sub: `${quarter} per quarter hour incl. VAT. Remote wherever you are, on-site in the Hoeksche Waard. No fix, no fee.`,
+      sub: `${quarter} per quarter hour incl. VAT. Remote wherever you are, on-site in the Hoeksche Waard. No fix? No fee.`,
     },
     crumb: "Help",
     hero: {
@@ -5015,6 +5026,8 @@ const hulpH1 = { pre: "Stuck? I'll take a look ", accent: "right away", post: ".
 
 - [ ] **Step 2: Hulp-blokken in `lib/i18n/en/services.ts`**
 
+Vertaal bovenin ook de const: `const guaranteeLine = "No fix? No fee.";`. Die staat al in `pijlers[2].price` (`${euro(pricing.hulp.quarter)} per quarter hour · ${guaranteeLine}`), zodat de zin één keer per taal bestaat.
+
 ```ts
   hulpHelp: [
     { title: "Email, domain and hosting", body: "Setting up business email, switching providers, DNS, an expired domain." },
@@ -5043,7 +5056,7 @@ const hulpH1 = { pre: "Stuck? I'll take a look ", accent: "right away", post: ".
     { q: "How does remote help work?", a: "You open a link I send you, and I see your screen while we talk. You stay in control and can end it at any time. Nothing is left behind on your computer." },
     { q: "What if it doesn't work out?", a: "Then you pay nothing for that help. We agree upfront what the problem is; if I don't fix it, it costs you nothing. That doesn't apply to the check-ups, explanations and advice, or when the cause is beyond my reach and I've told you so." },
     { q: "Do you also help with my phone or tablet?", a: "Yes. Setting up email, transferring photos, setting up a new phone, tidying up and securing it: it's all part of it." },
-    { q: "Do you help private individuals too?", a: "Yes, in the Hoeksche Waard area, at the same rate: €15 per quarter hour incl. VAT. Businesses come first when it's busy, but you're welcome." },
+    { q: "Do you help private individuals too?", a: `Yes, in the Hoeksche Waard area, at the same rate: ${euro(pricing.hulp.quarter)} per quarter hour incl. VAT. Businesses come first when it's busy, but you're welcome.` },
   ],
   hulpTarief: {
     billing: "Remote per quarter hour; on-site per half hour, minimum one hour.",

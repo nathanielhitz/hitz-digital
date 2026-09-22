@@ -86,7 +86,7 @@ test("ctaFor: header-knop per route", () => {
   assert.equal(ctaFor("/en/contact"), null);
 });
 
-test("alternatesFor: alleen canonical zolang EN niet live is of geen tegenhanger heeft", () => {
+test("alternatesFor: geen hreflang zonder EN-tegenhanger", () => {
   const a = alternatesFor("nl", "support");
   assert.equal(a.canonical, "/support");
   assert.equal(a.languages, undefined);

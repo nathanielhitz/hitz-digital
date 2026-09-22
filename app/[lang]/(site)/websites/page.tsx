@@ -141,7 +141,7 @@ export default async function WebsitesPage({ params }: LangParams) {
                 </a>
               </div>
               <div className="mx-auto w-full max-w-[420px] overflow-hidden rounded-[22px] border border-line shadow-card">
-                <BeforeAfterSlider beforeSrc={voorNa.voorNa.voor} afterSrc={voorNa.voorNa.na} beforeAlt={voorNaCopy.voorNaAlt.voor} afterAlt={voorNaCopy.voorNaAlt.na} className="aspect-[3/4]" />
+                <BeforeAfterSlider beforeSrc={voorNa.voorNa.voor} afterSrc={voorNa.voorNa.na} beforeAlt={voorNaCopy.voorNaAlt.voor} afterAlt={voorNaCopy.voorNaAlt.na} labels={ui.voorNa} className="aspect-[3/4]" />
               </div>
             </Reveal>
           </Container>

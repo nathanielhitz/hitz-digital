@@ -40,9 +40,9 @@ export function middleware(req: NextRequest) {
       url.pathname = target;
       return NextResponse.redirect(url, 301);
     }
-    // Regel 6: publieke EN-slug → interne route. Onbekend pad blijft staan; de catch-all geeft een Engelse 404.
+    // Regel 6: publieke EN-slug → interne route. Onbekend pad blijft staan; de catch-all geeft een 404; NotFoundView kiest client-side Engels.
     const parsed = parsePublic(pathname);
-    return rewrite(req, parsed ? internalPath(parsed) : pathname);
+    return parsed ? rewrite(req, internalPath(parsed)) : NextResponse.next();
   }
 
   // Regel 7

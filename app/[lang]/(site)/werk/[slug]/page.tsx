@@ -128,7 +128,7 @@ export default async function CasePage({ params }: SlugParams) {
                 <p className="mt-6 max-w-[46ch] text-[16px] leading-[1.65] text-muted">{t.voorNa.lead}</p>
               </div>
               <div className="mx-auto w-full max-w-[420px] overflow-hidden rounded-[22px] border border-line shadow-card">
-                <BeforeAfterSlider beforeSrc={c.voorNa.voor} afterSrc={c.voorNa.na} beforeAlt={copy.voorNaAlt.voor} afterAlt={copy.voorNaAlt.na} className="aspect-[3/4]" />
+                <BeforeAfterSlider beforeSrc={c.voorNa.voor} afterSrc={c.voorNa.na} beforeAlt={copy.voorNaAlt.voor} afterAlt={copy.voorNaAlt.na} labels={ui.voorNa} className="aspect-[3/4]" />
               </div>
             </Reveal>
           </Container>

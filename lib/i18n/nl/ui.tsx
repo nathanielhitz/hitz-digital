@@ -147,6 +147,7 @@ export const ui = {
   workCard: { viewCase: "Bekijk de case", tags: { demo: "Demo", eigen: "Eigen project" } satisfies Record<WorkTag, string> },
   plan: { mostChosen: "Meest gekozen", perMonthShort: "/mnd", choose: (name: string) => `Kies ${name}` },
   faq: { eyebrow: "Veelgestelde vragen", title: "Wat mensen me vaak vragen." },
+  voorNa: { before: "Voor", after: "Na", aria: "Vergelijk voor en na" },
 };
 
 export type UiDict = typeof ui;

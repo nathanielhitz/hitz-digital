@@ -88,8 +88,12 @@ test("interne slug onder /en → 301 naar de Engelse slug", async () => {
 });
 
 test("support bestaat alleen in NL: /en/support → 301 /support", async () => {
-  assert.equal(location(await get("/en/support")), "/support");
-  assert.equal(location(await get("/en/support/e-mail-instellingen")), "/support/e-mail-instellingen");
+  const root = await get("/en/support");
+  assert.equal(root.status, 301);
+  assert.equal(location(root), "/support");
+  const deep = await get("/en/support/e-mail-instellingen");
+  assert.equal(deep.status, 301);
+  assert.equal(location(deep), "/support/e-mail-instellingen");
 });
 
 test("onbekend EN-pad en onbekende taal geven 404", async () => {

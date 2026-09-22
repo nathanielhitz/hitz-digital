@@ -16,6 +16,7 @@ export function BeforeAfterSlider({
   afterSrc,
   beforeAlt,
   afterAlt,
+  labels,
   initial = 52,
   className,
 }: {
@@ -23,6 +24,7 @@ export function BeforeAfterSlider({
   afterSrc: string;
   beforeAlt: string;
   afterAlt: string;
+  labels: { before: string; after: string; aria: string };
   initial?: number;
   className?: string;
 }) {
@@ -81,7 +83,7 @@ export function BeforeAfterSlider({
           className="object-cover object-left-top"
         />
         <span className="absolute right-3 top-3 rounded-full border border-on-scrim/20 bg-scrim/45 px-[11px] py-1 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-on-scrim backdrop-blur-[4px]">
-          Na
+          {labels.after}
         </span>
       </div>
 
@@ -98,7 +100,7 @@ export function BeforeAfterSlider({
           className="object-cover object-left-top"
         />
         <span className="absolute left-3 top-3 rounded-full border border-on-scrim/20 bg-scrim/45 px-[11px] py-1 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-on-scrim-muted backdrop-blur-[4px]">
-          Voor
+          {labels.before}
         </span>
       </div>
 
@@ -111,7 +113,7 @@ export function BeforeAfterSlider({
           ref={gripRef}
           type="button"
           role="slider"
-          aria-label="Vergelijk voor en na"
+          aria-label={labels.aria}
           aria-valuemin={0}
           aria-valuemax={100}
           aria-valuenow={initial}

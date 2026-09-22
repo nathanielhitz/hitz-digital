@@ -150,4 +150,5 @@ export const ui: UiDict = {
   workCard: { viewCase: "View the case", tags: { demo: "Demo", eigen: "Own project" } },
   plan: { mostChosen: "Most popular", perMonthShort: "/mo", choose: (name: string) => `Choose ${name}` },
   faq: { eyebrow: "Frequently asked", title: "Questions I often get." },
+  voorNa: { before: "Before", after: "After", aria: "Compare before and after" },
 };
