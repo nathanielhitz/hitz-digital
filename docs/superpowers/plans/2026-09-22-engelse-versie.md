@@ -1089,8 +1089,10 @@ test("metadata-routes en OG-afbeeldingen blijven bereikbaar", async () => {
 });
 
 test("paden buiten de padkaart geven 404, ook als de middleware ze overslaat", async () => {
+  // Op Vercel blokkeert de firewall bekende botpaden (.php) al met 403 vóór onze code; lokaal is het 404.
   for (const p of ["/wp-login.php", "/foo.php", "/iconografie", "/icon-192.png", "/en/x", "/werk/onbekend"]) {
-    assert.equal((await get(p)).status, 404, p);
+    const status = (await get(p)).status;
+    assert.ok(status === 404 || (status === 403 && p.endsWith(".php")), `${p}: ${status}`);
   }
   for (const p of ["/icon", "/apple-icon"]) assert.equal((await get(p)).status, 200, p);
 });
