@@ -27,7 +27,7 @@ const hostingH1 = { pre: "Stay online, ", accent: "without the hassle", post: ".
 const hulpH1 = { pre: "Stuck? I'll take a look ", accent: "right away", post: "." };
 
 /** Lead van de juridische pagina's: staat zowel in de hero als op de OG-afbeelding. */
-const privacyLead = "Ik vind het belangrijk dat je weet wat ik met jouw gegevens doe. Op deze pagina lees je hoe ik dat doe.";
+const privacyLead = "I think it matters that you know what I do with your data. This page explains how I handle it.";
 const voorwaardenLead = "Geen kleine lettertjes, maar wel duidelijke afspraken. Dit is wat je van mij kunt verwachten en wat ik van jou verwacht.";
 
 /** Copy per pagina: metadata, OG-afbeelding, hero, secties, CTA-band. */
@@ -292,16 +292,16 @@ export const pages: PagesDict = {
 
   privacy: {
     meta: {
-      title: "Privacybeleid | HitzDigital",
-      description: "Wat HitzDigital met je gegevens doet, in gewone taal: welke gegevens ik bewaar, waarom, hoe lang, met wie ik ze deel en welke rechten je hebt.",
+      title: "Privacy policy | HitzDigital",
+      description: "What HitzDigital does with your data, in plain language: what I keep, why, for how long, who I share it with and what your rights are.",
     },
-    og: { title: "*Privacybeleid*", kicker: "Privacy", sub: privacyLead },
+    og: { title: "*Privacy policy*", kicker: "Privacy", sub: privacyLead },
     crumb: "Privacy",
-    title: "Privacybeleid",
+    title: "Privacy policy",
     lead: privacyLead,
-    versionLine: (version: string, updated: string) => `Versie ${version}, bijgewerkt op ${updated}`,
+    versionLine: (version: string, updated: string) => `Version ${version}, updated ${updated}`,
     version: "2.0",
-    updated: "29 augustus 2026",
+    updated: "29 August 2026",
   },
 
   voorwaarden: {
