@@ -198,8 +198,8 @@ export const services: ServicesDict = {
   },
 
   contactFaq: [
-    { q: "Wat gebeurt er na mijn bericht?", a: "Je krijgt binnen 1 werkdag antwoord van mij, per mail of app. Bij een website-aanvraag stel ik een paar korte vragen en ga ik aan de slag met je gratis demo." },
-    { q: "Kom je langs?", a: "Voor hulp kom ik langs in de Hoeksche Waard als op afstand niet lukt. Voor een website-gesprek kom ik graag even bij je kijken, maar het kan ook telefonisch." },
-    { q: "Is een demo echt gratis?", a: "Ja. Je krijgt een echte, werkende voorproef van je homepage. Bevalt hij niet, dan stopt het daar, zonder kosten." },
+    { q: "What happens after my message?", a: "You'll hear back from me within one working day, by email or WhatsApp. For a website enquiry I ask a few short questions and get started on your free demo." },
+    { q: "Do you come to me?", a: "For help, I come on-site in the Hoeksche Waard area if remote doesn't work. For a website conversation, a video call works just as well as a visit." },
+    { q: "Is the demo really free?", a: "Yes. You get a real, working preview of your homepage. If you don't like it, it ends there, at no cost." },
   ],
 };

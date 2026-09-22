@@ -272,21 +272,21 @@ export const pages: PagesDict = {
   contact: {
     meta: {
       title: "Contact | HitzDigital",
-      description: "Vraag een gratis demo aan, regel hosting of vraag hulp. App, bel of mail Nathaniel in Puttershoek. Reactie binnen 1 werkdag, vrijblijvend.",
+      description: "Request a free demo, arrange hosting or ask for help. Message, call or email Nathaniel in the Netherlands. Reply within one working day, no obligation.",
     },
-    og: { title: "Waar kan ik je *mee helpen*?", kicker: "Contact", sub: "Gratis demo, hosting of hulp. App, bel of mail. Reactie binnen 1 werkdag." },
+    og: { title: "What can I *help you with*?", kicker: "Contact", sub: "Free demo, hosting or help. Message, call or email. Reply within one working day." },
     crumb: "Contact",
     hero: {
-      title: "Waar kan ik je mee helpen?",
-      lead: "Kies waarvoor je me nodig hebt en vertel kort wat er speelt. Ik reageer binnen 1 werkdag, vrijblijvend. Bij een storing of spoed: bel.",
+      title: "What can I help you with?",
+      lead: "Pick what you need me for and tell me briefly what's going on. I reply within one working day, no obligation. Site down or urgent? Call.",
     },
-    direct: { eyebrow: "Liever direct", whatsappNote: "snelste voor korte vragen", callNote: "bel bij storing of spoed" },
+    direct: { eyebrow: "Prefer to skip the form", whatsappNote: "quickest for short questions", callNote: "call if your site is down or it's urgent" },
     about: {
-      place: (founder: string, city: string) => `${founder} · ${city}, Hoeksche Waard`,
-      kvk: (kvk: string) => `KvK ${kvk}`,
-      reply: "Reactie binnen 1 werkdag. Op afstand of bij jou in de regio.",
+      place: (founder: string, city: string) => `${founder} · ${city}, the Netherlands`,
+      kvk: (kvk: string) => `Chamber of Commerce (KvK) ${kvk}`,
+      reply: "Reply within one working day. Remote, or on-site in my region.",
     },
-    faqTitle: "Korte vragen",
+    faqTitle: "Quick questions",
     schemaName: "Contact HitzDigital",
   },
 
