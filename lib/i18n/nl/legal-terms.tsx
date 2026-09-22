@@ -1,11 +1,15 @@
 import { liveHosting, pricing, euro } from "@/lib/pricing";
 import { site } from "@/lib/site";
+import { href } from "../paths";
 import { services } from "./services";
 
-/** Body van de algemene voorwaarden (26-08-2026). Verplaatst uit de pagina; tekst ongewijzigd. */
+const L = "nl" as const;
+
+/** Body van de algemene voorwaarden. Datum en losse regels staan in `pages.voorwaarden`. */
 export function TermsBody() {
   const webshop = liveHosting.find((h) => h.id === "webshop");
-  const [mailOne, mailMulti] = pricing.addons[0].tiers;
+  const mailbox = pricing.addons.find((a) => a.id === "mailbox")!;
+  const tierPrice = (id: "one" | "multi") => mailbox.tiers.find((t) => t.id === id)!.monthly;
   const namen = liveHosting.map((h) => services.plans[h.id].name);
   const pakketten = namen.length > 1 ? `${namen.slice(0, -1).join(", ")} of ${namen.at(-1)}` : namen[0];
   return (
@@ -56,8 +60,8 @@ export function TermsBody() {
       </p>
       <h3>Mailboxen</h3>
       <p>
-        Eén zakelijke mailbox kost {euro(mailOne.monthly)} per maand; twee tot en met vijf mailboxen samen{" "}
-        {euro(mailMulti.monthly)} per maand. Elke mailbox heeft {pricing.addons[0].quotaGb} GB opslag; loopt die
+        Eén zakelijke mailbox kost {euro(tierPrice("one"))} per maand; twee tot en met vijf mailboxen samen{" "}
+        {euro(tierPrice("multi"))} per maand. Elke mailbox heeft {mailbox.quotaGb} GB opslag; loopt die
         vol, dan overleggen we over opruimen of extra opslag. Meer dan vijf mailboxen spreken we apart af.
       </p>
       <h3>Kleine wijzigingen</h3>
@@ -140,7 +144,7 @@ export function TermsBody() {
 
       <h2>7. Privacy</h2>
       <p>
-        Hoe ik met persoonsgegevens omga staat in het <a href="/privacy">privacybeleid</a>. Host ik je website, dan
+        Hoe ik met persoonsgegevens omga staat in het <a href={href(L, "privacy")}>privacybeleid</a>. Host ik je website, dan
         verwerk ik ook gegevens van jouw klanten (bijvoorbeeld via je contactformulier). Daarvoor gelden de
         afspraken uit het privacybeleid als verwerkersafspraken tussen ons.
       </p>

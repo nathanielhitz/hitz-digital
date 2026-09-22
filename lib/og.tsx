@@ -4,7 +4,7 @@ export const ogSize = { width: 1200, height: 630 };
 
 /**
  * Gedeelde OG-afbeelding: wordmark, paginatitel (met accentwoord tussen sterretjes), kicker, domein.
- * Gebruik: `renderOg({ title: "Online blijven, *zonder gedoe*.", kicker: "Hosting & domeinen" })`.
+ * Gebruik: `renderOg({ title: "Online blijven, *zonder gedoe*.", kicker: "Hosting & domeinen", footer: "Puttershoek, Hoeksche Waard" })`.
  */
 export function renderOg({ title, kicker, sub, footer }: { title: string; kicker?: string; sub?: string; footer: string }) {
   // Woorden met kleurvlag: tekst tussen sterretjes krijgt het accent. Per woord een flex-item zodat Satori netjes afbreekt.

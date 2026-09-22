@@ -3727,7 +3727,7 @@ import { href } from "../paths";
 
 const L = "nl" as const;
 
-/** Body van het privacybeleid (versie 2.0, 29-08-2026). Verplaatst uit de pagina; tekst ongewijzigd. */
+/** Body van het privacybeleid. Versie en datum staan in `pages.privacy`. */
 export function PrivacyBody() {
   return (
     <>
@@ -3746,12 +3746,16 @@ Zelfde procedure met `app/[lang]/(site)/voorwaarden/page.tsx`: alles tussen `<Pr
 ```tsx
 import { liveHosting, pricing, euro } from "@/lib/pricing";
 import { site } from "@/lib/site";
+import { href } from "../paths";
 import { services } from "./services";
 
-/** Body van de algemene voorwaarden (26-08-2026). Verplaatst uit de pagina; tekst ongewijzigd. */
+const L = "nl" as const;
+
+/** Body van de algemene voorwaarden. Datum en losse regels staan in `pages.voorwaarden`. */
 export function TermsBody() {
   const webshop = liveHosting.find((h) => h.id === "webshop");
-  const [mailOne, mailMulti] = pricing.addons[0].tiers;
+  const mailbox = pricing.addons.find((a) => a.id === "mailbox")!;
+  const tierPrice = (id: "one" | "multi") => mailbox.tiers.find((t) => t.id === id)!.monthly;
   const namen = liveHosting.map((h) => services.plans[h.id].name);
   const pakketten = namen.length > 1 ? `${namen.slice(0, -1).join(", ")} of ${namen.at(-1)}` : namen[0];
   return (
@@ -3762,17 +3766,18 @@ export function TermsBody() {
 }
 ```
 
-Twee vervangingen in de verplaatste JSX: `{pricing.hulp.card.validity}` → `{services.hulpTarief.cardValidity}`; verder niets. (`webshop`, `mailOne`, `mailMulti`, `pakketten`, `euro`, `pricing`, `site` worden precies zo gebruikt als voorheen. De naam "Onderhoud" staat als losse tekst in de JSX, dus een `onderhoud`-const is hier niet nodig.)
+Vervangingen in de verplaatste JSX: `{pricing.hulp.card.validity}` → `{services.hulpTarief.cardValidity}`; `{euro(mailOne.monthly)}` / `{euro(mailMulti.monthly)}` → `{euro(tierPrice("one"))}` / `{euro(tierPrice("multi"))}`; `{pricing.addons[0].quotaGb}` → `{mailbox.quotaGb}`; `<a href="/privacy">privacybeleid</a>` → `<a href={href(L, "privacy")}>privacybeleid</a>`. Verder niets. (`webshop`, `pakketten`, `euro`, `pricing`, `site` worden precies zo gebruikt als voorheen. De naam "Onderhoud" staat als losse tekst in de JSX, dus een `onderhoud`-const is hier niet nodig.)
 
 - [ ] **Step 3: Registreer de bodies in `lib/i18n/nl/index.ts`**
 
 ```ts
+import { PrivacyBody } from "./legal-privacy";
+import { TermsBody } from "./legal-terms";
+
 export { ui } from "./ui";
 export { pages } from "./pages";
 export { services } from "./services";
 export { work } from "./work";
-import { PrivacyBody } from "./legal-privacy";
-import { TermsBody } from "./legal-terms";
 export const legal = { PrivacyBody, TermsBody };
 ```
 
@@ -3892,7 +3897,7 @@ Zelfde bestand voor `websites/`, `hosting/`, `hulp/`, `werk/`, `contact/`, `priv
 
 `privacy/opengraph-image.tsx` en `voorwaarden/opengraph-image.tsx` zijn **nieuw**: `pageMetadata` geeft die twee pagina's sinds Task 14 een eigen `openGraph`-blok, waardoor ze de OG-afbeelding van de `(site)`-laag niet meer erven. Zonder eigen route zouden `/privacy` en `/voorwaarden` helemaal geen `og:image` meer sturen.
 
-`support/opengraph-image.tsx`: behoud de drie strings en `generateStaticParams`, voeg `footer: getDict("nl").ui.og.footer` toe.
+`support/opengraph-image.tsx`: behoud de drie strings, voeg `footer: getDict("nl").ui.og.footer` toe en laat `generateStaticParams` `[{ lang: "nl" }]` teruggeven — support bestaat alleen in het Nederlands (spec §1), dus `locales` zou vanaf Task 18 een overbodige EN-variant prerenderen. De import van `locales` vervalt daarmee.
 
 `werk/[slug]/opengraph-image.tsx`:
 

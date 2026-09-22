@@ -3,7 +3,7 @@ import { href } from "../paths";
 
 const L = "nl" as const;
 
-/** Body van het privacybeleid (versie 2.0, 29-08-2026). Verplaatst uit de pagina; tekst ongewijzigd. */
+/** Body van het privacybeleid. Versie en datum staan in `pages.privacy`. */
 export function PrivacyBody() {
   return (
     <>
