@@ -5,6 +5,22 @@ const nextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
   },
+  // Oude en alternatieve domeinen → www.hitzit.nl. Werkt zodra die domeinen in Vercel aan dit project hangen.
+  // Naamswijziging HitzDigital → HitzIT (30 sep 2026); hitzdigital.nl blijft minimaal een jaar doorsturen voor SEO en oude links.
+  async redirects() {
+    const hosts = ["hitzdigital.nl", "www.hitzdigital.nl", "hitzit.com", "www.hitzit.com"];
+    return [
+      // Clippen-homepage (Google OAuth-verificatie wijst naar /clippen/). Statische bestanden onder public/
+      // worden niet als index geserveerd en de middleware herschrijft /clippen naar de NL-404, dus expliciet doorsturen.
+      { source: "/clippen", destination: "/clippen/index.html", permanent: false },
+      ...hosts.map((host) => ({
+        source: "/:path*",
+        has: [{ type: "host", value: host }],
+        destination: "https://www.hitzit.nl/:path*",
+        permanent: true,
+      })),
+    ];
+  },
   async headers() {
     return [
       {
