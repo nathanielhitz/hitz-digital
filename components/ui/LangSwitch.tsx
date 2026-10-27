@@ -20,7 +20,7 @@ function remember(target: Lang) {
 /**
  * Taalschakelaar (spec §4): een gewone link naar de tegenhanger van de huidige pagina, werkt ook zonder JS.
  * - text:    desktop-nav, "NL · EN", actieve taal in inkt
- * - segment: mobiel menu, exacte tweeling van ThemeSwitch size="lg" (76×40, knop 32px), NL links / EN rechts
+ * - segment: mobiel menu, pil 76×40 met schuivende knop van 32px, NL links / EN rechts
  * - names:   footer-onderbalk, "Nederlands | English"
  */
 export function LangSwitch({ lang, labels, variant, className }: { lang: Lang; labels: LangSwitchLabels; variant: LangSwitchVariant; className?: string }) {
@@ -73,7 +73,7 @@ export function LangSwitch({ lang, labels, variant, className }: { lang: Lang; l
           className,
         )}
       >
-        {/* knop: 32px, schuift 36px, zelfde maten en easing als ThemeSwitch size="lg" */}
+        {/* knop: 32px, schuift 36px */}
         <span
           aria-hidden
           className={cn(
