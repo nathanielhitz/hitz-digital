@@ -8,7 +8,6 @@ export const work = {
     "monster-zorg": { meta: "Zzp-zorgverlener · Gouda", alt: "Website van Monster Zorg op mobiel" },
     "youniek-art": { meta: "Fotografie portfolio", alt: "Website van Youniek Art op mobiel" },
     lesbosreizen: { meta: "Reisinformatie over Lesbos", alt: "Website van LesbosReizen op mobiel" },
-    "cafe-centrum": { meta: "Lokaal café · Hoeksche Waard", alt: "Demo-website voor Café 't Centrum op mobiel" },
     opgietingen: { meta: "Agenda voor opgiet-evenementen", alt: "Opgietingen.nl op mobiel" },
     festivaldiscounter: { meta: "Festivaltickets vergelijken", alt: "Festivaldiscounter op mobiel" },
   },

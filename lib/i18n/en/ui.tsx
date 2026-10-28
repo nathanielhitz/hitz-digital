@@ -148,7 +148,7 @@ export const ui: UiDict = {
       },
     ],
   },
-  workCard: { viewCase: "View the project", tags: { demo: "Demo", eigen: "Own project" } },
+  workCard: { viewCase: "View the project", tags: { eigen: "Own project" } },
   plan: { mostChosen: "Most popular", perMonthShort: "/month", choose: (name: string) => `Choose ${name}` },
   faq: { eyebrow: "Frequently asked", title: "Questions I often get." },
   voorNa: { before: "Before", after: "After", aria: "Compare before and after" },

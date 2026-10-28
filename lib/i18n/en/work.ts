@@ -8,7 +8,6 @@ export const work: WorkDict = {
     "monster-zorg": { meta: "Freelance care professional · Gouda", alt: "The Monster Zorg website on mobile" },
     "youniek-art": { meta: "Photography portfolio", alt: "The Youniek Art website on mobile" },
     lesbosreizen: { meta: "Travel guide to Lesbos", alt: "The LesbosReizen website on mobile" },
-    "cafe-centrum": { meta: "Local café · Hoeksche Waard", alt: "Demo website for Café 't Centrum on mobile" },
     opgietingen: { meta: "Calendar of sauna aufguss (steam-infusion) events", alt: "Opgietingen.nl on mobile" },
     festivaldiscounter: { meta: "Comparing festival tickets", alt: "Festivaldiscounter on mobile" },
   },

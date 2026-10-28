@@ -6,13 +6,12 @@ export type WorkSlug =
   | "monster-zorg"
   | "youniek-art"
   | "lesbosreizen"
-  | "cafe-centrum"
   | "opgietingen"
   | "festivaldiscounter";
 export type CaseSlug = Extract<WorkSlug, "volmer-techniek" | "mourits-schilderwerken" | "monster-zorg">;
 
 /** Label-id; de tekst staat in lib/i18n (ui.workCard.tags). Alleen bij afwijkingen; klanten krijgen geen label. */
-export type WorkTag = "demo" | "eigen";
+export type WorkTag = "eigen";
 
 export type WorkItem = {
   slug: WorkSlug;
@@ -31,7 +30,6 @@ export const work: WorkItem[] = [
   { slug: "monster-zorg", title: "Monster Zorg", href: "https://monsterzorg.nl", src: "/images/monsterzorg.webp", client: true },
   { slug: "youniek-art", title: "Youniek Art", href: "https://youniekart.vercel.app", src: "/images/youniekart.webp" },
   { slug: "lesbosreizen", title: "LesbosReizen", href: "https://lesbosreizen.nl", src: "/images/lesbosreizen.webp" },
-  { slug: "cafe-centrum", title: "Café 't Centrum", href: "https://cafe-centrum.vercel.app", src: "/images/cafecentrum.webp", tag: "demo" },
   { slug: "opgietingen", title: "Opgietingen.nl", href: "https://www.opgietingen.nl/", src: "/images/opgietingen.webp", tag: "eigen" },
   { slug: "festivaldiscounter", title: "Festivaldiscounter", href: "https://festivaldiscounter.nl/", src: "/images/festivaldiscounter.webp", tag: "eigen" },
 ];

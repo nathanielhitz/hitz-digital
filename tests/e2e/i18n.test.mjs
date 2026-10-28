@@ -41,7 +41,7 @@ test("onbekend pad: 404 in het Nederlands", async () => {
 });
 
 test("metadata-routes en OG-afbeeldingen blijven bereikbaar", async () => {
-  for (const p of ["/sitemap.xml", "/robots.txt", "/icon", "/apple-icon", "/images/cafecentrum.webp"]) {
+  for (const p of ["/sitemap.xml", "/robots.txt", "/icon", "/apple-icon", "/images/volmertechniek.webp"]) {
     const res = await get(p);
     assert.equal(res.status, 200, p);
   }
