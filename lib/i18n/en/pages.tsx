@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { pricing, euro } from "@/lib/pricing";
+import { site } from "@/lib/site";
 import type { PagesDict } from "../nl/pages";
 
 const accent = (word: string): ReactNode => <em className="hd-accent-word not-italic text-accent">{word}</em>;
@@ -25,6 +26,7 @@ const homeH1 = { pre: "Everything to do with your ", accent: "website", post: ".
 const websitesH1 = { pre: "A website that instantly feels more ", accent: "professional", post: "." };
 const hostingH1 = { pre: "Stay online, ", accent: "without the hassle", post: "." };
 const hulpH1 = { pre: "Stuck? I'll take a look ", accent: "right away", post: "." };
+const overH1 = { pre: "One person behind everything to do with your ", accent: "website", post: "." };
 
 /** Lead van de juridische pagina's: staat zowel in de hero als op de OG-afbeelding. */
 const privacyLead = "I think it matters that you know what I do with your data. This page explains how I handle it.";
@@ -268,6 +270,52 @@ export const pages: PagesDict = {
     },
     others: "Also built.",
     schemaName: (title: string) => `Website for ${title}`,
+  },
+
+  over: {
+    meta: {
+      title: `About ${site.name}: Nathaniel from the Netherlands | ${site.name}`,
+      description: `Who is behind ${site.name}, what I do and how I work. Websites, hosting and tech help for small businesses, run by one person: Nathaniel from Puttershoek in the Netherlands.`,
+    },
+    og: { title: star(overH1), kicker: "About", sub: "Nathaniel from Puttershoek, the Netherlands. Websites, hosting and tech help for small businesses." },
+    crumb: "About",
+    hero: {
+      title: accented(overH1),
+      lead: `I'm Nathaniel. ${site.name} is my one-person business in Puttershoek, the Netherlands, for small businesses here and abroad. No agency, no middle layer: you always deal with me.`,
+    },
+    sections: [
+      {
+        title: "Who I am",
+        paragraphs: [
+          `I'm Nathaniel, from Puttershoek in the Netherlands. I run ${site.name} on my own, for small businesses here and abroad. Not a big agency working from templates, just one person you can message directly.`,
+          "I like work that simply works: a site that loads fast, email that arrives, a computer that doesn't get in your way. And I explain things in plain language, so you understand what's happening and can make your own decisions.",
+        ],
+      },
+      {
+        title: "What I do",
+        paragraphs: [
+          `Three things. I build websites for small businesses, from ${websiteFrom} incl. VAT, and you see a free demo of your own homepage before you decide anything. I host and maintain websites, with domain, business email and one small change a month in a single monthly fee, from ${euro(online.monthly)} a month. And I help when your computer, email, network or website lets you down: ${quarter} per 15 minutes, usually remotely via screen sharing.`,
+          "For whom? Trades, hospitality, care professionals and other independents who want one point of contact instead of three suppliers. Most clients are in the Netherlands, but building a website or helping remotely works anywhere. Expats in the Netherlands and clients abroad are welcome.",
+        ],
+      },
+      {
+        title: "How I work",
+        paragraphs: [
+          "A clear price up front, everything incl. VAT, no small print. Your website and domain are registered in your name and stay yours. Hosting can be cancelled monthly. Help that doesn't fix the problem costs you nothing.",
+          "You message or call me and I reply myself, usually within one working day. No ticket system, no account manager. Small things I handle in between; for bigger jobs we agree the scope and price first.",
+        ],
+      },
+      {
+        title: "Where I am",
+        paragraphs: [
+          `${site.name} is based in ${site.city}, Hoeksche Waard, in the province of South Holland, the Netherlands. On-site visits are available in the Hoeksche Waard area; everything else I do remotely. Want to get acquainted first? Send a message via the contact page and you'll hear from me soon.`,
+        ],
+      },
+    ],
+    ctaBand: {
+      title: "Curious what I can do for your business?",
+      body: "Tell me briefly what you do and what you're running into. You'll get a reply from me within one working day, no obligation.",
+    },
   },
 
   contact: {

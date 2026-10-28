@@ -70,6 +70,7 @@ export const ui: UiDict = {
     moreLinks: [
       { label: "How it works", href: `${href(L, "websites")}#werkwijze` },
       { label: "Work", href: href(L, "werk") },
+      { label: "About", href: href(L, "over") },
       { label: "Contact", href: href(L, "contact") },
     ],
     contact: "Contact",

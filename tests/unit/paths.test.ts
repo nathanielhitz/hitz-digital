@@ -12,6 +12,8 @@ test("href: NL zonder prefix, EN met /en en Engelse slug", () => {
   assert.equal(href("en", "voorwaarden"), "/en/terms");
   assert.equal(href("en", "werk", "mourits-schilderwerken"), "/en/work/mourits-schilderwerken");
   assert.equal(href("nl", "contact"), "/contact");
+  assert.equal(href("nl", "over"), "/over");
+  assert.equal(href("en", "over"), "/en/about");
 });
 
 test("href: support bestaat alleen in NL", () => {
@@ -24,6 +26,8 @@ test("parsePublic: bekende paden", () => {
   assert.deepEqual(parsePublic("/en"), { lang: "en", key: "home" });
   assert.deepEqual(parsePublic("/en/"), { lang: "en", key: "home" });
   assert.deepEqual(parsePublic("/hulp"), { lang: "nl", key: "hulp" });
+  assert.deepEqual(parsePublic("/over"), { lang: "nl", key: "over" });
+  assert.deepEqual(parsePublic("/en/about"), { lang: "en", key: "over" });
   assert.deepEqual(parsePublic("/en/help"), { lang: "en", key: "hulp" });
   assert.deepEqual(parsePublic("/werk/volmer-techniek"), { lang: "nl", key: "werk", slug: "volmer-techniek" });
   assert.deepEqual(parsePublic("/en/work/volmer-techniek?x=1#y"), { lang: "en", key: "werk", slug: "volmer-techniek" });
@@ -33,6 +37,8 @@ test("parsePublic: bekende paden", () => {
 test("parsePublic: onbekende paden geven null", () => {
   assert.equal(parsePublic("/en/hulp"), null); // interne slug is niet publiek in EN
   assert.equal(parsePublic("/foo"), null);
+  assert.equal(parsePublic("/about"), null); // NL-slug is /over; next.config stuurt /about door
+  assert.equal(parsePublic("/en/over"), null); // interne slug is niet publiek in EN
   assert.equal(parsePublic("/websites/extra"), null); // niet-dynamische route met slug
   assert.equal(parsePublic("/en/support"), null); // support heeft geen EN
 });
@@ -62,6 +68,7 @@ test("redirectForEn: interne slug en support onder /en", () => {
   assert.equal(redirectForEn("/en/hulp"), "/en/help");
   assert.equal(redirectForEn("/en/werk/volmer-techniek"), "/en/work/volmer-techniek");
   assert.equal(redirectForEn("/en/voorwaarden"), "/en/terms");
+  assert.equal(redirectForEn("/en/over"), "/en/about");
   assert.equal(redirectForEn("/en/support"), "/support");
   assert.equal(redirectForEn("/en/support/e-mail-instellingen"), "/support/e-mail-instellingen");
   assert.equal(redirectForEn("/en/websites"), null); // gelijke slug: geen redirect

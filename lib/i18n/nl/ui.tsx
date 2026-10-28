@@ -69,6 +69,7 @@ export const ui = {
     moreLinks: [
       { label: "Werkwijze", href: `${href(L, "websites")}#werkwijze` },
       { label: "Werk", href: href(L, "werk") },
+      { label: "Over", href: href(L, "over") },
       { label: "Contact", href: href(L, "contact") },
       { label: "Support", href: href(L, "support") },
     ],

@@ -35,6 +35,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...entries("contact", undefined, { lastModified: now, changeFrequency: "yearly", priority: 0.7 }),
     ...entries("werk", undefined, { lastModified: now, changeFrequency: "monthly", priority: 0.8 }),
     ...cases.flatMap((c) => entries("werk", c.slug, { lastModified: now, changeFrequency: "yearly", priority: 0.6 })),
+    ...entries("over", undefined, { lastModified: now, changeFrequency: "yearly", priority: 0.6 }),
     ...entries("support", undefined, { lastModified: now, changeFrequency: "monthly", priority: 0.6 }),
     ...supportArticles.flatMap((a) =>
       entries("support", a.slug, { lastModified: new Date(a.updatedIso), changeFrequency: "yearly", priority: 0.5 }),

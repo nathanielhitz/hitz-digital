@@ -20,7 +20,7 @@ export function langOf(raw: unknown): Lang {
 }
 
 export type CtaKind = "demo" | "hosting" | "hulp" | "contact";
-export type RouteKey = "home" | "websites" | "hosting" | "hulp" | "werk" | "contact" | "privacy" | "voorwaarden" | "support";
+export type RouteKey = "home" | "websites" | "hosting" | "hulp" | "werk" | "over" | "contact" | "privacy" | "voorwaarden" | "support";
 type SegmentKey = Exclude<RouteKey, "home">;
 
 type Segment = {
@@ -40,6 +40,7 @@ export const segments: Record<SegmentKey, Segment> = {
   hosting: { nl: "hosting", en: "hosting", cta: "hosting", dynamic: false },
   hulp: { nl: "hulp", en: "help", cta: "hulp", dynamic: false },
   werk: { nl: "werk", en: "work", cta: "demo", dynamic: true },
+  over: { nl: "over", en: "about", cta: "contact", dynamic: false },
   contact: { nl: "contact", en: "contact", cta: null, dynamic: false },
   privacy: { nl: "privacy", en: "privacy", cta: "contact", dynamic: false },
   voorwaarden: { nl: "voorwaarden", en: "terms", cta: "contact", dynamic: false },

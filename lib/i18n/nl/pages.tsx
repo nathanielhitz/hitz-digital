@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { pricing, euro } from "@/lib/pricing";
+import { site } from "@/lib/site";
 
 const accent = (word: string): ReactNode => <em className="hd-accent-word not-italic text-accent">{word}</em>;
 
@@ -24,6 +25,7 @@ const homeH1 = { pre: "Alles rond je ", accent: "website", post: ". Eén aanspre
 const websitesH1 = { pre: "Een website die direct ", accent: "professioneler", post: " voelt." };
 const hostingH1 = { pre: "Online blijven, ", accent: "zonder gedoe", post: "." };
 const hulpH1 = { pre: "Vastgelopen? Ik kijk ", accent: "direct", post: " mee." };
+const overH1 = { pre: "Eén persoon achter alles rond je ", accent: "website", post: "." };
 
 /** Lead van de juridische pagina's: staat zowel in de hero als op de OG-afbeelding. */
 const privacyLead = "Ik vind het belangrijk dat je weet wat ik met jouw gegevens doe. Op deze pagina lees je hoe ik dat doe.";
@@ -267,6 +269,52 @@ export const pages = {
     },
     others: "Ook gebouwd.",
     schemaName: (title: string) => `Website voor ${title}`,
+  },
+
+  over: {
+    meta: {
+      title: `Over ${site.name}: Nathaniel uit Puttershoek | ${site.name}`,
+      description: `Wie er achter ${site.name} zit, wat ik doe en hoe ik werk. Websites, hosting en computerhulp voor ondernemers in de Hoeksche Waard, door één persoon: Nathaniel uit Puttershoek.`,
+    },
+    og: { title: star(overH1), kicker: "Over", sub: `Nathaniel uit Puttershoek. Websites, hosting en computerhulp voor ondernemers in de Hoeksche Waard.` },
+    crumb: "Over",
+    hero: {
+      title: accented(overH1),
+      lead: `Ik ben Nathaniel. ${site.name} is mijn eenmanszaak in Puttershoek, voor ondernemers in de Hoeksche Waard. Geen bureau, geen tussenlaag: je hebt altijd met mij te maken.`,
+    },
+    sections: [
+      {
+        title: "Wie ik ben",
+        paragraphs: [
+          `Ik ben Nathaniel, uit Puttershoek. Ik run ${site.name} in mijn eentje, voor ondernemers in de Hoeksche Waard. Geen landelijk bureau met sjablonen, maar iemand uit de regio die je gewoon kunt appen.`,
+          "Ik hou van werk dat klopt: een site die snel laadt, mail die gewoon binnenkomt, een computer die niet in de weg zit. En ik leg het uit in gewone taal, zodat jij snapt wat er gebeurt en zelf keuzes kunt maken.",
+        ],
+      },
+      {
+        title: "Wat ik doe",
+        paragraphs: [
+          `Drie dingen. Ik bouw websites voor kleine bedrijven, vanaf ${websiteFrom} incl. btw, en je ziet eerst een gratis demo van je eigen homepage voordat je iets beslist. Ik host en onderhoud websites, met domein, zakelijke mail en een kleine wijziging per maand in één bedrag, vanaf ${euro(online.monthly)} per maand. En ik help als je computer, mail, netwerk of website vastloopt: ${quarter} per kwartier, meestal op afstand, en anders kom ik langs.`,
+          "Voor wie? Vakbedrijven, horeca, zorgverleners en andere zelfstandigen die één aanspreekpunt willen in plaats van drie leveranciers. De meeste klanten zitten in Puttershoek, Oud-Beijerland, Klaaswaal, Strijen, Numansdorp en 's-Gravendeel, maar een website bouwen of op afstand helpen kan overal.",
+        ],
+      },
+      {
+        title: "Hoe ik werk",
+        paragraphs: [
+          "Duidelijke prijs vooraf, alles incl. btw, geen kleine lettertjes. Je website en je domein staan op jouw naam en blijven van jou. Hosting is maandelijks opzegbaar. Hulp die niets oplost, kost je niets.",
+          "Je appt of belt mij en ik reageer zelf, meestal binnen een werkdag. Geen ticketsysteem, geen accountmanager. Kleine dingen regel ik tussendoor; voor grotere klussen spreken we vooraf af wat het wordt.",
+        ],
+      },
+      {
+        title: "Waar ik zit",
+        paragraphs: [
+          `${site.name} is gevestigd in ${site.city}, Hoeksche Waard (Zuid-Holland). Aan huis kom ik in de hele Hoeksche Waard, zonder voorrijkosten. Wil je eerst even kennismaken? Stuur een bericht via de contactpagina, dan hoor je snel van me.`,
+        ],
+      },
+    ],
+    ctaBand: {
+      title: "Benieuwd wat ik voor jouw bedrijf kan doen?",
+      body: "Vertel kort wat je doet en waar je tegenaan loopt. Je krijgt antwoord van mij, binnen 1 werkdag en vrijblijvend.",
+    },
   },
 
   contact: {
