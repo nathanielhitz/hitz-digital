@@ -62,7 +62,7 @@ export const services = {
 
   over: {
     title: "Eén persoon voor alles rond je website.",
-    body: "Ik ben Nathaniel, uit Puttershoek. Ik bouw HitzDigital in mijn eentje voor ondernemers in de Hoeksche Waard. Ik maak je website, zorg dat hij online blijft en kijk direct mee als je computer of mail niet meewerkt. Ik woon zelf in de regio en je kunt me gewoon appen.",
+    body: "Ik ben Nathaniel, uit Puttershoek. HitzDigital is mijn eenmanszaak, voor ondernemers in de Hoeksche Waard. Ik maak je website, zorg dat hij online blijft en kijk direct mee als je computer of mail niet meewerkt. Moet ik langskomen, dan doe ik dat binnen de Hoeksche Waard zonder voorrijkosten.",
     facts: ["Eén aanspreekpunt", "Duidelijke afspraken", "Uit de Hoeksche Waard"],
     portraitAlt: "Nathaniel, oprichter van HitzDigital",
   },

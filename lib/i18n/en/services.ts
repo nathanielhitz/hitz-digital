@@ -63,7 +63,7 @@ export const services: ServicesDict = {
 
   over: {
     title: "One person for everything around your website.",
-    body: "I'm Nathaniel, from Puttershoek in the Netherlands. I run HitzDigital on my own, for small businesses here and abroad. I build your website, keep it online and step in the moment your computer or email lets you down. You can message me directly.",
+    body: "I'm Nathaniel, from Puttershoek in the Netherlands. HitzDigital is my one-person business, for small businesses here and abroad. I build your website, keep it online and step in the moment your computer or email lets you down. If I need to come over, there's no call-out fee within the Hoeksche Waard.",
     facts: ["One point of contact", "Everything agreed up front", "Based in the Netherlands"],
     portraitAlt: "Nathaniel, founder of HitzDigital",
   },

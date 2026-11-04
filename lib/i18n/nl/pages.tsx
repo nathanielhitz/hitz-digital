@@ -286,7 +286,7 @@ export const pages = {
       {
         title: "Wie ik ben",
         paragraphs: [
-          `Ik ben Nathaniel, uit Puttershoek. Ik run ${site.name} in mijn eentje, voor ondernemers in de Hoeksche Waard. Ik woon zelf in de regio en je kunt me gewoon appen.`,
+          `Ik ben Nathaniel, uit Puttershoek. Ik run ${site.name} in mijn eentje, voor ondernemers in de Hoeksche Waard.`,
           "Ik hou van werk dat klopt: een site die snel laadt, mail die gewoon binnenkomt, een computer die niet in de weg zit. En ik leg het uit in gewone taal, zodat jij snapt wat er gebeurt en zelf keuzes kunt maken.",
         ],
       },
