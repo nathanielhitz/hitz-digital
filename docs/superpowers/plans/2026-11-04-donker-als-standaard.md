@@ -34,7 +34,7 @@ Vóór de wijziging leggen we vast hoe licht en donker er nu uitzien. Na afloop 
 **Files:**
 - Create: `tests/visual/theme-shots.mjs`
 
-- [ ] **Step 1: Schrijf het screenshot-script**
+- [x] **Step 1: Schrijf het screenshot-script**
 
 ```js
 // Screenshots van de homepage (NL en EN) in licht en donker op 390 en 1280 px.
@@ -75,7 +75,7 @@ try {
 }
 ```
 
-- [ ] **Step 2: Bouw en start de huidige site**
+- [x] **Step 2: Bouw en start de huidige site**
 
 Run:
 ```bash
@@ -83,7 +83,7 @@ npm run build && (npm start > /private/tmp/claude-501/-Users-nathaniel-Documents
 ```
 Expected: build zonder fouten, daarna `200`.
 
-- [ ] **Step 3: Maak de "voor"-screenshots**
+- [x] **Step 3: Maak de "voor"-screenshots**
 
 Run:
 ```bash
@@ -91,7 +91,7 @@ node tests/visual/theme-shots.mjs /private/tmp/claude-501/-Users-nathaniel-Docum
 ```
 Expected: `theme-shots: 8 screenshots in …/voor` en acht bestanden: `nl-light-390.png`, `nl-light-1280.png`, `nl-dark-390.png`, `nl-dark-1280.png`, `en-light-390.png`, `en-light-1280.png`, `en-dark-390.png`, `en-dark-1280.png`.
 
-- [ ] **Step 4: Stop de server**
+- [x] **Step 4: Stop de server**
 
 Run:
 ```bash
@@ -99,7 +99,7 @@ pkill -f "next start -p 3111"; sleep 1; curl -s -o /dev/null -w "%{http_code}\n"
 ```
 Expected: `server gestopt` (curl faalt omdat niets meer luistert).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add tests/visual/theme-shots.mjs
@@ -116,7 +116,7 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 - Create: `tests/unit/theme-css.test.ts`
 - Modify: `app/globals.css` (kopcommentaar regel 5–8, lichte blok regel 33–35, dark-mediablok regel 100–124, dark-blok regel 125, grain regel 240–244)
 
-- [ ] **Step 1: Schrijf de falende structuurtest**
+- [x] **Step 1: Schrijf de falende structuurtest**
 
 ```ts
 // Bewaakt de thema-structuur van globals.css: donker is de basis (:root, ook zonder JS),
@@ -150,12 +150,12 @@ test("grain: één lichte uitzondering, geen media query", () => {
 });
 ```
 
-- [ ] **Step 2: Draai de test en zie hem falen**
+- [x] **Step 2: Draai de test en zie hem falen**
 
 Run: `node --test tests/unit/theme-css.test.ts`
 Expected: minstens 4 van de 5 tests FAIL (`prefers-color-scheme` staat er nog, `:root[data-theme="light"] {` bestaat niet, `:root[data-theme="dark"]` bestaat wel, `:root { color-scheme: dark` ontbreekt, en de grain-mediaquery bestaat nog). Wat telt is dat Step 4 alles groen maakt.
 
-- [ ] **Step 3: Pas `app/globals.css` aan**
+- [x] **Step 3: Pas `app/globals.css` aan**
 
 Vijf wijzigingen, met het Edit-tool (exacte strings). Tokenwaarden niet aanraken.
 
@@ -234,12 +234,12 @@ Nieuw:
 :root[data-theme="light"] .hd-grain { opacity: 0.035; mix-blend-mode: multiply; }
 ```
 
-- [ ] **Step 4: Draai de structuurtest en zie hem slagen**
+- [x] **Step 4: Draai de structuurtest en zie hem slagen**
 
 Run: `node --test tests/unit/theme-css.test.ts`
 Expected: `pass 5`, `fail 0`.
 
-- [ ] **Step 5: Controleer dat elk token in het donkere blok precies één keer staat**
+- [x] **Step 5: Controleer dat elk token in het donkere blok precies één keer staat**
 
 Run:
 ```bash
@@ -247,7 +247,7 @@ awk '/^:root \{$/{f=1} f&&/^\}$/{f=0} f' app/globals.css | grep -o -- '--[a-z0-9
 ```
 Expected: geen uitvoer (geen dubbele declaraties; dit sluit het audit-punt over `--accent-sheen`/`--accent-halo` af). Let op: `awk` matcht twee `:root {`-blokken (merk-invariant bovenaan en het donkere blok); die delen geen tokennamen, dus lege uitvoer blijft het criterium.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add tests/unit/theme-css.test.ts app/globals.css
@@ -264,7 +264,7 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 - Modify: `app/[lang]/layout.tsx:58-62`
 - Modify: `components/ui/ThemeSwitch.tsx:10-15`
 
-- [ ] **Step 1: Pas de ThemeProvider aan**
+- [x] **Step 1: Pas de ThemeProvider aan**
 
 In `app/[lang]/layout.tsx`. Oud:
 ```tsx
@@ -280,7 +280,7 @@ Nieuw:
         <ThemeProvider attribute="data-theme" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
 ```
 
-- [ ] **Step 2: Pas het commentaar in ThemeSwitch aan**
+- [x] **Step 2: Pas het commentaar in ThemeSwitch aan**
 
 In `components/ui/ThemeSwitch.tsx`. Oud:
 ```tsx
@@ -297,12 +297,12 @@ Nieuw:
  * maat, zodat er geen layout-shift is.
 ```
 
-- [ ] **Step 3: Typecheck en lint**
+- [x] **Step 3: Typecheck en lint**
 
 Run: `npm run typecheck && npm run lint`
 Expected: beide zonder fouten (`enableSystem` accepteert een boolean; `defaultTheme` een string).
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add "app/[lang]/layout.tsx" components/ui/ThemeSwitch.tsx
@@ -317,7 +317,7 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 
 **Files:** geen wijzigingen.
 
-- [ ] **Step 1: Build en start**
+- [x] **Step 1: Build en start**
 
 Run:
 ```bash
@@ -325,7 +325,7 @@ npm run build && (npm start > /private/tmp/claude-501/-Users-nathaniel-Documents
 ```
 Expected: build zonder fouten; de `<html>`-tag bevat `lang="nl"` en `suppressHydrationWarning` wordt niet uitgeschreven. `data-theme` staat er server-side nog niet op (next-themes zet het client-side vóór hydration); dat is normaal.
 
-- [ ] **Step 2: Unit- en e2e-tests**
+- [x] **Step 2: Unit- en e2e-tests**
 
 Run: `npm test`
 Expected: alle unit-tests (inclusief de nieuwe `theme-css.test.ts`) en alle e2e-tests slagen, `fail 0` in beide runs.
@@ -337,7 +337,7 @@ Expected: alle unit-tests (inclusief de nieuwe `theme-css.test.ts`) en alle e2e-
 **Files:**
 - Create: `tests/e2e/theme-default.mjs`
 
-- [ ] **Step 1: Schrijf de browsertest**
+- [x] **Step 1: Schrijf de browsertest**
 
 ```js
 // Browsertest: donker is de standaard, ongeacht de OS-voorkeur; licht alleen via localStorage/themaknop.
@@ -412,7 +412,7 @@ try {
 
 De knoplabels komen uit `lib/i18n/nl/ui.tsx` (`"Schakel naar licht thema"`) en `lib/i18n/en/ui.tsx` (`"Switch to light theme"`), beide onder `theme.toLight`.
 
-- [ ] **Step 2: Draai de browsertest (server uit Task 4 draait nog)**
+- [x] **Step 2: Draai de browsertest (server uit Task 4 draait nog)**
 
 Run: `node tests/e2e/theme-default.mjs`
 Expected: `theme-default: OK`.
@@ -426,7 +426,7 @@ python3 -c "from PIL import Image; [print(n, Image.open(f'/private/tmp/claude-50
 ```
 Expected: twee regels met `(7, 7, 6)` (de donkere `--deep`).
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add tests/e2e/theme-default.mjs
@@ -441,7 +441,7 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 
 **Files:** geen wijzigingen.
 
-- [ ] **Step 1: Maak de "na"-screenshots (server uit Task 4 draait nog)**
+- [x] **Step 1: Maak de "na"-screenshots (server uit Task 4 draait nog)**
 
 Run:
 ```bash
@@ -449,7 +449,7 @@ node tests/visual/theme-shots.mjs /private/tmp/claude-501/-Users-nathaniel-Docum
 ```
 Expected: `theme-shots: 8 screenshots in …/na`.
 
-- [ ] **Step 2: Vergelijk**
+- [x] **Step 2: Vergelijk**
 
 Run:
 ```bash
@@ -457,7 +457,7 @@ python3 tests/visual/diff.py /private/tmp/claude-501/-Users-nathaniel-Documents-
 ```
 Expected: acht regels `OK  …: 0.000% pixels anders` (of een fractie onder 0,5 % door font-rendering) en exit 0. Een `DIFF` betekent dat de tokenverhuizing iets veranderd heeft binnen een thema: open beide PNG's met het Read-tool, zoek de afwijking en herstel in `globals.css` (meestal een token dat per ongeluk in het verkeerde blok staat). Draai daarna Task 2 Step 4 en deze stap opnieuw.
 
-- [ ] **Step 3: Stop de server**
+- [x] **Step 3: Stop de server**
 
 Run:
 ```bash
@@ -471,11 +471,11 @@ Expected: `server gestopt`.
 
 **Files:** geen wijzigingen.
 
-- [ ] **Step 1: Schone werkboom**
+- [x] **Step 1: Schone werkboom**
 
 Run: `git status --short && git log --oneline -5`
 Expected: geen ongecommitte wijzigingen; de laatste vier commits zijn (nieuw → oud) de browsertest, de ThemeProvider-wissel, de CSS-omdraai en het screenshot-script, daarboven `4639dfb Spec: donker als standaardthema`.
 
-- [ ] **Step 2: Vink het plan af en meld**
+- [x] **Step 2: Vink het plan af en meld**
 
 Meld aan Nathaniel: donker is de standaard, licht blijft via de knop, alle checks groen (structuurtest, `npm test`, browsertest, visuele diff). Deploy is `git push origin main` (Vercel bouwt automatisch) en gebeurt pas na zijn akkoord; niet zelf pushen.
