@@ -3,7 +3,7 @@
 /* ---------------------------------------------------------------------------
    HitzDigital — design tokens (groen, "Claude Design 2026")
    Twee thema's, één bron. Donker is de standaard.
-   1. :root               = dark, tevens de fallback zonder JS en de eerste paint.
+   1. :root               = dark, tevens de fallback zonder JS en vóór het themascript.
    2. [data-theme=light]  = light ("Warm Paper"), alleen na een klik op de themaknop;
                             next-themes zet het attribuut uit localStorage vóór hydration.
    De OS-voorkeur (licht/donker-instelling van het systeem) speelt geen rol.
@@ -31,7 +31,7 @@
   --on-scrim-muted: #c9c3b8;
 }
 
-/* ---- Light: Warm Paper (opt-in via de themaknop) ---- */
+/* ---- Light: Warm Paper (opt-in via de themaknop; wint op specificiteit van het kale :root hieronder, niet op volgorde) ---- */
 :root[data-theme="light"] {
   color-scheme: light;
 

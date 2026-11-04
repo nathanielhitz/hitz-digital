@@ -27,3 +27,14 @@ test("grain: één lichte uitzondering, geen media query", () => {
   assert.match(css, /:root\[data-theme="light"\] \.hd-grain/);
   assert.doesNotMatch(css, /:root:not\(\[data-theme="dark"\]\) \.hd-grain/);
 });
+
+test("beide thema's declareren dezelfde tokens", () => {
+  const names = (sel: RegExp) => {
+    const body = css.match(sel)?.[1] ?? "";
+    return [...body.matchAll(/--[a-z0-9-]+(?=\s*:)/g)].map((m) => m[0]).sort();
+  };
+  const light = names(/:root\[data-theme="light"\]\s*\{([^}]*)\}/);
+  const dark = names(/\n:root\s*\{\s*color-scheme:\s*dark;([^}]*)\}/);
+  assert.ok(light.length > 40, "lichte tokens gevonden");
+  assert.deepEqual(dark, light);
+});
