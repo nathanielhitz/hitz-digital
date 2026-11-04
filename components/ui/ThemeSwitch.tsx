@@ -9,8 +9,8 @@ export type ThemeLabels = { toLight: string; toDark: string; light: string; dark
 
 /**
  * Licht/donker-knop: één icoon dat het huidige thema toont (zon = licht, maan = donker);
- * een klik wisselt. Standaard volgt de site het systeem (next-themes); een klik overschrijft dat
- * en bewaart de keuze in localStorage. Vóór hydration rendert een lege placeholder van dezelfde
+ * een klik wisselt. Standaard is de site donker (next-themes, defaultTheme="dark", geen systeem);
+ * een klik bewaart de keuze in localStorage. Vóór hydration rendert een lege placeholder van dezelfde
  * maat, zodat er geen layout-shift is.
  */
 export function ThemeSwitch({ className, size = "md", labels }: { className?: string; size?: "md" | "lg"; labels: ThemeLabels }) {

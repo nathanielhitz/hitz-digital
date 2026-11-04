@@ -56,8 +56,9 @@ export default async function LangLayout({ children, params }: Readonly<{ childr
     <html lang={lang} className={`${body.variable} ${display.variable}`} suppressHydrationWarning>
       <body>
         {/* next-themes zet data-theme + color-scheme op <html> via een inline script vóór hydration:
-            systeemvoorkeur als default, handmatige keuze in localStorage ("theme"). Geen flash. */}
-        <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem disableTransitionOnChange>
+            donker als standaard, handmatige keuze in localStorage ("theme"). De OS-voorkeur telt niet;
+            de CSS-basis (:root) is óók donker, dus geen flash, ook niet zonder JS. */}
+        <ThemeProvider attribute="data-theme" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
           {children}
         </ThemeProvider>
         <script
