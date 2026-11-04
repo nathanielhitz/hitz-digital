@@ -111,7 +111,7 @@
   --code-fg: #837c70; --code-comment: #6b7268;
   --dv-1: #2a2620; --dv-2: #1a1712; --dv-3: #16130f; --dv-4: #110f0c; --dv-5: #0b0a08; --dv-6: #080706; --dv-edge: rgba(255, 255, 255, 0.06);
   --sc-1: #16130f; --sc-2: #110f0c; --sc-3: #0b0a08; --sc-4: #080706; --device-ink: #f4f1ec; --device-muted: #a8a298;
-  --screen-hi: #1c1914; --screen-lo: #100e0b;
+  --screen-hi: #1c1914; --screen-lo: #100e0b; /* iets lichter dan de behuizing: het scherm staat ook vóór het scrollen zichtbaar aan */
   --danger: #e0685c;
   --sh-card: 0 30px 60px -40px rgba(0, 0, 0, 0.85);
   --sh-card-accent: 0 30px 60px -40px rgba(95, 164, 126, 0.35);
