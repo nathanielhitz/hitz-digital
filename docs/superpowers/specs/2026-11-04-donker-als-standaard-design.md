@@ -43,7 +43,7 @@ Het kopcommentaar van het bestand beschrijft de nieuwe volgorde: `:root` is donk
 
 ### `components/ui/ThemeSwitch.tsx`
 
-Alleen het commentaar: "Standaard volgt de site het systeem" wordt "Standaard is de site donker". Geen gedragswijziging.
+Het commentaar: "Standaard volgt de site het systeem" wordt "Standaard is de site donker". Eén gedragsdetail: de knop leest `theme` in plaats van `resolvedTheme` (`dark = theme !== "light"`), zodat hij exact de CSS-regel volgt, ook bij een oude localStorage-waarde `system` op een licht OS. Wisselen en bewaren blijven gelijk.
 
 ## Niet in scope
 

@@ -53,7 +53,17 @@ try {
     assert.equal(s.bg, LIGHT_BG, `${path}: achtergrond na herladen`);
     await ctx.close();
 
-    // 4. JavaScript uit: de CSS-basis is donker.
+    // 4. Oude waarde "system" (van vóór donker-als-standaard) op een licht OS: pagina én knop donker.
+    ctx = await browser.newContext({ colorScheme: "light", viewport: { width: 1280, height: 800 } });
+    await ctx.addInitScript(() => localStorage.setItem("theme", "system"));
+    page = await ctx.newPage();
+    await page.goto(`${BASE}${path}`);
+    s = await state(page);
+    assert.equal(s.bg, DARK_BG, `${path}: theme=system is donker`);
+    await page.getByRole("button", { name: toLight }).waitFor();
+    await ctx.close();
+
+    // 5. JavaScript uit: de CSS-basis is donker.
     ctx = await browser.newContext({ colorScheme: "light", javaScriptEnabled: false });
     page = await ctx.newPage();
     await page.goto(`${BASE}${path}`);
