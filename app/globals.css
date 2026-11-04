@@ -2,10 +2,11 @@
 
 /* ---------------------------------------------------------------------------
    HitzDigital — design tokens (groen, "Claude Design 2026")
-   Twee thema's, één bron.
-   1. :root            = light ("Warm Paper"), tevens de fallback zonder JS.
-   2. prefers dark     = dark, tenzij expliciet data-theme="light".
-   3. [data-theme=dark]= dark, gezet door next-themes (localStorage) vóór hydration.
+   Twee thema's, één bron. Donker is de standaard.
+   1. :root               = dark, tevens de fallback zonder JS en de eerste paint.
+   2. [data-theme=light]  = light ("Warm Paper"), alleen na een klik op de themaknop;
+                            next-themes zet het attribuut uit localStorage vóór hydration.
+   De OS-voorkeur (licht/donker-instelling van het systeem) speelt geen rol.
    Tailwind v4 maakt via @theme inline utilities van de runtime-variabelen
    (bg-panel, text-ink, border-line, bg-glass/72, shadow-card, ...), dus
    componenten hoeven geen dark:-varianten.
@@ -30,8 +31,8 @@
   --on-scrim-muted: #c9c3b8;
 }
 
-/* ---- Light: Warm Paper ---- */
-:root {
+/* ---- Light: Warm Paper (opt-in via de themaknop) ---- */
+:root[data-theme="light"] {
   color-scheme: light;
 
   --deep: #f6f3ed;
@@ -97,32 +98,8 @@
   --sh-grip: 0 0 0 6px rgba(41, 112, 77, 0.16), 0 8px 22px -6px rgba(28, 26, 23, 0.35);
 }
 
-/* ---- Dark (huidige site) ---- */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-    --deep: #070706; --base: #0c0b09; --panel: #11100e;
-    --ink: #f4f1ec; --muted: #9b968d; --faint: #847f77;
-    --line: rgba(244, 241, 236, 0.1); --line2: rgba(244, 241, 236, 0.05);
-    --accent: #5fa47e; --accent-bright: #79bb97; --accent-deep: #4a8466; --accent-warm: #9ecdb4; --focus: #79bb97; --accent-sheen: #8fd0ac; --accent-halo: rgba(95, 164, 126, 0.28);
-    --glass-base: #12100e; --shadow-ink: #000; --glow: #5fa47e; --field: rgba(244, 241, 236, 0.04);
-    --chrome-hi: #2a251f; --chrome-lo: #211d19; --chrome-url: #17140f;
-    --hero-1: #13120d; --hero-2: #0b0a08; --hero-3: #070706; --hero-cool: rgba(118, 138, 168, 0.06); --vignette: rgba(0, 0, 0, 0.62);
-    --code-fg: #837c70; --code-comment: #6b7268;
-    --dv-1: #2a2620; --dv-2: #1a1712; --dv-3: #16130f; --dv-4: #110f0c; --dv-5: #0b0a08; --dv-6: #080706; --dv-edge: rgba(255, 255, 255, 0.06);
-    --sc-1: #16130f; --sc-2: #110f0c; --sc-3: #0b0a08; --sc-4: #080706; --device-ink: #f4f1ec; --device-muted: #a8a298;
-    --screen-hi: #1c1914; --screen-lo: #100e0b; /* iets lichter dan de behuizing: het scherm staat ook vóór het scrollen zichtbaar aan */
-    --danger: #e0685c;
-    --sh-card: 0 30px 60px -40px rgba(0, 0, 0, 0.85);
-    --sh-card-accent: 0 30px 60px -40px rgba(95, 164, 126, 0.35);
-    --sh-photo: 0 40px 80px -50px rgba(0, 0, 0, 0.9);
-    --sh-dot: 0 0 10px rgba(95, 164, 126, 0.55);
-    --sh-btn: 0 12px 32px -16px rgba(0, 0, 0, 0.7), 0 6px 20px -12px rgba(95, 164, 126, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.16);
-    --sh-btn-hover: 0 16px 40px -16px rgba(0, 0, 0, 0.7), 0 10px 26px -12px rgba(95, 164, 126, 0.48), inset 0 1px 0 rgba(255, 255, 255, 0.22);
-    --sh-grip: 0 0 0 6px rgba(95, 164, 126, 0.18), 0 8px 22px -6px rgba(0, 0, 0, 0.8);
-  }
-}
-:root[data-theme="dark"] {
+/* ---- Dark: standaard, tevens de fallback zonder JS ---- */
+:root {
   color-scheme: dark;
   --deep: #070706; --base: #0c0b09; --panel: #11100e;
   --ink: #f4f1ec; --muted: #9b968d; --faint: #847f77;
@@ -239,9 +216,6 @@ body {
 /* Hero-grain: overlay op donker, multiply op papier. */
 .hd-grain { opacity: 0.045; mix-blend-mode: overlay; }
 :root[data-theme="light"] .hd-grain { opacity: 0.035; mix-blend-mode: multiply; }
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) .hd-grain { opacity: 0.035; mix-blend-mode: multiply; }
-}
 
 /* Inhoud die direct na de pinned hero komt: op desktop onder de uitfadende
    hero schuiven (zelfde conditie als scrollDriven in HeroExperience).
