@@ -1,6 +1,7 @@
 // Screenshots van de homepage (NL en EN) in licht en donker op 390 en 1280 px.
 // Het thema wordt expliciet in localStorage gezet, dus het script werkt vóór en ná de wissel naar donker-als-standaard.
-// Draaien: server op 3111 (`npm run build && npm start`), dan `node tests/visual/theme-shots.mjs <uitvoermap>`.
+// Draaien (symlink ../node_modules/playwright nodig, net als in tests/e2e/switch-cookie.mjs): server op 3111 (`npm run build && npm start`), dan `node tests/visual/theme-shots.mjs <uitvoermap>`.
+import assert from "node:assert/strict";
 import { chromium } from "playwright";
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
@@ -24,7 +25,9 @@ try {
       const page = await ctx.newPage();
       for (const [path, name] of [["/", "nl"], ["/en", "en"]]) {
         await page.goto(`${BASE}${path}`, { waitUntil: "networkidle" });
-        await page.waitForTimeout(400);
+        await page.waitForTimeout(3200); // hero-intro (1,4 s; mobiel 2,8 s) loopt op tijd, ook bij reduced motion
+        assert.equal(new URL(page.url()).pathname, path, `${name}: geen redirect`);
+        assert.equal(await page.locator("html").getAttribute("data-theme"), theme, `${name}: thema toegepast`);
         await page.screenshot({ path: join(out, `${name}-${theme}-${width}.png`), fullPage: true });
       }
       await ctx.close();
