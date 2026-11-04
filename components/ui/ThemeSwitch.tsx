@@ -14,13 +14,14 @@ export type ThemeLabels = { toLight: string; toDark: string; light: string; dark
  * maat, zodat er geen layout-shift is.
  */
 export function ThemeSwitch({ className, size = "md", labels }: { className?: string; size?: "md" | "lg"; labels: ThemeLabels }) {
-  const { resolvedTheme, setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const iconRef = useRef<HTMLSpanElement>(null);
   const clicked = useRef(false);
   useEffect(() => setMounted(true), []);
 
-  const dark = resolvedTheme === "dark";
+  // Gelijk aan de CSS-regel: alles behalve "light" is donker (ook een oude waarde "system" in localStorage).
+  const dark = theme !== "light";
 
   // Icoon draait en schaalt in na een klik. Web Animations i.p.v. een CSS-transition:
   // next-themes (disableTransitionOnChange) zet tijdens de wissel alle transitions uit.
