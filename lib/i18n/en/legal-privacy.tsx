@@ -161,7 +161,7 @@ export function PrivacyBody() {
       </p>
       <p>
         I do want to be sure that you really are you. So I reply to the email address I know you by, and if in doubt
-        I may ask an extra question. Not to be awkward, but to protect your data.
+        I may ask an extra question. I do that to protect your data.
       </p>
 
       <h2>Questions or complaints?</h2>

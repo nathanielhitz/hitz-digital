@@ -42,7 +42,7 @@ export const services: ServicesDict = {
     {
       n: "02",
       title: "I build a concrete demo",
-      body: "You get to see a real demo site, focused on your new homepage. No pitch or PowerPoint, but something you can click through yourself.",
+      body: "You get to see a real demo site, focused on your new homepage. You open it in your browser and click through it yourself.",
     },
     {
       n: "03",
@@ -52,18 +52,18 @@ export const services: ServicesDict = {
   ],
 
   zoWerkIk: [
-    { title: "Yours, and it stays that way", body: "Your website and domain are registered in your name. No lock-in. You're never stuck with me." },
+    { title: "Yours, and it stays that way", body: "Your website and domain are registered in your name. If you ever leave, you take everything with you." },
     {
       title: "Clear pricing up front",
-      body: `Websites from ${euro(pricing.website.from)}, hosting from ${euro(online.monthly)} a month, maintenance ${euro(onderhoud.monthly)} a month, help ${euro(pricing.hulp.quarter)} per 15 minutes. All incl. VAT, no small print.`,
+      body: `Websites from ${euro(pricing.website.from)}, hosting from ${euro(online.monthly)} a month, maintenance ${euro(onderhoud.monthly)} a month, help ${euro(pricing.hulp.quarter)} per 15 minutes. All incl. VAT.`,
     },
     { title: "Cancel any time", body: "That includes the hosting. Your domain just runs to the end of the year it's registered for." },
-    { title: "One message is enough", body: "No account manager, no ticket system. You message or call me, and I reply myself." },
+    { title: "One message is enough", body: "You message or call me, and I reply myself." },
   ],
 
   over: {
-    title: "One person. Straight answers. No hassle.",
-    body: "I'm Nathaniel, from Puttershoek in the Netherlands. I run HitzDigital on my own, for small businesses here and abroad. I build your website, keep it online and step in the moment your computer or email lets you down. Not a big agency working from templates. Just one person you can message directly.",
+    title: "One person for everything around your website.",
+    body: "I'm Nathaniel, from Puttershoek in the Netherlands. I run HitzDigital on my own, for small businesses here and abroad. I build your website, keep it online and step in the moment your computer or email lets you down. You can message me directly.",
     facts: ["One point of contact", "Everything agreed up front", "Based in the Netherlands"],
     portraitAlt: "Nathaniel, founder of HitzDigital",
   },
@@ -89,7 +89,7 @@ export const services: ServicesDict = {
   ],
   websiteFaq: [
     { q: "How long does it take?", a: "The demo of your homepage is usually ready within a week. The complete website then goes live in two to four weeks, depending on how quickly copy and photos come together." },
-    { q: "What exactly is the demo?", a: "A real, working preview of your new homepage that you can open in your own browser. No sketch or PowerPoint. So you see what your site will look like before you decide anything." },
+    { q: "What exactly is the demo?", a: "A real, working preview of your new homepage that you can open in your own browser. So you see what your site will look like before you decide anything." },
     { q: "What if I don't like the demo?", a: "Then it ends there, with no cost and no obligation. The demo is and stays free." },
     { q: "Do I have to write the copy myself?", a: "No. You're welcome to supply it, but I also write it for you based on a short conversation. You supply photos, or I source fitting imagery." },
     { q: "Can I edit the site myself?", a: "Yes. You change copy, photos, prices and opening hours yourself, without technical knowledge. Rather not? Then one small change per month is included in the maintenance plan." },

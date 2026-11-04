@@ -41,7 +41,7 @@ export const services = {
     {
       n: "02",
       title: "Ik maak een concrete demo",
-      body: "Je krijgt een echte demo-site te zien, met vooral je nieuwe homepage. Geen praatje of PowerPoint, maar iets wat je zelf kunt bekijken.",
+      body: "Je krijgt een echte demo-site te zien, met vooral je nieuwe homepage. Je opent hem in je browser en klikt er zelf doorheen.",
     },
     {
       n: "03",
@@ -51,18 +51,18 @@ export const services = {
   ],
 
   zoWerkIk: [
-    { title: "Van jou, en dat blijft zo", body: "Je website en domein staan op jouw naam. Geen gijzeling, geen vastzitten aan mij." },
+    { title: "Van jou, en dat blijft zo", body: "Je website en domein staan op jouw naam. Wil je ooit weg, dan neem je alles mee." },
     {
       title: "Duidelijke prijs vooraf",
-      body: `Website vanaf ${euro(pricing.website.from)}, hosting vanaf ${euro(online.monthly)} per maand, onderhoud ${euro(onderhoud.monthly)} per maand, hulp ${euro(pricing.hulp.quarter)} per kwartier. Alles incl. btw, geen kleine lettertjes.`,
+      body: `Website vanaf ${euro(pricing.website.from)}, hosting vanaf ${euro(online.monthly)} per maand, onderhoud ${euro(onderhoud.monthly)} per maand, hulp ${euro(pricing.hulp.quarter)} per kwartier. Alles incl. btw.`,
     },
     { title: "Maandelijks opzegbaar", body: "Ook de hosting. Je domein loopt gewoon door tot het einde van het jaar waarvoor het geregistreerd is." },
-    { title: "Eén appje is genoeg", body: "Geen accountmanager, geen ticketsysteem. Je appt of belt mij, en ik reageer zelf." },
+    { title: "Eén appje is genoeg", body: "Je appt of belt mij, en ik reageer zelf." },
   ],
 
   over: {
-    title: "Eén persoon. Korte lijnen. Geen gedoe.",
-    body: "Ik ben Nathaniel, uit Puttershoek. Ik bouw HitzDigital in mijn eentje voor ondernemers in de Hoeksche Waard. Ik maak je website, zorg dat hij online blijft en kijk direct mee als je computer of mail niet meewerkt. Geen landelijk bureau met sjablonen, maar iemand uit de regio die je gewoon kunt appen.",
+    title: "Eén persoon voor alles rond je website.",
+    body: "Ik ben Nathaniel, uit Puttershoek. Ik bouw HitzDigital in mijn eentje voor ondernemers in de Hoeksche Waard. Ik maak je website, zorg dat hij online blijft en kijk direct mee als je computer of mail niet meewerkt. Ik woon zelf in de regio en je kunt me gewoon appen.",
     facts: ["Eén aanspreekpunt", "Duidelijke afspraken", "Uit de Hoeksche Waard"],
     portraitAlt: "Nathaniel, oprichter van HitzDigital",
   },
@@ -88,7 +88,7 @@ export const services = {
   ],
   websiteFaq: [
     { q: "Hoe lang duurt het?", a: "De demo van je homepage heb je meestal binnen een week. De complete website staat daarna in twee tot vier weken live, afhankelijk van hoe snel teksten en foto's rond zijn." },
-    { q: "Wat is de demo precies?", a: "Een echte, werkende voorproef van je nieuwe homepage die je zelf in je browser kunt bekijken. Geen schets of PowerPoint. Zo zie je hoe je site eruit gaat zien voordat je iets beslist." },
+    { q: "Wat is de demo precies?", a: "Een echte, werkende voorproef van je nieuwe homepage die je zelf in je browser kunt bekijken. Zo zie je hoe je site eruit gaat zien voordat je iets beslist." },
     { q: "Wat als de demo niet bevalt?", a: "Dan stopt het daar, zonder kosten en zonder verplichtingen. De demo is en blijft gratis." },
     { q: "Moet ik zelf teksten schrijven?", a: "Nee. Je mag ze zelf aanleveren, maar ik schrijf ze ook voor je op basis van een kort gesprek. Foto's lever je aan, of ik zorg voor passende beelden." },
     { q: "Kan ik de site zelf aanpassen?", a: "Ja. Teksten, foto's, prijzen en openingstijden pas je zelf aan zonder technische kennis. Wil je dat liever niet zelf doen, dan zit een kleine wijziging per maand in het onderhoudspakket." },

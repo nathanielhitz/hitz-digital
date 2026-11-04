@@ -157,7 +157,7 @@ export function PrivacyBody() {
       </p>
       <p>
         Ik wil wel zeker weten dat jij ook echt jij bent. Daarom reageer ik op het e-mailadres dat ik van je ken en
-        kan ik bij twijfel een extra vraag stellen. Niet om lastig te doen, maar om jouw gegevens te beschermen.
+        kan ik bij twijfel een extra vraag stellen. Dat doe ik om jouw gegevens te beschermen.
       </p>
 
       <h2>Heb je vragen of klachten?</h2>

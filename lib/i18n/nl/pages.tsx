@@ -29,7 +29,7 @@ const overH1 = { pre: "Eén persoon achter alles rond je ", accent: "website", p
 
 /** Lead van de juridische pagina's: staat zowel in de hero als op de OG-afbeelding. */
 const privacyLead = "Ik vind het belangrijk dat je weet wat ik met jouw gegevens doe. Op deze pagina lees je hoe ik dat doe.";
-const voorwaardenLead = "Geen kleine lettertjes, maar wel duidelijke afspraken. Dit is wat je van mij kunt verwachten en wat ik van jou verwacht.";
+const voorwaardenLead = "Duidelijke afspraken in gewone taal. Dit is wat je van mij kunt verwachten en wat ik van jou verwacht.";
 
 /** Copy per pagina: metadata, OG-afbeelding, hero, secties, CTA-band. */
 export const pages = {
@@ -62,7 +62,7 @@ export const pages = {
       },
     },
     pijlers: { title: "Drie dingen die ik voor je regel." },
-    zoWerkIk: { title: "Duidelijk vooraf. Geen verrassingen achteraf." },
+    zoWerkIk: { title: "Je weet vooraf wat het kost." },
     werk: {
       eyebrow: "Werk",
       teaserTitle: "Bedrijven die je al voorgingen.",
@@ -245,7 +245,7 @@ export const pages = {
     crumb: "Werk",
     hero: {
       title: "Voorbeelden van mijn werk.",
-      lead: "Geen sjablonen, geen stockfoto's. Sites die ik gebouwd heb voor bedrijven in de regio, en een paar eigen projecten. Bij de klanten lees je hoe het ging.",
+      lead: "Sites die ik zelf ontworpen en gebouwd heb voor bedrijven in de regio, en een paar eigen projecten. Bij de klanten lees je hoe het ging.",
     },
     ctaBand: {
       title: "Wil je dit ook voor jouw bedrijf?",
@@ -280,13 +280,13 @@ export const pages = {
     crumb: "Over",
     hero: {
       title: accented(overH1),
-      lead: `Ik ben Nathaniel. ${site.name} is mijn eenmanszaak in Puttershoek, voor ondernemers in de Hoeksche Waard. Geen bureau, geen tussenlaag: je hebt altijd met mij te maken.`,
+      lead: `Ik ben Nathaniel. ${site.name} is mijn eenmanszaak in Puttershoek, voor ondernemers in de Hoeksche Waard. Je hebt altijd met mij te maken.`,
     },
     sections: [
       {
         title: "Wie ik ben",
         paragraphs: [
-          `Ik ben Nathaniel, uit Puttershoek. Ik run ${site.name} in mijn eentje, voor ondernemers in de Hoeksche Waard. Geen landelijk bureau met sjablonen, maar iemand uit de regio die je gewoon kunt appen.`,
+          `Ik ben Nathaniel, uit Puttershoek. Ik run ${site.name} in mijn eentje, voor ondernemers in de Hoeksche Waard. Ik woon zelf in de regio en je kunt me gewoon appen.`,
           "Ik hou van werk dat klopt: een site die snel laadt, mail die gewoon binnenkomt, een computer die niet in de weg zit. En ik leg het uit in gewone taal, zodat jij snapt wat er gebeurt en zelf keuzes kunt maken.",
         ],
       },
@@ -300,8 +300,8 @@ export const pages = {
       {
         title: "Hoe ik werk",
         paragraphs: [
-          "Duidelijke prijs vooraf, alles incl. btw, geen kleine lettertjes. Je website en je domein staan op jouw naam en blijven van jou. Hosting is maandelijks opzegbaar. Hulp die niets oplost, kost je niets.",
-          "Je appt of belt mij en ik reageer zelf, meestal binnen een werkdag. Geen ticketsysteem, geen accountmanager. Kleine dingen regel ik tussendoor; voor grotere klussen spreken we vooraf af wat het wordt.",
+          "Duidelijke prijs vooraf, alles incl. btw. Je website en je domein staan op jouw naam en blijven van jou. Hosting is maandelijks opzegbaar. Hulp die niets oplost, kost je niets.",
+          "Je appt of belt mij en ik reageer zelf, meestal binnen een werkdag. Kleine dingen regel ik tussendoor; voor grotere klussen spreken we vooraf af wat het wordt.",
         ],
       },
       {

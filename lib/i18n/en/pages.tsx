@@ -30,7 +30,7 @@ const overH1 = { pre: "One person behind everything to do with your ", accent: "
 
 /** Lead van de juridische pagina's: staat zowel in de hero als op de OG-afbeelding. */
 const privacyLead = "I think it matters that you know what I do with your data. This page explains how I handle it.";
-const voorwaardenLead = "No small print, but clear agreements. This is what you can expect from me, and what I expect from you.";
+const voorwaardenLead = "Clear agreements in plain language. This is what you can expect from me, and what I expect from you.";
 
 /** Copy per pagina: metadata, OG-afbeelding, hero, secties, CTA-band. */
 export const pages: PagesDict = {
@@ -63,7 +63,7 @@ export const pages: PagesDict = {
       },
     },
     pijlers: { title: "Three things I take care of for you." },
-    zoWerkIk: { title: "Clear up front. No surprises afterwards." },
+    zoWerkIk: { title: "You know the price up front." },
     werk: {
       eyebrow: "Work",
       teaserTitle: "Businesses I've already built for.",
@@ -246,7 +246,7 @@ export const pages: PagesDict = {
     crumb: "Work",
     hero: {
       title: "Examples of my work.",
-      lead: "No templates, no stock photos. Sites I built for businesses in my region, plus a few projects of my own. For the clients, you can read how it went.",
+      lead: "Sites I designed and built myself for businesses in my region, plus a few projects of my own. For the clients, you can read how it went.",
     },
     ctaBand: {
       title: "Want this for your business too?",
@@ -281,13 +281,13 @@ export const pages: PagesDict = {
     crumb: "About",
     hero: {
       title: accented(overH1),
-      lead: `I'm Nathaniel. ${site.name} is my one-person business in Puttershoek, the Netherlands, for small businesses here and abroad. No agency, no middle layer: you always deal with me.`,
+      lead: `I'm Nathaniel. ${site.name} is my one-person business in Puttershoek, the Netherlands, for small businesses here and abroad. You always deal with me.`,
     },
     sections: [
       {
         title: "Who I am",
         paragraphs: [
-          `I'm Nathaniel, from Puttershoek in the Netherlands. I run ${site.name} on my own, for small businesses here and abroad. Not a big agency working from templates, just one person you can message directly.`,
+          `I'm Nathaniel, from Puttershoek in the Netherlands. I run ${site.name} on my own, for small businesses here and abroad. You can message me directly.`,
           "I like work that simply works: a site that loads fast, email that arrives, a computer that doesn't get in your way. And I explain things in plain language, so you understand what's happening and can make your own decisions.",
         ],
       },
@@ -301,8 +301,8 @@ export const pages: PagesDict = {
       {
         title: "How I work",
         paragraphs: [
-          "A clear price up front, everything incl. VAT, no small print. Your website and domain are registered in your name and stay yours. Hosting can be cancelled monthly. Help that doesn't fix the problem costs you nothing.",
-          "You message or call me and I reply myself, usually within one working day. No ticket system, no account manager. Small things I handle in between; for bigger jobs we agree the scope and price first.",
+          "A clear price up front, everything incl. VAT. Your website and domain are registered in your name and stay yours. Hosting can be cancelled monthly. Help that doesn't fix the problem costs you nothing.",
+          "You message or call me and I reply myself, usually within one working day. Small things I handle in between; for bigger jobs we agree the scope and price first.",
         ],
       },
       {
