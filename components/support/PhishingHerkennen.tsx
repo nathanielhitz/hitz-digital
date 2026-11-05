@@ -77,7 +77,7 @@ export function PhishingHerkennen() {
       </p>
 
       <h2>Toch geklikt of ingelogd?</h2>
-      <ol>
+      <ul>
         <li>
           <strong>Wachtwoord direct wijzigen</strong> op de echte site. Ging het om je mailbox, zie{" "}
           <a href="/support/webmail">Webmail: je mail in de browser</a>. Gebruikte je datzelfde wachtwoord ook ergens
@@ -96,7 +96,7 @@ export function PhishingHerkennen() {
           <a href="mailto:valse-email@fraudehelpdesk.nl">valse-email@fraudehelpdesk.nl</a>. Nep-mails uit naam van je
           bank stuur je door naar je bank; die hebben daar een eigen adres voor.
         </li>
-      </ol>
+      </ul>
 
       <h2>Voorkomen</h2>
       <ul>
