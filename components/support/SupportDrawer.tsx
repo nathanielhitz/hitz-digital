@@ -91,6 +91,7 @@ export function SupportDrawerPanel({ groups, hulpHref, whatsappHref }: { groups:
       const m = document.getElementById("main");
       if (m) {
         m.setAttribute("tabindex", "-1");
+        m.style.outline = "none";
         m.focus({ preventScroll: true });
       }
     }

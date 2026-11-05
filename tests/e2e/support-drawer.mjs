@@ -86,7 +86,9 @@ try {
   assert.equal(s.current, "E-mailinstellingen: IMAP, POP3 en SMTP", "actief item bij start");
   await page.getByRole("dialog", { name: "Handleidingen" }).getByRole("link", { name: B_TITLE }).click();
   await page.waitForURL(BASE + B);
-  await page.waitForTimeout(400); // navigatie laten landen (nieuwe H1, focus-afhandeling van Next)
+  await page.waitForFunction((t) =>
+    document.querySelector("h1")?.textContent?.trim() === t &&
+    document.querySelector('#support-drawer [aria-current="page"]')?.textContent?.trim() === t, B_TITLE);
   s = await state(page);
   assert.equal(s.path, B, "URL na doorklikken");
   assert.equal(s.h1, B_TITLE, "H1 na doorklikken");
