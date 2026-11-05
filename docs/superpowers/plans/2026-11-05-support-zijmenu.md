@@ -46,7 +46,7 @@ Nog een correctie: `Nav.tsx` heeft geen focus-sentinels (de "sentinel" daar is v
 **Files:**
 - Modify: `docs/superpowers/specs/2026-11-05-support-zijmenu-design.md`
 
-- [ ] **Step 1: Vervang de structuursectie van de layout**
+- [x] **Step 1: Vervang de structuursectie van de layout**
 
 Zoek in de spec het kopje `### \`app/[lang]/(site)/support/[slug]/layout.tsx\` (nieuw)` met de alinea eronder en vervang door:
 
@@ -60,7 +60,7 @@ De layout is een server-component. Hij berekent uit `supportArticles` de groepen
 Op `/support` staat geen knop; het paneel is daar inert markup. Een effect in de provider sluit het paneel zodra het pad geen `/support/<slug>` meer is, zodat de scroll-lock nooit op het overzicht blijft hangen.
 ```
 
-- [ ] **Step 2: Pas de tabel "Keuzes" en de focus-regel aan**
+- [x] **Step 2: Pas de tabel "Keuzes" en de focus-regel aan**
 
 In de rij `Techniek` van de tabel "Keuzes": vervang `Paneel in een eigen layout voor de artikelroute` door `Paneel in een layout op het segment support`.
 
@@ -70,7 +70,7 @@ De regel `Bij sluiten gaat focus terug naar de heroknop als die nog in de DOM st
 
 In de tabel "Randgevallen", rij `Navigatie naar /support of elders`: vervang de gedragskolom door `Naar /support: layout blijft, effect sluit het paneel en de cleanup herstelt de scroll. Elders: layout unmount, cleanup herstelt de scroll`.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add docs/superpowers/specs/2026-11-05-support-zijmenu-design.md
@@ -86,7 +86,7 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 **Files:**
 - Create: `tests/e2e/support-drawer.mjs`
 
-- [ ] **Step 1: Schrijf de test**
+- [x] **Step 1: Schrijf de test**
 
 ```js
 // Browsertest voor het support-zijmenu (spec 2026-11-05-support-zijmenu-design.md, sectie Test).
@@ -227,7 +227,7 @@ try {
 }
 ```
 
-- [ ] **Step 2: Build en start de server, draai de test, verwacht falen**
+- [x] **Step 2: Build en start de server, draai de test, verwacht falen**
 
 ```bash
 ls node_modules/playwright >/dev/null 2>&1 || ln -s ../node_modules/playwright node_modules/playwright
@@ -238,7 +238,7 @@ node tests/e2e/support-drawer.mjs
 
 Verwacht: `AssertionError … paneel aria-hidden bij laden` (expected `'true'`, actual `undefined`), want het paneel bestaat nog niet.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add tests/e2e/support-drawer.mjs
@@ -254,7 +254,7 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 **Files:**
 - Create: `components/support/SupportDrawer.tsx`
 
-- [ ] **Step 1: Schrijf het component**
+- [x] **Step 1: Schrijf het component**
 
 ```tsx
 "use client";
@@ -460,7 +460,7 @@ export function SupportDrawerPanel({ groups, hulpHref, whatsappHref }: { groups:
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 npm run typecheck
@@ -468,7 +468,7 @@ npm run typecheck
 
 Verwacht: geen fouten. Als `inert` een type-fout geeft: React 19-types kennen `inert?: boolean`; `Nav.tsx` gebruikt het al, dus de fout zit dan elders.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add components/support/SupportDrawer.tsx
@@ -485,7 +485,7 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 - Create: `app/[lang]/(site)/support/layout.tsx`
 - Modify: `app/[lang]/(site)/support/[slug]/page.tsx`
 
-- [ ] **Step 1: Schrijf de layout**
+- [x] **Step 1: Schrijf de layout**
 
 ```tsx
 import type { ReactNode } from "react";
@@ -517,7 +517,7 @@ export default function SupportLayout({ children }: { children: ReactNode }) {
 }
 ```
 
-- [ ] **Step 2: Knop in de hero en focusbare main**
+- [x] **Step 2: Knop in de hero en focusbare main**
 
 In `app/[lang]/(site)/support/[slug]/page.tsx`:
 
@@ -557,7 +557,7 @@ door
       />
 ```
 
-- [ ] **Step 3: Typecheck en build**
+- [x] **Step 3: Typecheck en build**
 
 ```bash
 npm run typecheck && npm run build
@@ -565,7 +565,7 @@ npm run typecheck && npm run build
 
 Verwacht: beide slagen. Let in de build-uitvoer op `/support/[slug]` als statische route (●) met de twee slugs.
 
-- [ ] **Step 4: Server herstarten en browsertest draaien**
+- [x] **Step 4: Server herstarten en browsertest draaien**
 
 ```bash
 pkill -f "next start" ; sleep 1
@@ -580,7 +580,7 @@ Als check 4 ("paneel blijft open na doorklikken") faalt met `hidden = "true"`: d
 
 Als check 3a faalt op `focus terug op knop`: de knop zit in een `Reveal`; die verandert alleen opacity/transform, dus focus werkt. Controleer dan of `aria-controls` exact `support-drawer` is.
 
-- [ ] **Step 5: Bestaande e2e-tests blijven groen**
+- [x] **Step 5: Bestaande e2e-tests blijven groen**
 
 ```bash
 npm run test:e2e
@@ -588,7 +588,7 @@ npm run test:e2e
 
 Verwacht: alle tests slagen (de i18n-test bezoekt `/support/e-mail-instellingen` en verwacht 200).
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add "app/[lang]/(site)/support/layout.tsx" "app/[lang]/(site)/support/[slug]/page.tsx"
@@ -604,7 +604,7 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 **Files:**
 - Create: `tests/visual/support-drawer-shots.mjs`
 
-- [ ] **Step 1: Schrijf het screenshot-script**
+- [x] **Step 1: Schrijf het screenshot-script**
 
 ```js
 // Screenshots van het support-zijmenu: licht en donker, dicht en open, op 1280 en 390 px.
@@ -641,7 +641,7 @@ try {
 }
 ```
 
-- [ ] **Step 2: Draai het script naar de projectmap met screenshots**
+- [x] **Step 2: Draai het script naar de projectmap met screenshots**
 
 ```bash
 node tests/visual/support-drawer-shots.mjs ../screenshots/support-zijmenu
@@ -649,7 +649,7 @@ node tests/visual/support-drawer-shots.mjs ../screenshots/support-zijmenu
 
 Verwacht: 8 PNG's in `/Users/nathaniel/Documents/Hitzdigital-web/screenshots/support-zijmenu/`.
 
-- [ ] **Step 3: Bekijk de 4 "open"-screenshots met de Read-tool en controleer**
+- [x] **Step 3: Bekijk de 4 "open"-screenshots met de Read-tool en controleer**
 
 - Paneel staat links, begint onder de header, logo en navigatie zijn vrij.
 - Scrim dimt de pagina, paneel is leesbaar in licht en donker.
@@ -659,7 +659,7 @@ Verwacht: 8 PNG's in `/Users/nathaniel/Documents/Hitzdigital-web/screenshots/sup
 
 Wijkt iets af, pas de klassen in `components/support/SupportDrawer.tsx` aan, build opnieuw, herstart de server en maak de screenshots opnieuw.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add tests/visual/support-drawer-shots.mjs
@@ -672,7 +672,7 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 
 ### Task 6: Afronden
 
-- [ ] **Step 1: Server stoppen en checklist afvinken**
+- [x] **Step 1: Server stoppen en checklist afvinken**
 
 ```bash
 pkill -f "next start"
@@ -688,6 +688,6 @@ git commit -m "Plan: alle stappen afgevinkt
 Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 ```
 
-- [ ] **Step 2: Rapporteer aan Nathaniel, zonder te pushen**
+- [x] **Step 2: Rapporteer aan Nathaniel, zonder te pushen**
 
 Meld: welke commits er staan, dat de browsertest slaagt, waar de screenshots staan, en dat `git push origin main` de deploy naar Vercel start. Pushen is zijn beslissing.
