@@ -19,15 +19,19 @@ Er zijn nu twee artikelen, beide in de categorie E-mail. Het menu is gebouwd voo
 | Waar de knop staat | Alleen op artikelpagina's, in de hero tussen kruimelpad en titel. Niet op `/support` zelf |
 | Scrim | Pagina dimt en vervaagt (glas), scroll van de pagina staat vast zolang het paneel open is |
 | Sluiten | Kruisje, Escape, klik op de scrim |
-| Techniek | Paneel in een eigen layout voor de artikelroute, links in het paneel via `next/link`, zodat de open-status navigatie overleeft zonder flits |
+| Techniek | Paneel in een layout op het segment support, links in het paneel via `next/link`, zodat de open-status navigatie overleeft zonder flits |
 
 Niet in scope: zoekveld, "Meer weergeven", inhoudsopgave van het artikel, vaste knop aan de linkerrand bij scrollen, Engelse versie (support bestaat alleen in het Nederlands).
 
 ## Structuur
 
-### `app/[lang]/(site)/support/[slug]/layout.tsx` (nieuw)
+### `app/[lang]/(site)/support/layout.tsx` (nieuw)
 
-Omhult alleen artikelpagina's. Rendert `SupportDrawerProvider` met daarin `children` en `SupportDrawerPanel`. Omdat de layout gemonteerd blijft bij client-side navigatie tussen artikelen, overleeft de open-status.
+Omhult het overzicht `/support` en alle artikelpagina's. Een layout ín het dynamische segment `[slug]` zou bij een slug-wissel opnieuw mounten (de cache-sleutel bevat de slug), waardoor de open-status verloren gaat; op het statische segment `support` blijft de layout gemonteerd bij client-side navigatie tussen artikelen.
+
+De layout is een server-component. Hij berekent uit `supportArticles` de groepen `{ category, items: { slug, title }[] }[]` in bestandsvolgorde en geeft die als props aan het paneel, zodat `lib/support.ts` (dat de artikel-componenten importeert) buiten de client-bundel blijft. Rendert `SupportDrawerProvider` met daarin `children` en `SupportDrawerPanel`.
+
+Op `/support` staat geen knop; het paneel is daar inert markup. Een effect in de provider sluit het paneel zodra het pad geen `/support/<slug>` meer is, zodat de scroll-lock nooit op het overzicht blijft hangen.
 
 ### `components/support/SupportDrawer.tsx` (nieuw, client)
 
@@ -49,7 +53,7 @@ Geen wijziging.
 
 ### Afhankelijkheden
 
-Geen nieuwe. Overgangen in CSS, icoon uit `@phosphor-icons/react`, dialoogpatroon gelijk aan het mobiele menu in `components/layout/Nav.tsx` (Escape, focusbeheer met sentinels, `inert`, scroll-lock via `document.body.style.overflow`).
+Geen nieuwe. Overgangen in CSS, icoon uit `@phosphor-icons/react`, dialoogpatroon gelijk aan het mobiele menu in `components/layout/Nav.tsx` (Escape, `inert`, scroll-lock via `document.body.style.overflow`).
 
 ## Uiterlijk
 
@@ -94,8 +98,8 @@ Bij `prefers-reduced-motion`: geen verschuiving, alleen opacity, via `motion-red
 ### Openen en sluiten
 
 - Open via de heroknop. Dicht via kruisje, Escape, klik op de scrim.
-- Focus gaat bij openen naar het kruisje. Focus blijft binnen het paneel via sentinels, zoals in `Nav`.
-- Bij sluiten gaat focus terug naar de heroknop als die nog in de DOM staat. Na doorklikken is het een nieuwe knop; dan krijgt die de focus, anders `main`.
+- Focus gaat bij openen naar het kruisje. Focus blijft binnen het paneel: een keydown-handler op het paneel vangt Tab en Shift+Tab op en springt rond tussen het eerste en laatste focusbare element.
+- Bij sluiten gaat focus naar het element met `aria-controls="support-drawer"` (de heroknop, na doorklikken automatisch de nieuwe), anders naar `main` (dat daarvoor `tabIndex={-1}` krijgt).
 - Zolang het paneel open is staat `document.body.style.overflow = "hidden"`. Hersteld bij sluiten en bij unmount van de layout.
 
 ### Doorklikken
@@ -110,7 +114,7 @@ Bij `prefers-reduced-motion`: geen verschuiving, alleen opacity, via `motion-red
 | Situatie | Gedrag |
 |---|---|
 | Browser terug-knop tussen twee artikelen | Next herstelt de vorige artikelpagina binnen dezelfde layout; paneel houdt zijn status. Geen extra code |
-| Navigatie naar `/support` of elders | Layout unmount, scroll-lock opgeruimd in de cleanup van het effect |
+| Navigatie naar `/support` of elders | Naar `/support`: layout blijft, effect sluit het paneel en de cleanup herstelt de scroll. Elders: layout unmount, cleanup herstelt de scroll |
 | Themawissel terwijl open | Tokens veranderen mee, niets extra's |
 | Venster smaller dan 420px | Paneel `calc(100% - 48px)`, scrimstrook blijft klikbaar |
 | JavaScript uit | Knop doet niets; kruimelpad en `/support` werken. Gelijk aan het mobiele menu |
