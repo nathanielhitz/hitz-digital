@@ -5,6 +5,7 @@ import { Webmail } from "@/components/support/Webmail";
 import { MailWerktNiet } from "@/components/support/MailWerktNiet";
 import { DomeinActief } from "@/components/support/DomeinActief";
 import { BrowsercacheLegen } from "@/components/support/BrowsercacheLegen";
+import { GeenSlotje } from "@/components/support/GeenSlotje";
 
 export type SupportArticle = {
   slug: string;
@@ -77,6 +78,15 @@ export const supportArticles: readonly SupportArticle[] = [
     updated: "5 november 2026",
     updatedIso: "2026-11-05",
     body: BrowsercacheLegen,
+  },
+  {
+    slug: "geen-slotje",
+    title: "Geen slotje in de browser?",
+    summary: "Waarom Chrome geen slotje meer toont, wat een beveiligingswaarschuwing op je eigen site betekent, en wanneer het aan je apparaat of wifi ligt.",
+    category: "Website",
+    updated: "5 november 2026",
+    updatedIso: "2026-11-05",
+    body: GeenSlotje,
   },
 ];
 
