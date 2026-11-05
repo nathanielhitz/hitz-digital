@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { pricing, euro } from "@/lib/pricing";
 import { site } from "@/lib/site";
+import { href } from "../paths";
 import type { PagesDict } from "../nl/pages";
 
 const accent = (word: string): ReactNode => <em className="hd-accent-word not-italic text-accent">{word}</em>;
@@ -289,7 +290,7 @@ export const pages: PagesDict = {
         paragraphs: [
           `I'm Nathaniel, from Puttershoek in the Netherlands. I run ${site.name} on my own, for small businesses here and abroad. You can message me directly.`,
           "I was already behind a computer as a toddler, and that interest never left. I built my first website in 2013, at fourteen. Thirteen years later I turned it into my business. Too often I saw small businesses pay a lot for a site that didn't match their work, or get stuck with a builder who stopped replying. That could be done better, more affordably and closer to home.",
-          "I was born in Puttershoek and have lived here all my life. I like helping people, I like creative work, and I like a problem that needs solving. This job brings all of that together. The bilingual site for Volmer Techniek and the new site for Mourits Schilderwerken are the projects I'm proudest of. Both are under Work.",
+          `I was born in Puttershoek and have lived here all my life. I like helping people, I like creative work, and I like a problem that needs solving. This job brings all of that together. The bilingual site for [Volmer Techniek](${href("en", "werk", "volmer-techniek")}) and the new site for [Mourits Schilderwerken](${href("en", "werk", "mourits-schilderwerken")}) are the projects I'm proudest of. Both are under [Work](${href("en", "werk")}).`,
           "I like work that simply works: a site that loads fast, email that arrives, a computer that doesn't get in your way. And I explain things in plain language, so you understand what's happening and can make your own decisions.",
         ],
       },

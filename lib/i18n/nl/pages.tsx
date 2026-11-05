@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { pricing, euro } from "@/lib/pricing";
 import { site } from "@/lib/site";
+import { href } from "../paths";
 
 const accent = (word: string): ReactNode => <em className="hd-accent-word not-italic text-accent">{word}</em>;
 
@@ -288,7 +289,7 @@ export const pages = {
         paragraphs: [
           `Ik ben Nathaniel, uit Puttershoek. Ik run ${site.name} in mijn eentje, voor ondernemers in de Hoeksche Waard.`,
           "Als kleuter zat ik al achter de computer, en die interesse is nooit weggegaan. Mijn eerste website bouwde ik in 2013, op mijn veertiende. Dertien jaar later heb ik er mijn bedrijf van gemaakt. Ik zag te vaak dat ondernemers hier veel betaalden voor een site die niet bij hun werk paste, of vastzaten bij een bouwer die niet meer reageerde. Dat kon beter, betaalbaarder en dichterbij.",
-          "Ik ben geboren in Puttershoek en heb hier altijd gewoond. Ik help graag mensen, ik hou van creatief werk en van een probleem dat opgelost moet worden. In dit vak komt dat samen. De tweetalige site van Volmer Techniek en de nieuwe site van Mourits Schilderwerken zijn de klussen waar ik het meest trots op ben. Allebei staan ze bij Werk.",
+          `Ik ben geboren in Puttershoek en heb hier altijd gewoond. Ik help graag mensen, ik hou van creatief werk en van een probleem dat opgelost moet worden. In dit vak komt dat samen. De tweetalige site van [Volmer Techniek](${href("nl", "werk", "volmer-techniek")}) en de nieuwe site van [Mourits Schilderwerken](${href("nl", "werk", "mourits-schilderwerken")}) zijn de klussen waar ik het meest trots op ben. Allebei staan ze bij [Werk](${href("nl", "werk")}).`,
           "Ik hou van werk dat klopt: een site die snel laadt, mail die gewoon binnenkomt, een computer die niet in de weg zit. En ik leg het uit in gewone taal, zodat jij snapt wat er gebeurt en zelf keuzes kunt maken.",
         ],
       },

@@ -3,6 +3,7 @@ import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Reveal } from "@/components/ui/Reveal";
+import { Inline } from "@/components/ui/Inline";
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { getDict } from "@/lib/i18n";
 import { href, type Lang } from "@/lib/i18n/paths";
@@ -19,7 +20,9 @@ export function Over({ lang }: { lang: Lang }) {
             </SectionTitle>
             <div className="mb-[18px] max-w-[480px] space-y-4 text-[16px] leading-[1.65] text-muted">
               {over.paragraphs.map((p) => (
-                <p key={p}>{p}</p>
+                <p key={p}>
+                  <Inline text={p} linkClassName="text-ink hover:text-accent-bright" />
+                </p>
               ))}
             </div>
             {/* Losse feiten met ruimte ertussen, geen scheidingstekens (max één middelpunt per regel). */}

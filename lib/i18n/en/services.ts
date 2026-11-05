@@ -65,7 +65,7 @@ export const services: ServicesDict = {
     title: "One person for everything around your website.",
     paragraphs: [
       "I'm Nathaniel, from Puttershoek in the Netherlands. HitzDigital is my one-person business, for small businesses here and abroad. I build your website, keep it online and step in the moment your computer or email lets you down.",
-      "I've been building websites since I was fourteen. It started as a hobby in 2013, and in 2026 I turned it into HitzDigital. I felt that small businesses deserved better and more affordable work, from someone who lives on the same island. The sites for Volmer Techniek and Mourits Schilderwerken show what I mean by that.",
+      `I've been building websites since I was fourteen. It started as a hobby in 2013, and in 2026 I turned it into HitzDigital. I felt that small businesses deserved better and more affordable work, from someone who lives on the same island. The sites for [Volmer Techniek](${href(L, "werk", "volmer-techniek")}) and [Mourits Schilderwerken](${href(L, "werk", "mourits-schilderwerken")}) show what I mean by that.`,
       "I was born in Puttershoek and still live here. I like helping people and solving problems. That's why I explain what I do in plain language, so you can decide for yourself. If I need to come over, there's no call-out fee within the Hoeksche Waard.",
     ],
     facts: ["One point of contact", "Everything agreed up front", "Based in the Netherlands", "Websites since 2013"],

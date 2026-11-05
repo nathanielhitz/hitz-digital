@@ -6,6 +6,7 @@ import { Prose } from "@/components/page/Prose";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Reveal } from "@/components/ui/Reveal";
+import { Inline } from "@/components/ui/Inline";
 import { getDict } from "@/lib/i18n";
 import { pageMetadata } from "@/lib/i18n/meta";
 import { href, langOf, type LangParams } from "@/lib/i18n/paths";
@@ -54,7 +55,9 @@ export default async function OverPage({ params }: LangParams) {
                   <section key={s.title}>
                     <h2>{s.title}</h2>
                     {s.paragraphs.map((p) => (
-                      <p key={p}>{p}</p>
+                      <p key={p}>
+                        <Inline text={p} />
+                      </p>
                     ))}
                   </section>
                 ))}

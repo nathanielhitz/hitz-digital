@@ -79,7 +79,10 @@ const labels = {
 
 export type MarkdownPage = { title: string; description: string; canonical: string; markdown: string };
 
-const section = (title: string, ...parts: (string | undefined | null | false)[]) => [`## ${title}`, ...parts.filter(Boolean)].join("\n\n");
+/** Markdown-links met een relatief pad (`](/werk/...)`) worden absoluut; de teksten zelf blijven relatief voor next/link. */
+const absLinks = (s: string) => s.replace(/\]\((\/[^)\s]*)\)/g, (_, p: string) => `](${abs(p)})`);
+const section = (title: string, ...parts: (string | undefined | null | false)[]) =>
+  [`## ${title}`, ...parts.filter((p): p is string => Boolean(p)).map(absLinks)].join("\n\n");
 const bullets = (items: readonly string[]) => items.map((i) => `- ${i}`).join("\n");
 const faq = (items: readonly { q: string; a: string }[]) => items.map((f) => `**${f.q}**\n${f.a}`).join("\n\n");
 const link = (text: string, url: string) => `[${text}](${url})`;
