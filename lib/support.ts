@@ -6,6 +6,8 @@ import { MailWerktNiet } from "@/components/support/MailWerktNiet";
 import { DomeinActief } from "@/components/support/DomeinActief";
 import { BrowsercacheLegen } from "@/components/support/BrowsercacheLegen";
 import { GeenSlotje } from "@/components/support/GeenSlotje";
+import { PhishingHerkennen } from "@/components/support/PhishingHerkennen";
+import { BackupMaken } from "@/components/support/BackupMaken";
 
 export type SupportArticle = {
   slug: string;
@@ -87,6 +89,24 @@ export const supportArticles: readonly SupportArticle[] = [
     updated: "5 november 2026",
     updatedIso: "2026-11-05",
     body: GeenSlotje,
+  },
+  {
+    slug: "phishing-herkennen",
+    title: "Valse mail herkennen",
+    summary: "Vijf controles voordat je klikt, de trucs die ondernemers het vaakst krijgen, en wat je doet als je toch hebt geklikt.",
+    category: "Computer",
+    updated: "5 november 2026",
+    updatedIso: "2026-11-05",
+    body: PhishingHerkennen,
+  },
+  {
+    slug: "backup-maken",
+    title: "Back-up maken van je laptop of pc",
+    summary: "Twee plekken, waarvan één buiten de deur. Stappen voor Mac, Windows en je telefoon, plus hoe je test of het werkt.",
+    category: "Computer",
+    updated: "5 november 2026",
+    updatedIso: "2026-11-05",
+    body: BackupMaken,
   },
 ];
 
