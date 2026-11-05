@@ -12,6 +12,8 @@ type ButtonProps = {
   onClick?: () => void;
   type?: "button" | "submit";
   ariaLabel?: string;
+  ariaExpanded?: boolean;
+  ariaControls?: string;
 };
 
 const base =
@@ -42,17 +44,35 @@ export function Button({
   onClick,
   type = "button",
   ariaLabel,
+  ariaExpanded,
+  ariaControls,
 }: ButtonProps) {
   const cls = cn(base, sizes[size], variants[variant], className);
   if (href) {
     return (
-      <a href={href} target={target} rel={rel} className={cls} onClick={onClick} aria-label={ariaLabel}>
+      <a
+        href={href}
+        target={target}
+        rel={rel}
+        className={cls}
+        onClick={onClick}
+        aria-label={ariaLabel}
+        aria-expanded={ariaExpanded}
+        aria-controls={ariaControls}
+      >
         {children}
       </a>
     );
   }
   return (
-    <button type={type} className={cls} onClick={onClick} aria-label={ariaLabel}>
+    <button
+      type={type}
+      className={cls}
+      onClick={onClick}
+      aria-label={ariaLabel}
+      aria-expanded={ariaExpanded}
+      aria-controls={ariaControls}
+    >
       {children}
     </button>
   );

@@ -51,7 +51,7 @@ export default async function SupportArticlePage({ params }: SlugParams) {
         crumbs={[{ label: "Support", href: "/support" }, { label: a.title }]}
         title={a.title}
         lead={a.summary}
-        actions={<SupportDrawerButton />}
+        before={<SupportDrawerButton />}
       />
       <section id="artikel" className="px-[clamp(20px,5vw,64px)] pb-10 md:pb-12">
         <Container>

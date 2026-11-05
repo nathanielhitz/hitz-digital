@@ -1,5 +1,6 @@
 // Browsertest voor het support-zijmenu (spec 2026-11-05-support-zijmenu-design.md, sectie Test).
-// Draaien: server op 3111 (`npm run build && npm start`), symlink ../node_modules/playwright, dan `node tests/e2e/support-drawer.mjs`.
+// Draaien: oude server stoppen met `kill $(lsof -t -iTCP:3111 -sTCP:LISTEN)`, starten met `npm run build && npm start` (poort 3111),
+// dan `node tests/e2e/support-drawer.mjs`.
 import { chromium } from "playwright";
 import assert from "node:assert/strict";
 
@@ -62,6 +63,8 @@ try {
   await page.waitForTimeout(250);
   s = await state(page);
   assert.equal(s.hidden, "true", "dicht na scrim-klik");
+  assert.equal(s.overflow, "", "overflow hersteld na scrim-klik");
+  assert.equal(s.focused, "Alle handleidingen", "focus terug op knop na scrim-klik");
 
   // 3c. Kruisje sluit.
   await openBtn.click();
@@ -70,6 +73,8 @@ try {
   await page.waitForTimeout(250);
   s = await state(page);
   assert.equal(s.hidden, "true", "dicht na kruisje");
+  assert.equal(s.overflow, "", "overflow hersteld na kruisje");
+  assert.equal(s.focused, "Alle handleidingen", "focus terug op knop na kruisje");
 
   // 4. Doorklikken: paneel blijft open, actieve markering verspringt.
   await openBtn.click();

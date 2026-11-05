@@ -8,6 +8,7 @@ import type { Lang } from "@/lib/i18n/paths";
  * Rustige kop voor subpagina's: kruimelpad, H1, subkop, knoppen. Geen label-decoratie.
  * Met `aside`: twee kolommen, gloed rechtsboven achter het blok. Zonder `aside`: één kolom en
  * geen gloed (decoratie zonder iets om achter te staan leest als een losse vlek).
+ * Met `before`: een slot tussen kruimelpad en titel (bijvoorbeeld de zijmenuknop op supportartikelen).
  */
 export function PageHero({
   lang,
@@ -16,6 +17,7 @@ export function PageHero({
   lead,
   actions,
   aside,
+  before,
 }: {
   lang: Lang;
   crumbs: Crumb[];
@@ -23,6 +25,7 @@ export function PageHero({
   lead?: string;
   actions?: ReactNode;
   aside?: ReactNode;
+  before?: ReactNode;
 }) {
   return (
     <section className="relative px-[clamp(20px,5vw,64px)] pb-6 md:pb-10 pt-[clamp(120px,16vw,168px)]">
@@ -35,6 +38,7 @@ export function PageHero({
       <Container className="relative">
         <Reveal>
           <Breadcrumbs lang={lang} items={crumbs} />
+          {before && <div className="mt-6">{before}</div>}
           <div className={aside ? "mt-8 grid grid-cols-1 items-end gap-10 min-[901px]:grid-cols-[1.1fr_0.9fr]" : "mt-8"}>
             <div>
               <h1 className="max-w-[16ch] font-display text-[clamp(36px,5vw,64px)] font-semibold leading-[1.04] tracking-[-0.035em] [text-wrap:balance]">

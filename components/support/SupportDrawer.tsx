@@ -37,16 +37,10 @@ export function SupportDrawerProvider({ children }: { children: ReactNode }) {
 export function SupportDrawerButton() {
   const { open, setOpen } = useContext(DrawerContext);
   return (
-    <button
-      type="button"
-      aria-expanded={open}
-      aria-controls={PANEL_ID}
-      onClick={() => setOpen(true)}
-      className="inline-flex items-center gap-[10px] rounded-full border border-line px-[17px] py-[9px] text-[14px] font-medium leading-none text-ink transition-[transform,border-color,background-color] duration-[250ms] ease-[cubic-bezier(.2,.7,.2,1)] hover:-translate-y-0.5 hover:border-accent/55 hover:bg-accent/10 active:translate-y-0 active:scale-[0.98] active:duration-[120ms]"
-    >
+    <Button variant="ghost" size="sm" ariaExpanded={open} ariaControls={PANEL_ID} onClick={() => setOpen(true)}>
       <List size={16} weight="bold" aria-hidden />
       Alle handleidingen
-    </button>
+    </Button>
   );
 }
 
@@ -129,7 +123,7 @@ export function SupportDrawerPanel({ groups, hulpHref, whatsappHref }: { groups:
         inert={!open}
         onKeyDown={onKeyDown}
         className={cn(
-          "fixed inset-y-0 left-0 z-[60] flex w-[360px] max-w-[calc(100%-48px)] flex-col border-r border-line bg-glass/97 pt-[88px] backdrop-blur-[12px]",
+          "fixed bottom-0 left-0 top-[88px] z-[60] flex w-[360px] max-w-[calc(100%-48px)] flex-col border-r border-line bg-glass/97 backdrop-blur-[12px]",
           "transition-transform motion-reduce:transition-opacity",
           EASE,
           open
@@ -191,7 +185,7 @@ export function SupportDrawerPanel({ groups, hulpHref, whatsappHref }: { groups:
               Computer- en websitehulp
             </a>
           </p>
-          <Button href={whatsappHref} target="_blank" rel="noopener noreferrer" size="sm" className="mt-4">
+          <Button href={whatsappHref} target="_blank" rel="noopener noreferrer" size="sm" onClick={close} className="mt-4">
             App me
           </Button>
         </div>
