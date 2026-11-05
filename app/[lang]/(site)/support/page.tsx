@@ -25,7 +25,7 @@ export default async function SupportPage({ params }: LangParams) {
   if (lang !== "nl") notFound(); // support bestaat alleen in het Nederlands (spec §1)
   const categories = Array.from(new Set(supportArticles.map((a) => a.category)));
   return (
-    <main id="main" tabIndex={-1} className="relative z-[2] bg-deep outline-none">
+    <main id="main" className="relative z-[2] bg-deep">
       <PageHero
         lang="nl"
         crumbs={[{ label: "Support" }]}

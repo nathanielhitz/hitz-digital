@@ -26,6 +26,8 @@ const state = (page) =>
     };
   });
 
+const waitHidden = (page, v) => page.waitForFunction((v) => document.getElementById("support-drawer")?.getAttribute("aria-hidden") === v, v);
+
 const browser = await chromium.launch({ executablePath: CHROME });
 try {
   // 1. Dicht bij laden.
@@ -40,7 +42,8 @@ try {
   // 2. Openen: open, focus op kruisje, scroll-lock.
   const openBtn = page.getByRole("button", { name: "Alle handleidingen" });
   await openBtn.click();
-  await page.waitForTimeout(400);
+  await waitHidden(page, "false");
+  await page.waitForFunction(() => document.activeElement?.getAttribute("aria-label") === "Menu sluiten");
   s = await state(page);
   assert.equal(s.hidden, "false", "paneel zichtbaar na klik");
   assert.equal(s.inert, false, "paneel niet inert na klik");
@@ -50,7 +53,7 @@ try {
 
   // 3a. Escape sluit, overflow hersteld, focus terug op de knop.
   await page.keyboard.press("Escape");
-  await page.waitForTimeout(250);
+  await waitHidden(page, "true");
   s = await state(page);
   assert.equal(s.hidden, "true", "dicht na Escape");
   assert.equal(s.overflow, "", "overflow hersteld na Escape");
@@ -58,9 +61,9 @@ try {
 
   // 3b. Scrim-klik sluit.
   await openBtn.click();
-  await page.waitForTimeout(400);
+  await waitHidden(page, "false");
   await page.mouse.click(1000, 500);
-  await page.waitForTimeout(250);
+  await waitHidden(page, "true");
   s = await state(page);
   assert.equal(s.hidden, "true", "dicht na scrim-klik");
   assert.equal(s.overflow, "", "overflow hersteld na scrim-klik");
@@ -68,9 +71,9 @@ try {
 
   // 3c. Kruisje sluit.
   await openBtn.click();
-  await page.waitForTimeout(400);
+  await waitHidden(page, "false");
   await page.getByRole("button", { name: "Menu sluiten" }).click();
-  await page.waitForTimeout(250);
+  await waitHidden(page, "true");
   s = await state(page);
   assert.equal(s.hidden, "true", "dicht na kruisje");
   assert.equal(s.overflow, "", "overflow hersteld na kruisje");
@@ -78,22 +81,23 @@ try {
 
   // 4. Doorklikken: paneel blijft open, actieve markering verspringt.
   await openBtn.click();
-  await page.waitForTimeout(400);
+  await waitHidden(page, "false");
   s = await state(page);
   assert.equal(s.current, "E-mailinstellingen: IMAP, POP3 en SMTP", "actief item bij start");
   await page.getByRole("dialog", { name: "Handleidingen" }).getByRole("link", { name: B_TITLE }).click();
   await page.waitForURL(BASE + B);
-  await page.waitForTimeout(400);
+  await page.waitForTimeout(400); // navigatie laten landen (nieuwe H1, focus-afhandeling van Next)
   s = await state(page);
   assert.equal(s.path, B, "URL na doorklikken");
   assert.equal(s.h1, B_TITLE, "H1 na doorklikken");
   assert.equal(s.hidden, "false", "paneel blijft open na doorklikken");
   assert.equal(s.overflow, "hidden", "scroll-lock blijft na doorklikken");
   assert.equal(s.current, B_TITLE, "actief item verspringt");
+  assert.equal(await page.evaluate(() => document.getElementById("support-drawer").contains(document.activeElement)), true, "focus blijft in het paneel na doorklikken");
 
   // 5. Klik op het actieve artikel sluit zonder navigatie.
   await page.getByRole("dialog", { name: "Handleidingen" }).getByRole("link", { name: B_TITLE }).click();
-  await page.waitForTimeout(250);
+  await waitHidden(page, "true");
   s = await state(page);
   assert.equal(s.path, B, "geen navigatie bij klik op actief item");
   assert.equal(s.hidden, "true", "dicht na klik op actief item");
@@ -101,7 +105,7 @@ try {
 
   // 6. Onderin: link naar /hulp en App me aanwezig.
   await page.getByRole("button", { name: "Alle handleidingen" }).click();
-  await page.waitForTimeout(400);
+  await waitHidden(page, "false");
   const dialog = page.getByRole("dialog", { name: "Handleidingen" });
   assert.equal(await dialog.getByRole("link", { name: "Computer- en websitehulp" }).getAttribute("href"), "/hulp", "link naar /hulp");
   assert.match(await dialog.getByRole("link", { name: "App me" }).getAttribute("href"), /^https:\/\/wa\.me\//, "App me naar WhatsApp");
@@ -112,7 +116,7 @@ try {
   page = await ctx.newPage();
   await page.goto(BASE + A);
   await page.getByRole("button", { name: "Alle handleidingen" }).click();
-  await page.waitForTimeout(400);
+  await waitHidden(page, "false");
   const widths = await page.evaluate(() => ({
     scroll: document.documentElement.scrollWidth,
     client: document.documentElement.clientWidth,
@@ -121,7 +125,7 @@ try {
   assert.equal(widths.scroll, widths.client, "geen horizontale scroll op 375px");
   assert.equal(widths.panel, 375 - 48, "paneel 100% min 48px op 375px");
   await page.mouse.click(365, 400);
-  await page.waitForTimeout(250);
+  await waitHidden(page, "true");
   s = await state(page);
   assert.equal(s.hidden, "true", "scrimstrook sluit op 375px");
   await ctx.close();

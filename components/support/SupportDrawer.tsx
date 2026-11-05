@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { List, X } from "@phosphor-icons/react/dist/ssr";
@@ -30,7 +30,10 @@ export function SupportDrawerProvider({ children }: { children: ReactNode }) {
     if (!onArticle) setOpen(false);
   }, [onArticle]);
 
-  return <DrawerContext.Provider value={{ open, setOpen }}>{children}</DrawerContext.Provider>;
+  // Buiten een artikelpagina is het paneel altijd dicht, ook in de render vóór het effect hierboven.
+  const value = useMemo(() => ({ open: open && onArticle, setOpen }), [open, onArticle]);
+
+  return <DrawerContext.Provider value={value}>{children}</DrawerContext.Provider>;
 }
 
 /** Ghost-pil in de hero van een artikelpagina. Wordt gevonden via aria-controls voor de focus-teruggave. */
@@ -55,7 +58,7 @@ export function SupportDrawerPanel({ groups, hulpHref, whatsappHref }: { groups:
   const { open, setOpen } = useContext(DrawerContext);
   const panelRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
-  const firstRender = useRef(true);
+  const prevOpen = useRef(open);
   const current = publicPath(usePathname() ?? "/");
   const close = useCallback(() => setOpen(false), [setOpen]);
 
@@ -73,17 +76,24 @@ export function SupportDrawerPanel({ groups, hulpHref, whatsappHref }: { groups:
     };
   }, [open, close]);
 
+  // Alleen bij een echte wissel (ook veilig bij de dubbele effect-run van StrictMode).
   useEffect(() => {
-    if (firstRender.current) {
-      firstRender.current = false;
-      return;
-    }
+    if (prevOpen.current === open) return;
+    prevOpen.current = open;
     if (open) {
       closeRef.current?.focus();
       return;
     }
-    const back = document.querySelector<HTMLElement>(`[aria-controls="${PANEL_ID}"]`) ?? document.getElementById("main");
-    back?.focus();
+    const back = document.querySelector<HTMLElement>(`[aria-controls="${PANEL_ID}"]`);
+    if (back) back.focus({ preventScroll: true });
+    else {
+      // main krijgt tabindex pas hier, zodat Next bij navigatie niet zelf main focust (dan verlaat focus het paneel).
+      const m = document.getElementById("main");
+      if (m) {
+        m.setAttribute("tabindex", "-1");
+        m.focus({ preventScroll: true });
+      }
+    }
   }, [open]);
 
   // Tab en Shift+Tab blijven binnen het paneel.
@@ -108,7 +118,7 @@ export function SupportDrawerPanel({ groups, hulpHref, whatsappHref }: { groups:
         aria-hidden
         onClick={close}
         className={cn(
-          "fixed inset-0 z-[60] bg-deep/55 backdrop-blur-[6px] transition-opacity",
+          "fixed inset-0 z-[55] bg-deep/55 backdrop-blur-[6px] transition-opacity",
           EASE,
           open ? "opacity-100 duration-[220ms]" : "pointer-events-none opacity-0 duration-[180ms]",
         )}
@@ -123,7 +133,7 @@ export function SupportDrawerPanel({ groups, hulpHref, whatsappHref }: { groups:
         inert={!open}
         onKeyDown={onKeyDown}
         className={cn(
-          "fixed bottom-0 left-0 top-[88px] z-[60] flex w-[360px] max-w-[calc(100%-48px)] flex-col border-r border-line bg-glass/97 backdrop-blur-[12px]",
+          "fixed bottom-0 left-0 top-[88px] z-[55] flex w-[360px] max-w-[calc(100%-48px)] flex-col border-r border-line bg-glass/97 backdrop-blur-[12px]",
           "transition-transform motion-reduce:transition-opacity",
           EASE,
           open

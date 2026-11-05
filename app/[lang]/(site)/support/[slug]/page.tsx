@@ -44,7 +44,7 @@ export default async function SupportArticlePage({ params }: SlugParams) {
     publisher: { "@type": "ProfessionalService", name: site.name, url: site.url },
   };
   return (
-    <main id="main" tabIndex={-1} className="relative z-[2] bg-deep outline-none">
+    <main id="main" className="relative z-[2] bg-deep">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <PageHero
         lang="nl"
