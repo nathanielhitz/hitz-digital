@@ -7,4 +7,5 @@ Bestandsnaam zonder extensie staat in components/support/Webmail.tsx; .webp heef
 04-identiteiten    Instellingen › Identiteiten: Weergavenaam, Ondertekening, Opslaan
 05-twee-factor     Instellingen › Twee-factor-authenticatie: Mobiele app, E-mail, Yubikey
 
-Vervangen: nieuwe screenshot verkleinen naar 1400px breed en als webp opslaan met dezelfde naam.
+Kaders en pijlen: scripts/annotate-webmail.js (originelen staan buiten de repo in ../screenshots/support-webmail/originals/).
+Vervangen: nieuwe originele screenshot in die map zetten, coördinaten in het script nalopen en het script draaien.
