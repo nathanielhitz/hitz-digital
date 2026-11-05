@@ -3,6 +3,7 @@ import { EmailInstellingen } from "@/components/support/EmailInstellingen";
 import { EmailIphone } from "@/components/support/EmailIphone";
 import { Webmail } from "@/components/support/Webmail";
 import { MailWerktNiet } from "@/components/support/MailWerktNiet";
+import { DomeinActief } from "@/components/support/DomeinActief";
 
 export type SupportArticle = {
   slug: string;
@@ -57,6 +58,15 @@ export const supportArticles: readonly SupportArticle[] = [
     updated: "5 november 2026",
     updatedIso: "2026-11-05",
     body: MailWerktNiet,
+  },
+  {
+    slug: "domeinnaam-direct-actief",
+    title: "Is mijn nieuwe domeinnaam direct actief?",
+    summary: "Hoe snel een nieuwe of verhuisde domeinnaam werkt, waarom het bij jou soms later is dan bij een ander, en hoe je zelf controleert of alles klopt.",
+    category: "Domein & DNS",
+    updated: "5 november 2026",
+    updatedIso: "2026-11-05",
+    body: DomeinActief,
   },
 ];
 
