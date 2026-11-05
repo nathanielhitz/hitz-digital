@@ -41,11 +41,11 @@ Eén bestand met drie exports die dezelfde status delen:
 - `SupportDrawerButton`: ghost-pil (variant `ghost`, maat `sm`) met Phosphor-icoon `List` en tekst "Alle handleidingen". Heeft `aria-expanded` en `aria-controls="support-drawer"`.
 - `SupportDrawerPanel`: scrim en paneel. `role="dialog"`, `aria-modal="true"`, `aria-label="Handleidingen"`, `id="support-drawer"`, `aria-hidden` en `inert` als dicht.
 
-Het paneel leest `supportArticles` uit `lib/support.ts` en groepeert op `category` in bestandsvolgorde. Actief artikel komt uit `usePathname()`.
+Het paneel krijgt de groepen als props van de layout (zie hierboven). Actief artikel komt uit `publicPath(usePathname())`, want de middleware herschrijft naar `/nl/…`.
 
 ### `app/[lang]/(site)/support/[slug]/page.tsx` (bestaand)
 
-Enige wijziging: `actions={<SupportDrawerButton />}` op `PageHero`.
+`PageHero` krijgt een optionele slot `before` (tussen kruimelpad en titel); de pagina geeft daar `<SupportDrawerButton />` in en zet `tabIndex={-1}` op `main`. `components/ui/Button.tsx` krijgt optionele props `ariaExpanded` en `ariaControls`.
 
 ### `lib/support.ts` (bestaand)
 
@@ -72,7 +72,7 @@ Volledig scherm, `fixed inset-0`, `bg-deep/55` met `backdrop-blur-[6px]`. Klik s
 ### Paneel
 
 - Positie: links, van de onderkant van de header tot de onderkant van het venster (`top` gelijk aan de headerhoogte, zodat logo en navigatie vrij blijven).
-- Breedte: 360px op desktop; op vensters smaller dan 420px `calc(100% - 48px)`, zodat een strook scrim zichtbaar en klikbaar blijft.
+- Breedte: 360px, met `max-width: calc(100% - 48px)`, zodat op smalle vensters altijd een strook scrim van 48px zichtbaar en klikbaar blijft.
 - Achtergrond `bg-glass/97`, `backdrop-blur-[12px]`, rechterrand `border-r border-line`.
 - Inhoud scrolt zelfstandig (`overflow-y: auto`). De scrollpositie in het paneel blijft staan bij doorklikken.
 
@@ -107,7 +107,7 @@ Bij `prefers-reduced-motion`: geen verschuiving, alleen opacity, via `motion-red
 - Artikellinks in het paneel zijn `next/link` naar `/support/<slug>`. Navigatie is client-side, de layout blijft, `open` blijft `true`, de scroll-lock blijft staan, de actieve markering verspringt.
 - Klik op het actieve artikel sluit het paneel in plaats van opnieuw te laden.
 - De pagina onder het paneel start bovenaan (nieuw artikel), de scroll in het paneel blijft waar hij was.
-- De link naar `/hulp` en de WhatsApp-knop zijn gewone `<a href>`. Ze verlaten de route; de layout unmount en ruimt de scroll-lock op.
+- De link naar `/hulp` is een gewone `<a href>`; de layout unmount en ruimt de scroll-lock op. De WhatsApp-knop opent in een nieuw tabblad (siteconventie) en sluit het paneel in het huidige tabblad.
 
 ### Randgevallen
 
@@ -122,7 +122,7 @@ Bij `prefers-reduced-motion`: geen verschuiving, alleen opacity, via `motion-red
 
 ## Test
 
-Playwright via `npx`, lokale Chromium 1243, dev-server op poort 3111.
+Playwright uit `../node_modules`, lokale Chromium 1243, productieserver op poort 3111 (`npm run build && npm start`).
 
 1. Paneel staat dicht bij laden: `aria-hidden="true"`, `inert`, knop `aria-expanded="false"`.
 2. Klik op de knop: paneel open, `aria-expanded="true"`, focus op het kruisje, `body` heeft `overflow: hidden`.
