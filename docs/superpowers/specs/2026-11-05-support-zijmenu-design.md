@@ -45,7 +45,7 @@ Het paneel krijgt de groepen als props van de layout (zie hierboven). Actief art
 
 ### `app/[lang]/(site)/support/[slug]/page.tsx` (bestaand)
 
-`PageHero` krijgt een optionele slot `before` (tussen kruimelpad en titel); de pagina geeft daar `<SupportDrawerButton />` in en zet `tabIndex={-1}` op `main`. `components/ui/Button.tsx` krijgt optionele props `ariaExpanded` en `ariaControls`.
+`PageHero` krijgt een optionele slot `before` (tussen kruimelpad en titel); de pagina geeft daar `<SupportDrawerButton />` in. `components/ui/Button.tsx` krijgt optionele props `ariaExpanded` en `ariaControls`.
 
 ### `lib/support.ts` (bestaand)
 
@@ -62,7 +62,7 @@ Geen nieuwe. Overgangen in CSS, icoon uit `@phosphor-icons/react`, dialoogpatroo
 | Laag | z-index | Opmerking |
 |---|---|---|
 | Header (`Nav`) | 70 | Blijft zichtbaar en bruikbaar boven de scrim |
-| Scrim en paneel | 60 | Gelijk aan het mobiele menu |
+| Scrim en paneel | 55 | Onder het mobiele menu van Nav (60), zodat de hamburger het zijmenu afdekt |
 | WhatsApp-knop | lager | Valt onder de scrim |
 
 ### Scrim
@@ -99,7 +99,7 @@ Bij `prefers-reduced-motion`: geen verschuiving, alleen opacity, via `motion-red
 
 - Open via de heroknop. Dicht via kruisje, Escape, klik op de scrim.
 - Focus gaat bij openen naar het kruisje. Focus blijft binnen het paneel: een keydown-handler op het paneel vangt Tab en Shift+Tab op en springt rond tussen het eerste en laatste focusbare element.
-- Bij sluiten gaat focus naar het element met `aria-controls="support-drawer"` (de heroknop, na doorklikken automatisch de nieuwe), anders naar `main` (dat daarvoor `tabIndex={-1}` krijgt).
+- Bij sluiten gaat focus naar het element met `aria-controls="support-drawer"` (de heroknop, na doorklikken automatisch de nieuwe), anders naar `main` (krijgt op dat moment `tabindex=-1` via script, zodat Next bij navigatie niet zelf `main` focust).
 - Zolang het paneel open is staat `document.body.style.overflow = "hidden"`. Hersteld bij sluiten en bij unmount van de layout.
 
 ### Doorklikken
