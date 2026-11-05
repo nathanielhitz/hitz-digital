@@ -4,6 +4,7 @@ import { EmailIphone } from "@/components/support/EmailIphone";
 import { Webmail } from "@/components/support/Webmail";
 import { MailWerktNiet } from "@/components/support/MailWerktNiet";
 import { DomeinActief } from "@/components/support/DomeinActief";
+import { BrowsercacheLegen } from "@/components/support/BrowsercacheLegen";
 
 export type SupportArticle = {
   slug: string;
@@ -67,6 +68,15 @@ export const supportArticles: readonly SupportArticle[] = [
     updated: "5 november 2026",
     updatedIso: "2026-11-05",
     body: DomeinActief,
+  },
+  {
+    slug: "browsercache-legen",
+    title: "Je ziet je wijziging niet? Browsercache legen",
+    summary: "Je site is aangepast, maar jij ziet nog de oude versie. Eerst de snelle test, daarna per browser de stappen op computer en telefoon.",
+    category: "Website",
+    updated: "5 november 2026",
+    updatedIso: "2026-11-05",
+    body: BrowsercacheLegen,
   },
 ];
 
