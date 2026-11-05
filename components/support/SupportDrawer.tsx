@@ -17,9 +17,9 @@ const PANEL_ID = "support-drawer";
 const EASE = "ease-[cubic-bezier(.23,1,.32,1)]";
 
 /**
- * Open-status van het zijmenu. Leeft in app/[lang]/(site)/support/layout.tsx, dus blijft staan
- * bij client-side navigatie tussen artikelen. Sluit zichzelf zodra het pad geen artikelpagina is
- * (bijvoorbeeld terug naar /support), zodat de scroll-lock nooit achterblijft.
+ * Open-status van het zijmenu. Leeft in app/[lang]/(site)/support/layout.tsx, dus het paneel blijft
+ * gemonteerd bij client-side navigatie tussen artikelen (sluit-animatie zonder flits). Sluit zichzelf
+ * zodra het pad geen artikelpagina is (bijvoorbeeld terug naar /support), zodat de scroll-lock nooit achterblijft.
  */
 export function SupportDrawerProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -58,6 +58,8 @@ export function SupportDrawerPanel({ groups, hulpHref, whatsappHref }: { groups:
   const { open, setOpen } = useContext(DrawerContext);
   const panelRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  // Gezet bij klik op een artikel in het paneel: na de navigatie krijgt de knop van de nieuwe pagina focus.
+  const viaPanel = useRef(false);
   const prevOpen = useRef(open);
   const current = publicPath(usePathname() ?? "/");
   const close = useCallback(() => setOpen(false), [setOpen]);
@@ -96,6 +98,13 @@ export function SupportDrawerPanel({ groups, hulpHref, whatsappHref }: { groups:
       }
     }
   }, [open]);
+
+  // Na doorklikken vanuit het paneel is de oude heroknop weg (nieuwe pagina); focus de nieuwe, zonder te scrollen.
+  useEffect(() => {
+    if (!viaPanel.current) return;
+    viaPanel.current = false;
+    document.querySelector<HTMLElement>(`[aria-controls="${PANEL_ID}"]`)?.focus({ preventScroll: true });
+  }, [current]);
 
   // Tab en Shift+Tab blijven binnen het paneel.
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -169,10 +178,10 @@ export function SupportDrawerPanel({ groups, hulpHref, whatsappHref }: { groups:
                         href={href}
                         aria-current={active ? "page" : undefined}
                         onClick={(e) => {
-                          if (active) {
-                            e.preventDefault();
-                            close();
-                          }
+                          // Sluit altijd: na de keuze wil je lezen, niet eerst het paneel wegklikken.
+                          if (active) e.preventDefault();
+                          else viaPanel.current = true;
+                          close();
                         }}
                         className={cn(
                           "-ml-3 block border-l-2 py-[7px] pl-3 pr-2 text-[14.5px] leading-[1.4] transition-colors",

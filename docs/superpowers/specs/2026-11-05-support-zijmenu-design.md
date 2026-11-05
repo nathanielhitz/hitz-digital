@@ -5,7 +5,7 @@
 
 ## Waarom
 
-Op een artikelpagina onder `/support/<slug>` is de enige weg naar andere handleidingen het kruimelpad terug naar `/support`. Een zijmenu met alle handleidingen maakt doorklikken mogelijk zonder de pagina te verlaten. Voorbeeld is het paneel "Alle handleidingen" van Vimexx: knop boven de titel, paneel schuift van links in, blijft open bij doorklikken.
+Op een artikelpagina onder `/support/<slug>` is de enige weg naar andere handleidingen het kruimelpad terug naar `/support`. Een zijmenu met alle handleidingen maakt doorklikken mogelijk zonder de pagina te verlaten. Voorbeeld is het paneel "Alle handleidingen" van Vimexx: knop boven de titel, paneel schuift van links in.
 
 Er zijn nu twee artikelen, beide in de categorie E-mail. Het menu is gebouwd voor groei: een artikel registreren in `lib/support.ts` is automatisch een menu-item. Om het paneel nu al nuttig te maken staan onderin vaste ingangen naar computer- en websitehulp en naar WhatsApp.
 
@@ -15,11 +15,11 @@ Er zijn nu twee artikelen, beide in de categorie E-mail. Het menu is gebouwd voo
 |---|---|
 | Inhoud | Support-artikelen per categorie, plus link naar `/hulp` en knop "App me" onderin |
 | Gedrag desktop en mobiel | Standaard dicht, knop in de hero, paneel schuift van links in. Eén gedrag, overal |
-| Open blijven | Ja. Na klik op een artikel in het paneel blijft het paneel open en verspringt de actieve markering |
+| Sluiten bij keuze | Ja. Na klik op een artikel sluit het paneel en laadt het artikel; de actieve markering staat de volgende keer op het nieuwe artikel. (Gewijzigd 5 nov: eerst "blijft open", maar dan moet je het paneel eerst wegklikken voordat je kunt lezen) |
 | Waar de knop staat | Alleen op artikelpagina's, in de hero tussen kruimelpad en titel. Niet op `/support` zelf |
 | Scrim | Pagina dimt en vervaagt (glas), scroll van de pagina staat vast zolang het paneel open is |
 | Sluiten | Kruisje, Escape, klik op de scrim |
-| Techniek | Paneel in een layout op het segment support, links in het paneel via `next/link`, zodat de open-status navigatie overleeft zonder flits |
+| Techniek | Paneel in een layout op het segment support, links in het paneel via `next/link`, zodat het paneel gemonteerd blijft tijdens de navigatie (sluit-animatie zonder flits, actieve markering uit `usePathname`) |
 
 Niet in scope: zoekveld, "Meer weergeven", inhoudsopgave van het artikel, vaste knop aan de linkerrand bij scrollen, Engelse versie (support bestaat alleen in het Nederlands).
 
@@ -27,7 +27,7 @@ Niet in scope: zoekveld, "Meer weergeven", inhoudsopgave van het artikel, vaste 
 
 ### `app/[lang]/(site)/support/layout.tsx` (nieuw)
 
-Omhult het overzicht `/support` en alle artikelpagina's. Een layout ín het dynamische segment `[slug]` zou bij een slug-wissel opnieuw mounten (de cache-sleutel bevat de slug), waardoor de open-status verloren gaat; op het statische segment `support` blijft de layout gemonteerd bij client-side navigatie tussen artikelen.
+Omhult het overzicht `/support` en alle artikelpagina's. Een layout ín het dynamische segment `[slug]` zou bij een slug-wissel opnieuw mounten (de cache-sleutel bevat de slug), waardoor het paneel midden in de sluit-animatie zou verdwijnen; op het statische segment `support` blijft de layout gemonteerd bij client-side navigatie tussen artikelen.
 
 De layout is een server-component. Hij berekent uit `supportArticles` de groepen `{ category, items: { slug, title }[] }[]` in bestandsvolgorde en geeft die als props aan het paneel, zodat `lib/support.ts` (dat de artikel-componenten importeert) buiten de client-bundel blijft. Rendert `SupportDrawerProvider` met daarin `children` en `SupportDrawerPanel`.
 
@@ -104,9 +104,9 @@ Bij `prefers-reduced-motion`: geen verschuiving, alleen opacity, via `motion-red
 
 ### Doorklikken
 
-- Artikellinks in het paneel zijn `next/link` naar `/support/<slug>`. Navigatie is client-side, de layout blijft, `open` blijft `true`, de scroll-lock blijft staan, de actieve markering verspringt.
+- Artikellinks in het paneel zijn `next/link` naar `/support/<slug>`. Bij klik sluit het paneel (zelfde animatie als het kruisje) en navigeert Next client-side; de layout blijft, dus het paneel schuift rustig dicht terwijl het artikel wisselt. Focus gaat naar de knop "Alle handleidingen" van de nieuwe pagina. De volgende keer dat het paneel opent, staat de actieve markering op het nieuwe artikel.
 - Klik op het actieve artikel sluit het paneel in plaats van opnieuw te laden.
-- De pagina onder het paneel start bovenaan (nieuw artikel), de scroll in het paneel blijft waar hij was.
+- De nieuwe pagina start bovenaan. De scroll in het paneel blijft waar hij was.
 - De link naar `/hulp` is een gewone `<a href>`; de layout unmount en ruimt de scroll-lock op. De WhatsApp-knop opent in een nieuw tabblad (siteconventie) en sluit het paneel in het huidige tabblad.
 
 ### Randgevallen
@@ -127,7 +127,7 @@ Playwright uit `../node_modules`, lokale Chromium 1243, productieserver op poort
 1. Paneel staat dicht bij laden: `aria-hidden="true"`, `inert`, knop `aria-expanded="false"`.
 2. Klik op de knop: paneel open, `aria-expanded="true"`, focus op het kruisje, `body` heeft `overflow: hidden`.
 3. Escape sluit; scrim-klik sluit; kruisje sluit. Na sluiten `overflow` hersteld en focus op de knop.
-4. Open, klik op het andere artikel: URL verandert, H1 verandert, paneel blijft open, `aria-current="page"` staat op het nieuwe item.
+4. Open, klik op het andere artikel: paneel sluit, URL verandert, H1 verandert, scroll-lock weg, `aria-current="page"` staat op het nieuwe item.
 5. Klik op het actieve artikel sluit het paneel zonder navigatie.
 6. Op 375px breed: geen horizontale scroll, scrimstrook rechts van het paneel sluit bij klik.
 7. `prefers-reduced-motion: reduce`: paneel verschijnt zonder transform-overgang.

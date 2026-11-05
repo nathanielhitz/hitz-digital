@@ -5,7 +5,8 @@ import { whatsapp } from "@/lib/content";
 
 /**
  * Omhult /support en /support/<slug>. Staat op het statische segment "support", zodat de layout
- * (en daarmee de open-status van het zijmenu) blijft bij client-side navigatie tussen artikelen.
+ * (en daarmee het zijmenu zelf) gemonteerd blijft bij client-side navigatie tussen artikelen: het paneel
+ * schuift dicht terwijl het artikel wisselt, zonder flits.
  * Groepen worden hier berekend, zodat lib/support.ts (met de artikel-componenten) buiten de client-bundel blijft.
  */
 export default function SupportLayout({ children }: { children: ReactNode }) {

@@ -79,25 +79,28 @@ try {
   assert.equal(s.overflow, "", "overflow hersteld na kruisje");
   assert.equal(s.focused, "Alle handleidingen", "focus terug op knop na kruisje");
 
-  // 4. Doorklikken: paneel blijft open, actieve markering verspringt.
+  // 4. Doorklikken: paneel sluit, pagina wisselt, actieve markering verspringt.
   await openBtn.click();
   await waitHidden(page, "false");
   s = await state(page);
   assert.equal(s.current, "E-mailinstellingen: IMAP, POP3 en SMTP", "actief item bij start");
   await page.getByRole("dialog", { name: "Handleidingen" }).getByRole("link", { name: B_TITLE }).click();
   await page.waitForURL(BASE + B);
+  await waitHidden(page, "true");
   await page.waitForFunction((t) =>
     document.querySelector("h1")?.textContent?.trim() === t &&
     document.querySelector('#support-drawer [aria-current="page"]')?.textContent?.trim() === t, B_TITLE);
   s = await state(page);
   assert.equal(s.path, B, "URL na doorklikken");
   assert.equal(s.h1, B_TITLE, "H1 na doorklikken");
-  assert.equal(s.hidden, "false", "paneel blijft open na doorklikken");
-  assert.equal(s.overflow, "hidden", "scroll-lock blijft na doorklikken");
+  assert.equal(s.hidden, "true", "paneel sluit na doorklikken");
+  assert.equal(s.overflow, "", "scroll-lock weg na doorklikken");
   assert.equal(s.current, B_TITLE, "actief item verspringt");
-  assert.equal(await page.evaluate(() => document.getElementById("support-drawer").contains(document.activeElement)), true, "focus blijft in het paneel na doorklikken");
+  assert.equal(s.focused, "Alle handleidingen", "focus op de knop van de nieuwe pagina");
 
   // 5. Klik op het actieve artikel sluit zonder navigatie.
+  await page.getByRole("button", { name: "Alle handleidingen" }).click();
+  await waitHidden(page, "false");
   await page.getByRole("dialog", { name: "Handleidingen" }).getByRole("link", { name: B_TITLE }).click();
   await waitHidden(page, "true");
   s = await state(page);
