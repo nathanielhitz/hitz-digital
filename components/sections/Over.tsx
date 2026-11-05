@@ -21,7 +21,7 @@ export function Over({ lang }: { lang: Lang }) {
             <div className="mb-[18px] max-w-[480px] space-y-4 text-[16px] leading-[1.65] text-muted">
               {over.paragraphs.map((p) => (
                 <p key={p}>
-                  <Inline text={p} linkClassName="text-ink hover:text-accent-bright" />
+                  <Inline text={p} linkClassName="hover:text-ink" />
                 </p>
               ))}
             </div>

@@ -56,7 +56,7 @@ export default async function OverPage({ params }: LangParams) {
                     <h2>{s.title}</h2>
                     {s.paragraphs.map((p) => (
                       <p key={p}>
-                        <Inline text={p} />
+                        <Inline text={p} linkClassName="text-muted! hover:text-ink!" />
                       </p>
                     ))}
                   </section>
