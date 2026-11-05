@@ -4,6 +4,7 @@ import { PageHero } from "@/components/page/PageHero";
 import { Prose } from "@/components/page/Prose";
 import { Container } from "@/components/layout/Container";
 import { WhatsAppFab } from "@/components/ui/WhatsAppFab";
+import { SupportDrawerButton } from "@/components/support/SupportDrawer";
 import { supportArticles, getSupportArticle } from "@/lib/support";
 import { site } from "@/lib/site";
 import { getDict } from "@/lib/i18n";
@@ -43,9 +44,15 @@ export default async function SupportArticlePage({ params }: SlugParams) {
     publisher: { "@type": "ProfessionalService", name: site.name, url: site.url },
   };
   return (
-    <main id="main" className="relative z-[2] bg-deep">
+    <main id="main" tabIndex={-1} className="relative z-[2] bg-deep outline-none">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
-      <PageHero lang="nl" crumbs={[{ label: "Support", href: "/support" }, { label: a.title }]} title={a.title} lead={a.summary} />
+      <PageHero
+        lang="nl"
+        crumbs={[{ label: "Support", href: "/support" }, { label: a.title }]}
+        title={a.title}
+        lead={a.summary}
+        actions={<SupportDrawerButton />}
+      />
       <section id="artikel" className="px-[clamp(20px,5vw,64px)] pb-10 md:pb-12">
         <Container>
           <Prose>
