@@ -287,6 +287,8 @@ export const pages = {
         title: "Wie ik ben",
         paragraphs: [
           `Ik ben Nathaniel, uit Puttershoek. Ik run ${site.name} in mijn eentje, voor ondernemers in de Hoeksche Waard.`,
+          "Als kleuter zat ik al achter de computer, en die interesse is nooit weggegaan. Mijn eerste website bouwde ik in 2013, op mijn veertiende. Dertien jaar later heb ik er mijn bedrijf van gemaakt. Ik zag te vaak dat ondernemers hier veel betaalden voor een site die niet bij hun werk paste, of vastzaten bij een bouwer die niet meer reageerde. Dat kon beter, betaalbaarder en dichterbij.",
+          "Ik ben geboren in Puttershoek en heb hier altijd gewoond. Ik help graag mensen, ik hou van creatief werk en van een probleem dat opgelost moet worden. In dit vak komt dat samen. De tweetalige site van Volmer Techniek en de nieuwe site van Mourits Schilderwerken zijn de klussen waar ik het meest trots op ben. Allebei staan ze bij Werk.",
           "Ik hou van werk dat klopt: een site die snel laadt, mail die gewoon binnenkomt, een computer die niet in de weg zit. En ik leg het uit in gewone taal, zodat jij snapt wat er gebeurt en zelf keuzes kunt maken.",
         ],
       },

@@ -3,8 +3,9 @@ import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Reveal } from "@/components/ui/Reveal";
+import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { getDict } from "@/lib/i18n";
-import type { Lang } from "@/lib/i18n/paths";
+import { href, type Lang } from "@/lib/i18n/paths";
 
 export function Over({ lang }: { lang: Lang }) {
   const { over } = getDict(lang).services;
@@ -16,13 +17,23 @@ export function Over({ lang }: { lang: Lang }) {
             <SectionTitle size="sm" className="mb-6">
               {over.title}
             </SectionTitle>
-            <p className="mb-[18px] max-w-[480px] text-[16px] leading-[1.65] text-muted">{over.body}</p>
-            {/* Drie losse feiten met ruimte ertussen, geen scheidingstekens (max één middelpunt per regel). */}
+            <div className="mb-[18px] max-w-[480px] space-y-4 text-[16px] leading-[1.65] text-muted">
+              {over.paragraphs.map((p) => (
+                <p key={p}>{p}</p>
+              ))}
+            </div>
+            {/* Losse feiten met ruimte ertussen, geen scheidingstekens (max één middelpunt per regel). */}
             <ul className="flex flex-wrap gap-x-6 gap-y-1 text-[13.5px] text-faint">
               {over.facts.map((f) => (
                 <li key={f}>{f}</li>
               ))}
             </ul>
+            <a
+              href={href(lang, "over")}
+              className="mt-6 inline-flex items-center gap-2 py-1 text-[15px] font-medium text-ink underline-offset-4 hover:underline"
+            >
+              {over.more} <ArrowRight size={16} weight="bold" aria-hidden />
+            </a>
           </div>
           <div className="relative mx-auto aspect-[4/5] w-full max-w-[400px] overflow-hidden rounded-2xl border border-line min-[901px]:ml-auto min-[901px]:mr-0">
             <Image

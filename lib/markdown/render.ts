@@ -122,7 +122,7 @@ function home(lang: Lang): MarkdownPage {
     section(t.pijlers.title, bullets(services.pijlers.map((p) => `**${link(p.title, abs(p.href))}** (${p.price}): ${p.body}`))),
     section(t.zoWerkIk.title, bullets(services.zoWerkIk.map((z) => `**${z.title}**: ${z.body}`))),
     section(t.werk.teaserTitle, bullets(work.map((i) => `${link(i.title, item(i, lang))}: ${w.items[i.slug].meta}`)), link(t.werk.all, abs(href(lang, "werk")))),
-    section(services.over.title, services.over.body, bullets(services.over.facts), link(pages.over.crumb, abs(href(lang, "over")))),
+    section(services.over.title, ...services.over.paragraphs, bullets(services.over.facts), link(pages.over.crumb, abs(href(lang, "over")))),
     section(t.contact.title, t.contact.lead, contactLines(lang)),
   ]);
 }

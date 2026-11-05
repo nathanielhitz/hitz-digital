@@ -62,8 +62,13 @@ export const services = {
 
   over: {
     title: "Eén persoon voor alles rond je website.",
-    body: "Ik ben Nathaniel, uit Puttershoek. HitzDigital is mijn eenmanszaak, voor ondernemers in de Hoeksche Waard. Ik maak je website, zorg dat hij online blijft en kijk direct mee als je computer of mail niet meewerkt. Moet ik langskomen, dan doe ik dat binnen de Hoeksche Waard zonder voorrijkosten.",
-    facts: ["Eén aanspreekpunt", "Duidelijke afspraken", "Uit de Hoeksche Waard"],
+    paragraphs: [
+      "Ik ben Nathaniel, uit Puttershoek. HitzDigital is mijn eenmanszaak, voor ondernemers in de Hoeksche Waard. Ik maak je website, zorg dat hij online blijft en kijk direct mee als je computer of mail niet meewerkt.",
+      "Websites bouwen doe ik sinds mijn veertiende. In 2013 begon dat als hobby, in 2026 heb ik er HitzDigital van gemaakt. Ik vond dat het voor ondernemers hier beter en betaalbaarder kon, van iemand van het eiland zelf. De sites van Volmer Techniek en Mourits Schilderwerken laten zien wat ik daarmee bedoel.",
+      "Ik ben geboren en getogen in Puttershoek en woon hier nog steeds. Ik help graag mensen en hou van problemen oplossen. Daarom leg ik uit wat ik doe in gewone taal, zodat je zelf kunt beslissen. Moet ik langskomen, dan doe ik dat binnen de Hoeksche Waard zonder voorrijkosten.",
+    ],
+    facts: ["Eén aanspreekpunt", "Duidelijke afspraken", "Uit de Hoeksche Waard", "Websites sinds 2013"],
+    more: "Meer over mij",
     portraitAlt: "Nathaniel, oprichter van HitzDigital",
   },
 
