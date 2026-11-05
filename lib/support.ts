@@ -1,6 +1,7 @@
 import type { ComponentType } from "react";
 import { EmailInstellingen } from "@/components/support/EmailInstellingen";
 import { EmailIphone } from "@/components/support/EmailIphone";
+import { Webmail } from "@/components/support/Webmail";
 
 export type SupportArticle = {
   slug: string;
@@ -37,6 +38,15 @@ export const supportArticles: readonly SupportArticle[] = [
     updated: "27 augustus 2026",
     updatedIso: "2026-08-27",
     body: EmailIphone,
+  },
+  {
+    slug: "webmail",
+    title: "Webmail: je mail in de browser",
+    summary: "Overal bij je zakelijke mail zonder iets in te stellen. Inloggen, handtekening, wachtwoord wijzigen en extra beveiliging.",
+    category: "E-mail",
+    updated: "5 november 2026",
+    updatedIso: "2026-11-05",
+    body: Webmail,
   },
 ];
 

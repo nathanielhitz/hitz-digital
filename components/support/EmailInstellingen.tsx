@@ -103,7 +103,8 @@ export function EmailInstellingen() {
       <p>
         Wil je snel even je mail bekijken zonder iets in te stellen? Ga naar{" "}
         <code className="font-mono text-[14px] text-ink">https://mail.zxcs.nl</code> en log in met je e-mailadres
-        en wachtwoord.
+        en wachtwoord. Hoe webmail werkt, inclusief handtekening en wachtwoord wijzigen, staat in{" "}
+        <a href="/support/webmail">Webmail: je mail in de browser</a>.
       </p>
 
       <h2>Goed om te weten</h2>
