@@ -2,6 +2,7 @@ import type { ComponentType } from "react";
 import { EmailInstellingen } from "@/components/support/EmailInstellingen";
 import { EmailIphone } from "@/components/support/EmailIphone";
 import { Webmail } from "@/components/support/Webmail";
+import { MailWerktNiet } from "@/components/support/MailWerktNiet";
 
 export type SupportArticle = {
   slug: string;
@@ -47,6 +48,15 @@ export const supportArticles: readonly SupportArticle[] = [
     updated: "5 november 2026",
     updatedIso: "2026-11-05",
     body: Webmail,
+  },
+  {
+    slug: "mail-werkt-niet",
+    title: "Mail werkt niet? Dit kun je zelf controleren",
+    summary: "Zes controles in volgorde: webmail, wachtwoord, servernaam, verzenden, ontvangen en verbinding. Daarna weet je wat je me moet appen.",
+    category: "E-mail",
+    updated: "5 november 2026",
+    updatedIso: "2026-11-05",
+    body: MailWerktNiet,
   },
 ];
 
